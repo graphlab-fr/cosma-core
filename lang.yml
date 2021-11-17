@@ -8,18 +8,15 @@ graph:
 
 left_panel:
 
-    header: 
-      logo_description:
-        fr: logo de Cosma
-        en: Cosma's logo
-      spatialization_bar_description:
-        fr: spatialisation
-        en: spatialization
+    header:
+      spatialization_bar_desc:
+        fr: spatialisation (Espace)
+        en: spatialization (Space)
 
     input_search:
         placeholder:
-          fr: Rechercher
-          en: Search
+          fr: Rechercher…
+          en: Search…
 
     menu_types:
       title:
@@ -40,9 +37,19 @@ left_panel:
       title:
         fr: Vues
         en: Views
+      btn_reset:
+        fr: Réinitialiser la vue actuelle
+        en: Reset the current view
       btn_save:
         fr: Sauvegarder la vue actuelle
         en: Save the current view
+      tooltip:
+        fr: >
+          Enregistre l'état actuel de l'interface
+          (types et mots-clés actifs, mode focus) et crée un raccourci vers cet état dans le menu Vues.
+        en: >
+          Saves the current state of the interface
+          (active types and keywords, focus mode) and set a shortcut to this state in the Views menu.
 
     menu_controls:
       title:
@@ -102,15 +109,18 @@ left_panel:
       btn_about:
         fr: À propos
         en: About
+      publish_mark:
+        fr: Fabriqué avec Cosma –
+        en: Build with Cosma –
 
 right_panel:
 
-  standard:
+  record:
 
     header:
       btn_close:
-        fr: Fermer
-        en: Close
+        fr: Fermer (Echap)
+        en: Close (Escap)
 
     metadata:
       id:
@@ -210,6 +220,17 @@ right_panel:
         effect:
           fr: Fermer la fiche
           en: Close the record
+
+  credits:
+    version:
+      fr: Version
+      en: Version
+    license:
+      fr: Licence
+      en: License
+    ANR_program:
+      fr: Programme ANR
+      en: ANR schedule
 
   bibliography_data:
     title:

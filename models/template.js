@@ -9,7 +9,8 @@ const fs = require('fs')
     , nunjucks = require('nunjucks')
     , mdIt = require('markdown-it')()
     , mdItAttr = require('markdown-it-attrs')
-    , moment = require('moment');
+    , moment = require('moment')
+    , yamlEditor = require('js-yaml');
 
 // markdown-it plugin
 mdIt.use(mdItAttr, {
@@ -19,6 +20,10 @@ mdIt.use(mdItAttr, {
 });
 
 const Graph = require('./graph');
+
+const translation = yamlEditor.safeLoad(
+    fs.readFileSync(path.join(__dirname, '../lang.yml'), 'utf8')
+);
 
 /**
  * Class to get the Cosmoscope source code
@@ -125,6 +130,9 @@ module.exports = class Template {
                 config: this.config.graph,
                 data: JSON.stringify(graph.data)
             },
+
+            translation: translation,
+            lang: this.config.lang,
 
             colors: this.colors(),
 

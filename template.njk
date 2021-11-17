@@ -52,19 +52,22 @@
             <h1 class="title">{{ metadata.title }}</h1>
             {% endif %}
 
-            <div class="load-bar" onclick="updateForces()" title="Spatialisation (Espace)">
+            <div class="load-bar" onclick="updateForces()"
+                title="{{ translation.left_panel.header.spatialization_bar_desc[lang] }}">
                 <div id="load-bar-value"></div>
             </div>
         </header>
 
         <section>
-            <input class="search-bar" id="search" placeholder="Rechercher… (S)" autocomplete="off" role="search" />
+            <input class="search-bar" id="search" placeholder="{{ translation.left_panel.input_search.placeholder[lang] }} (S)"
+                autocomplete="off" role="search" />
             <ul id="search-result-list"></ul>
         </section>
 
         <details class="menu-types" open="open">
             <summary class="menu-title">
-                Types <span id="types-counter" class="badge">{{ types | length }}</span>
+                {{ translation.left_panel.menu_types.title[lang] }}
+                <span id="types-counter" class="badge">{{ types | length }}</span>
             </summary>
 
             <ul class="menu-types-list">
@@ -84,7 +87,8 @@
         {% if tags.length !== 0 %}
         <details class="menu-tags" data-sort="tag">
             <summary class="menu-title">
-                Mots-clés <span id="tag-counter" class="badge">{{ tags | length }}</span>
+                {{ translation.left_panel.menu_keywords.title[lang] }}
+                <span id="tag-counter" class="badge">{{ tags | length }}</span>
             </summary>
 
             <button class="menu-tags-btn sort-btn">A-Z</button>
@@ -109,7 +113,8 @@
 
         <details class="menu-index" id="index" data-sort="record">
             <summary class="menu-title">
-                Index <span id="index-counter" class="badge">{{ records | length }}</span>
+                {{ translation.left_panel.menu_index.title[lang] }}
+                <span id="index-counter" class="badge">{{ records | length }}</span>
             </summary>
 
             <button class="menu-index-btn sort-btn">A-Z</button>
@@ -135,16 +140,16 @@
 
         <details class="menu-view" open="open">
             <summary class="menu-title">
-                Vues <span class="badge">{{ views | length }}</span>
+                {{ translation.left_panel.menu_views.title[lang] }}
+                <span class="badge">{{ views | length }}</span>
             </summary>
 
-            <button onclick="resetView()">Réinitialiser la vue actuelle (Alt + R)</button>
+            <button onclick="resetView()">{{ translation.left_panel.menu_views.btn_reset[lang] }} (Alt + R)</button>
 
-            <button id="view-save" onclick="saveView()" hidden>Sauvegarder la vue actuelle</button>
+            <button id="view-save" onclick="saveView()" hidden>{{ translation.left_panel.menu_views.btn_save[lang] }}</button>
 
             <span class="tooltip">?
-                <span class="tooltiptext">Enregistre l'état actuel de l'interface
-                    (types actifs, mots-clés actifs, mode focus) et crée un raccourci vers cet état dans le menu Vues.</span>
+                <span class="tooltiptext">{{ translation.left_panel.menu_views.tooltip[lang] }}</span>
             </span>
 
             <div class="menu-view-container" id="views-container">
@@ -159,26 +164,29 @@
         </details>
 
         <details class="menu-controls">
-            <summary class="menu-title">Paramètres du graphe</summary>
+            <summary class="menu-title">
+                {{ translation.left_panel.menu_controls.title[lang] }}
+            </summary>
 
             <ul class="menu-controls-list">
                 <li>
                     <label>
                         <input type="checkbox" checked onchange="linksDisplayToggle(this.checked)">
-                        Afficher les liens <span class="badge">{{ nblinks }}</span>
+                        {{ translation.left_panel.menu_controls.input_links_show[lang] }}
+                        <span class="badge">{{ nblinks }}</span>
                     </label>
                 </li>
                 <li>
                     <label>
                         <input type="checkbox" checked onchange="labelDisplayToggle(this.checked)">
-                        Afficher les étiquettes
+                        {{ translation.left_panel.menu_controls.input_labels_show[lang] }}
                     </label>
                 </li>
                 <li>
                     <label>
                         <input type="checkbox" {{ "checked" if graph.config.highlight_on_hover }}
                             onchange="graphProperties.highlight_on_hover = this.checked">
-                        Surbrillance au survol
+                        {{ translation.left_panel.menu_controls.input_highlight_hover_node[lang] }}
                     </label>
                 </li>
             </ul>
@@ -193,21 +201,22 @@
 
             <article class="menu-controls-container">
                 <p class="menu-controls-title">
-                    Attraction
+                    {{ translation.left_panel.form_attraction.title[lang] }}
                     <span class="tooltip">?
-                        <span class="tooltiptext">Contrôlez la répartition des nœuds dans l’espace, la force de répulsion,
-                                la distance maximum sur laquelle ils se déploient et la pression sur les axes verticaux et horizontaux.</span>
+                        <span class="tooltiptext">{{ translation.left_panel.form_attraction.help[lang] }}</span>
                     </span>
                 </p>
-                {{ inputRange('force', 'attraction.force', 'updateForces()', graph.config.attraction.force, 50, 600, 0.1) }}
-                {{ inputRange('distance max', 'attraction.distance_max', 'updateForces()', graph.config.attraction.distance_max, 0, 800, 0.1) }}
-                {{ inputRange('verticale', 'attraction.verticale', 'updateForces()', graph.config.attraction.verticale, 0, 1, 0.01) }}
-                {{ inputRange('horizontale', 'attraction.horizontale', 'updateForces()', graph.config.attraction.horizontale, 0, 1, 0.01) }}
+                {{ inputRange(translation.left_panel.form_attraction.input_force, 'attraction.force', 'updateForces()', graph.config.attraction.force, 50, 600, 0.1) }}
+                {{ inputRange(translation.left_panel.form_attraction.input_distance_max, 'attraction.distance_max', 'updateForces()', graph.config.attraction.distance_max, 0, 800, 0.1) }}
+                {{ inputRange(translation.left_panel.form_attraction.input_vertical, 'attraction.verticale', 'updateForces()', graph.config.attraction.verticale, 0, 1, 0.01) }}
+                {{ inputRange(translation.left_panel.form_attraction.input_horizontal, 'attraction.horizontale', 'updateForces()', graph.config.attraction.horizontale, 0, 1, 0.01) }}
             </article>
 
             <article class="menu-controls-container">
-                <p class="menu-controls-title">Texte</p>
-                {{ inputRange('taille', 'text_size', 'updateFontsize()', graph.config.text_size, 5, 15, 0.5) }}
+                <p class="menu-controls-title">
+                    {{ translation.left_panel.form_text.title[lang] }}
+                </p>
+                {{ inputRange(translation.left_panel.form_attraction.input_size, 'text_size', 'updateFontsize()', graph.config.text_size, 5, 15, 0.5) }}
             </article>
         </details>
 
@@ -215,16 +224,20 @@
             {% if usedQuoteRef %}
             <button onclick="openRecord('citation-references', false)"
                 class="bibliography-open" title="Données bibliographiques">
-                Données
+                {{ translation.left_panel.footer.btn_data[lang] }}
             </button>
             {% endif %}
 
             <button onclick="openRecord('help', false)">
-                Aide
+                {{ translation.left_panel.footer.btn_help[lang] }}
             </button>
 
             <button class="about" onclick="openRecord('credits', false)">
-                {{ "Fabriqué avec Cosma – À propos" if publishMode else "À propos" }}
+                {% if publishMode %}
+                    {{ translation.left_panel.footer.publish_mark[lang] + " " + translation.left_panel.footer.btn_about[lang] }}
+                {% else %}
+                    {{ translation.left_panel.footer.btn_about[lang] }}
+                {% endif %}
             </button>
         </footer>
     </aside>
@@ -234,7 +247,9 @@
     ========================================= #}
 
     <main id="record-container" class="record-container">
-        <button class="record-btn-close" onclick="closeRecord()">Fermer (Echap)</button>
+        <button class="record-btn-close" onclick="closeRecord()">
+            {{ translation.right_panel.record.header.btn_close[lang] }}
+        </button>
 
         {% for record in records %}
         <article id="{{ record.id }}" class="record">
@@ -242,23 +257,23 @@
                 <h1 class="record-title">{{ record.title }}</h1>
 
                 <div class="record-id">
-                    <span>id :</span>
+                    <span>{{ translation.right_panel.record.metadata.id[lang] }} :</span>
                     <span>{{ record.id }}</span>
                 </div>
 
                 <div class="record-last-edit">
-                    <span>dernière édition :</span>
+                    <span>{{ translation.right_panel.record.metadata.last_edit[lang] }} :</span>
                     <time class="record-date" datetime="{{ record.mtime }}">{{ record.mtime }}</time>
                 </div>
 
                 <div class="record-type">
-                    <span>type :</span>
+                    <span>{{ translation.right_panel.record.metadata.type[lang] }} :</span>
                     <span>{{ record.type }}</span>
                 </div>
 
                 {% if record.tags %}
                 <div class="record-tags">
-                    <span>mots-clés :</span>
+                    <span>{{ translation.right_panel.record.metadata.keywords[lang] }} :</span>
                     <span>{{ record.tags }}</span>
                 </div>
                 {% endif %}
@@ -270,8 +285,10 @@
                 {% if record.bibliography %}
                 <section class="bibliography">
                     <hr/>
-                    <h1>Bibliographie</h1>
+                    <h1>{{ translation.right_panel.record.bibliography[lang] }}</h1>
+
                     {{ record.bibliography | safe }}
+
                 </section>
                 {% endif %}
             </main>
@@ -280,7 +297,8 @@
                 {% if record.links.length !== 0 %}
                 <details class="record-links" open="open">
                     <summary class="menu-title">
-                        Liens <span class="badge">{{ record.links | length }}</span>
+                        {{ translation.right_panel.record.footer.list_links[lang] }}
+                        <span class="badge">{{ record.links | length }}</span>
                     </summary>
 
                     <ul class="record-links-list">
@@ -300,7 +318,8 @@
                 {% if record.backlinks.length !== 0 %}
                 <details class="record-backlinks" open="open">
                     <summary class="menu-title">
-                        Rétroliens <span class="badge">{{ record.backlinks | length }}</span>
+                        {{ translation.right_panel.record.footer.list_backlinks[lang] }}
+                        <span class="badge">{{ record.backlinks | length }}</span>
                     </summary>
 
                     <ul class="record-backlinks-list">
@@ -324,45 +343,49 @@
         
         <article id="help" class="record">
             <main>
-                <h1>Aide</h1>
+                <h1>{{ translation.right_panel.help.title[lang] }}</h1>
                 
-                <p><a href="https://graphlab-fr.github.io/cosma/fr.html#utilisation-du-cosmoscope" target="_blank">Cliquez ici pour accéder à la documentation de Cosma</a></p>
+                <p>
+                    <a href="{{ translation.right_panel.help.documentation_link_href[lang] }}" target="_blank">
+                        {{ translation.right_panel.help.documentation_link_placeholder[lang] }}
+                    </a>
+                </p>
                 
-                <h2>Raccourcis</h2>
+                <h2>{{ translation.right_panel.help.shortcuts.title[lang] }}</h2>
                 
                     <table>
                         <tbody>
                             <tr>
-                                <td>Espace</td>
-                                <td>Réactiver l'algorithme de dessin du graphe</td>
+                                <td>{{ translation.right_panel.help.shortcuts.space.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.space.effect[lang] }}</td>
                             </tr>
                             <tr>
-                                <td>S</td>
-                                <td>Déplacer le curseur dans le champ Recherche</td>
+                                <td>{{ translation.right_panel.help.shortcuts.s.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.s.effect[lang] }}</td>
                             </tr>
                             <tr>
-                                <td>Alt + clic</td>
-                                <td>(sur un type de fiche) Désélectionner les autres types</td>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_click.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_click.effect[lang] }}</td>
                             </tr>
                             <tr>
-                                <td>R</td>
-                                <td>Réinitialiser le zoom</td>
+                                <td>{{ translation.right_panel.help.shortcuts.r.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.r.effect[lang] }}</td>
                             </tr>
                             <tr>
-                                <td>Alt + R</td>
-                                <td>Réinitialiser tous les paramètres visuels</td>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_r.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.alt_r.effect[lang] }}</td>
                             </tr>
                             <tr>
-                                <td>C</td>
-                                <td>Zoomer sur le nœud de la fiche active</td>
+                                <td>{{ translation.right_panel.help.shortcuts.c.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.c.effect[lang] }}</td>
                             </tr>
                             <tr>
-                                <td>F</td>
-                                <td>Passer en mode Focus</td>
+                                <td>{{ translation.right_panel.help.shortcuts.f.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.f.effect[lang] }}</td>
                             </tr>
                             <tr>
-                                <td>Echap</td>
-                                <td>Fermer la fiche</td>
+                                <td>{{ translation.right_panel.help.shortcuts.escap.key[lang] }}</td>
+                                <td>{{ translation.right_panel.help.shortcuts.escap.effect[lang] }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -390,21 +413,24 @@
                 {% endif %}
 
                 {% if publishMode and metadata %}
-                <div class="logo" title="Logo de Cosma">
+                <div class="logo">
                     {% include "icons/cosmalogo.svg" %}
                 </div>
                 {% else %}
                 <h1>Cosma</h1>
                 {% endif %}
 
-                <p>Version 1.0 • Licence GNU GPL 3.0</p>
+                <p>
+                    {{ translation.right_panel.credits.version[lang] }} 1.0
+                    •
+                    {{ translation.right_panel.credits.license[lang] }} GNU GPL 3.0</p>
 
                 <ul>
                     <li>Arthur Perret</li>
                     <li>Guillaume Brioudes</li>
                     <li>Olivier Le Deuff</li>
                     <li>Clément Borel</li>
-                    <li>Programme ANR <a href="https://hyperotlet.hypotheses.org/">HyperOtlet</a></li>
+                    <li>{{ translation.right_panel.credits.ANR_program[lang] }} <a href="https://hyperotlet.hypotheses.org/">HyperOtlet</a></li>
                 </ul>
 
                 <dl>
@@ -431,13 +457,11 @@
         {% if usedQuoteRef %}
         <article id="citation-references" class="record">
             <main>
-                <h1>Données bibliographiques</h1>
+                <h1>{{ translation.right_panel.bibliography_data.title[lang] }}</h1>
     
-                <p>
-                    Les données ci-dessous correspondent aux références citées dans ce cosmoscope. Elles sont en Citation Style Language, exprimé en JSON. Ce format est reconnu notamment par Zotero, Mendeley et Papers. Cliquez sur le bouton ci-dessous pour télécharger les données.
-                </p>
+                <p>{{ translation.right_panel.bibliography_data.description[lang] }}</p>
     
-                <button>Télécharger</button>
+                <button>{{ translation.right_panel.bibliography_data.btn_download[lang] }}</button>
     
                 <code>{{ usedQuoteRef | dump | escape }}</code>
             </main>
@@ -466,7 +490,7 @@
         <div class="graph-controls">
             <div class="graph-controls-zoom">
                 <button onclick="zoomLess()">-</button>
-                <button onclick="zoomReset()">Recentrer (R)</button>
+                <button onclick="zoomReset()">{{ translation.graph.btn_zoom_reset[lang] }} (R)</button>
                 <button onclick="zoomMore()">+</button>
             </div>
 
@@ -474,7 +498,7 @@
             <div class="graph-controls-focus">
                 <label>
                     <input id="focus-check" type="checkbox" name="checkbox">
-                    Focus (F)
+                    {{ translation.graph.btn_focus[lang] }} (F)
                 </label>
 
                 <input id="focus-range" type="range" min="0" max="6" value="1" name="range" step="1" />
