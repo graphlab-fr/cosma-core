@@ -1,7 +1,7 @@
 /**
  * @file Activate/disable focus on a node and focus controls.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 /**

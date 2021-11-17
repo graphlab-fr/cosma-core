@@ -1,7 +1,7 @@
 /**
  * @file Display/hide elts from the index of all records.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 const indexContainer = document.getElementById('index');

@@ -1,7 +1,7 @@
 /**
  * @file Download data from the cosmoscope.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 /**

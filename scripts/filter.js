@@ -1,7 +1,7 @@
 /**
  * @file Select filters elts and activate them by the ids them contain.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 let filterAltMode = false;

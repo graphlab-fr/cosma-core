@@ -1,7 +1,7 @@
 /**
  * @file Activate search engine and its keyboard shortcuts.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 let searchInput = document.querySelector('#search');

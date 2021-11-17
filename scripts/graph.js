@@ -1,7 +1,7 @@
 /**
  * @file Generate nodes, labels & links for graph. Highlight, hide & display nodes & links. Set mouse graph events.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 (function() {

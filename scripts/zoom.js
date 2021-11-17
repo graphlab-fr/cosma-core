@@ -1,7 +1,7 @@
 /**
  * @file Controls & apply zoom from graph.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 (function () {

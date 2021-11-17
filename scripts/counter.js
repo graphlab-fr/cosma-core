@@ -1,7 +1,7 @@
 /**
  * @file Counters elts and functions to change values.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 const counters = {

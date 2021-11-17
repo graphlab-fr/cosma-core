@@ -1,7 +1,7 @@
 /**
  * @file Open/close the records container on call and page loading.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 const recordContainer = document.getElementById('record-container');

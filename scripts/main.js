@@ -1,7 +1,7 @@
 /**
  * @file Global vars about nodes, record & graph displaying. Logo animation.
  * @author Guillaume Brioudes
- * @copyright MIT License ANR HyperOtlet
+ * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
 /** @namespace */
