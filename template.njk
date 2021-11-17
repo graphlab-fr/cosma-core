@@ -201,22 +201,22 @@
 
             <article class="menu-controls-container">
                 <p class="menu-controls-title">
-                    {{ translation.left_panel.form_attraction.title[lang] }}
+                    {{ translation.left_panel.menu_controls.form_attraction.title[lang] }}
                     <span class="tooltip">?
                         <span class="tooltiptext">{{ translation.left_panel.form_attraction.help[lang] }}</span>
                     </span>
                 </p>
-                {{ inputRange(translation.left_panel.form_attraction.input_force, 'attraction.force', 'updateForces()', graph.config.attraction.force, 50, 600, 0.1) }}
-                {{ inputRange(translation.left_panel.form_attraction.input_distance_max, 'attraction.distance_max', 'updateForces()', graph.config.attraction.distance_max, 0, 800, 0.1) }}
-                {{ inputRange(translation.left_panel.form_attraction.input_vertical, 'attraction.verticale', 'updateForces()', graph.config.attraction.verticale, 0, 1, 0.01) }}
-                {{ inputRange(translation.left_panel.form_attraction.input_horizontal, 'attraction.horizontale', 'updateForces()', graph.config.attraction.horizontale, 0, 1, 0.01) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_force[lang], 'attraction.force', 'updateForces()', graph.config.attraction.force, 50, 600, 0.1) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_distance_max[lang], 'attraction.distance_max', 'updateForces()', graph.config.attraction.distance_max, 0, 800, 0.1) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_vertical[lang], 'attraction.verticale', 'updateForces()', graph.config.attraction.verticale, 0, 1, 0.01) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_horizontal[lang], 'attraction.horizontale', 'updateForces()', graph.config.attraction.horizontale, 0, 1, 0.01) }}
             </article>
 
             <article class="menu-controls-container">
                 <p class="menu-controls-title">
-                    {{ translation.left_panel.form_text.title[lang] }}
+                    {{ translation.left_panel.menu_controls.form_text.title[lang] }}
                 </p>
-                {{ inputRange(translation.left_panel.form_attraction.input_size, 'text_size', 'updateFontsize()', graph.config.text_size, 5, 15, 0.5) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_text.input_size[lang], 'text_size', 'updateFontsize()', graph.config.text_size, 5, 15, 0.5) }}
             </article>
         </details>
 
