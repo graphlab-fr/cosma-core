@@ -91,6 +91,8 @@ module.exports = class Graph {
 
         this.config = config;
 
+        this.errors = [];
+
         this.params = [];
         if (params) { // valid params
             this.params = params.filter(parm => Graph.validParams.includes(parm)); }
@@ -189,13 +191,8 @@ module.exports = class Graph {
                 this.files = this.files.map(this.convertQuoteKeys, this);
                 this.files = this.files.map(this.getBibliography, this);
             } else {
-                dialog.showMessageBox(mainWindow, {
-                    message: "Vous ne pouvez traiter les citations : des paramètres sont manquants. Veuillez compléter vos préférences.",
-                    type: 'info',
-                    title: "Impossible de traiter les citations"
-                });
-                // remove 'citeproc' from params
                 this.params = this.params.filter(param => param !== 'citeproc');
+                this.errors.push('You cannot process quotes: parameters are missing. Please complete your preferences.');
             }
 
         }
