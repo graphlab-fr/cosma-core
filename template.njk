@@ -184,8 +184,8 @@
                 </li>
                 <li>
                     <label>
-                        <input type="checkbox" {{ "checked" if graph.config.highlight_on_hover }}
-                            onchange="graphProperties.highlight_on_hover = this.checked">
+                        <input type="checkbox" {{ "checked" if graph.config.graph_highlight_on_hover }}
+                            onchange="graphProperties.graph_highlight_on_hover = this.checked">
                         {{ translation.left_panel.menu_controls.input_highlight_hover_node[lang] }}
                     </label>
                 </li>
@@ -206,17 +206,17 @@
                         <span class="tooltiptext">{{ translation.left_panel.form_attraction.help[lang] }}</span>
                     </span>
                 </p>
-                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_force[lang], 'attraction.force', 'updateForces()', graph.config.attraction.force, 50, 600, 0.1) }}
-                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_distance_max[lang], 'attraction.distance_max', 'updateForces()', graph.config.attraction.distance_max, 0, 800, 0.1) }}
-                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_vertical[lang], 'attraction.verticale', 'updateForces()', graph.config.attraction.verticale, 0, 1, 0.01) }}
-                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_horizontal[lang], 'attraction.horizontale', 'updateForces()', graph.config.attraction.horizontale, 0, 1, 0.01) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_force[lang], 'attraction_force', 'updateForces()', graph.config.attraction_force, graph.minValues.attraction_force, 600, 0.1) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_distance_max[lang], 'attraction_distance_max', 'updateForces()', graph.config.attraction_distance_max, graph.minValues.attraction_distance_max, 800, 0.1) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_vertical[lang], 'attraction_vertical', 'updateForces()', graph.config.attraction_vertical, graph.minValues.attraction_vertical, 1, 0.01) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_attraction.input_horizontal[lang], 'attraction_horizontal', 'updateForces()', graph.config.attraction_horizontal, graph.minValues.attraction_horizontal, 1, 0.01) }}
             </article>
 
             <article class="menu-controls-container">
                 <p class="menu-controls-title">
                     {{ translation.left_panel.menu_controls.form_text.title[lang] }}
                 </p>
-                {{ inputRange(translation.left_panel.menu_controls.form_text.input_size[lang], 'text_size', 'updateFontsize()', graph.config.text_size, 5, 15, 0.5) }}
+                {{ inputRange(translation.left_panel.menu_controls.form_text.input_size[lang], 'text_size', 'updateFontsize()', graph.config.graph_text_size, graph.minValues.graph_text_size, 15, 0.5) }}
             </article>
         </details>
 
@@ -474,7 +474,7 @@
     Cosma graph
     ========================================= #}
 
-    <div class="graph-wrapper" style="background-color: {{ graph.config.background_color }}">
+    <div class="graph-wrapper" style="background-color: {{ graph.config.graph_background_color }}">
         <svg id="graph-canvas">
             <defs>
                 <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerUnits="strokeWidth" markerWidth="5" markerHeight="5" orient="auto">

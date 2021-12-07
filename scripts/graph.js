@@ -49,14 +49,14 @@ window.updateForces = function () {
 
     simulation.force("charge")
         // turn force value to negative number
-        .strength(-Math.abs(graphProperties.attraction.force))
-        .distanceMax(graphProperties.attraction.distance_max);
+        .strength(-Math.abs(graphProperties.attraction_force))
+        .distanceMax(graphProperties.attraction_distance_max);
 
     simulation.force("forceX")
-        .strength(graphProperties.attraction.horizontale)
+        .strength(graphProperties.attraction_horizontal)
 
     simulation.force("forceY")
-        .strength(graphProperties.attraction.verticale)
+        .strength(graphProperties.attraction_vertical)
 
     // restarts the simulation
     simulation.alpha(1).restart();
@@ -107,7 +107,7 @@ elts.links = svg.append("g")
         return false;
     });
 
-if (graphProperties.arrows === true) {
+if (graphProperties.graph_arrows === true) {
     elts.links
         .attr("marker-end", 'url(#arrow)');
 }
@@ -138,7 +138,7 @@ elts.circles = elts.nodes.append("circle")
             d.fy = null; })
         )
     .on('mouseenter', function(nodeMetas) {
-        if (!graphProperties.highlight_on_hover) { return; }
+        if (!graphProperties.graph_highlight_on_hover) { return; }
 
         let nodesIdsHovered = [nodeMetas.id];
 
@@ -177,7 +177,7 @@ elts.circles = elts.nodes.append("circle")
         linksToModif.classed('translucent', true);
     })
     .on('mouseout', function() {
-        if (!graphProperties.highlight_on_hover) { return; }
+        if (!graphProperties.graph_highlight_on_hover) { return; }
 
         elts.nodes.classed('hover', false);
         elts.nodes.classed('translucent', false);
@@ -207,7 +207,7 @@ elts.labels = elts.nodes.append("text")
             label = '';
         }
     })
-    .attr('font-size', graphProperties.text_size)
+    .attr('font-size', graphProperties.graph_text_size)
     .attr('x', 0)
     .attr('y', (d) => d.size)
     .attr('dominant-baseline', 'middle')

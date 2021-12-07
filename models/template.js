@@ -20,6 +20,7 @@ mdIt.use(mdItAttr, {
 });
 
 const Graph = require('./graph');
+const Config = require('./config');
 
 const translation = yamlEditor.safeLoad(
     fs.readFileSync(path.join(__dirname, '../lang.yml'), 'utf8')
@@ -101,8 +102,10 @@ module.exports = class Template {
             return file;
         });
 
-        if (this.config.custom_css === true && this.config['custom_css_path'] !== undefined) {
-            this.config.custom_css = fs.readFileSync(this.config['custom_css_path'], 'utf-8');
+        this.custom_css = null;
+
+        if (this.config.custom_css === true && this.config['custom_css_path'] !== '') {
+            this.custom_css = fs.readFileSync(this.config['custom_css_path'], 'utf-8');
         }
 
         nunjucks.configure(path.join(__dirname, '../'), { autoescape: true });
@@ -127,8 +130,9 @@ module.exports = class Template {
             }).sort(function (a, b) { return a.title.localeCompare(b.title); }),
 
             graph: {
-                config: this.config.graph,
-                data: JSON.stringify(graph.data)
+                config: this.config,
+                data: JSON.stringify(graph.data),
+                minValues: Config.minValues
             },
 
             translation: translation,
@@ -136,7 +140,7 @@ module.exports = class Template {
 
             colors: this.colors(),
 
-            customCss: this.config.custom_css,
+            customCss: this.custom_css,
 
             // from config
 
@@ -152,7 +156,12 @@ module.exports = class Template {
 
             usedQuoteRef: graph.getUsedCitationReferences(),
 
-            metadata: this.config.metas,
+            metadata: {
+                title: config.metas_title,
+                author: config.metas_author,
+                description: config.metas_description,
+                keywords: config.metas_keywords
+            },
 
             focusIsActive: !(this.config.focus_max <= 0),
 
@@ -160,7 +169,7 @@ module.exports = class Template {
 
             nblinks: graph.data.links.length,
 
-            date: moment().format('YYYY-MM-DD')
+            date: moment().format()
         });
 
         // try {
@@ -210,7 +219,7 @@ module.exports = class Template {
             .map(type => `.${type.prefix}${type.name} {color:var(--${type.prefix}${type.name}); fill:var(--${type.prefix}${type.name}); stroke:var(--${type.prefix}${type.name});}`, this)
     
         // add specifics parametered colors from config
-        types.push({prefix: '', name: 'highlight', color: this.config.graph.highlight_color});
+        types.push({prefix: '', name: 'highlight', color: this.config.graph_highlight_color});
     
         let globalsStyles = types.map(type => `--${type.prefix}${type.name}: ${type.color};`)
     

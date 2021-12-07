@@ -176,10 +176,10 @@ module.exports = class Graph {
 
         if (this.params.includes('citeproc')) {
 
-            if (this.config['bibliography'] && this.config['csl'] && this.config['bibliography_locales']) {
+            if (this.config['bibliography_path'] && this.config['csl_path'] && this.config['bibliography_locales_path']) {
                 this.library = {};
     
-                let libraryFileContent = fs.readFileSync(this.config['bibliography'], 'utf-8');
+                let libraryFileContent = fs.readFileSync(this.config['bibliography_path'], 'utf-8');
                 libraryFileContent = JSON.parse(libraryFileContent);
     
                 for (const item of libraryFileContent) {
@@ -630,8 +630,8 @@ module.exports = class Graph {
      */
 
     getCSL () {
-        const xmlLocal = fs.readFileSync(this.config['bibliography_locales'], 'utf-8')
-            , cslStyle = fs.readFileSync(this.config['csl'], 'utf-8');
+        const xmlLocal = fs.readFileSync(this.config['bibliography_locales_path'], 'utf-8')
+            , cslStyle = fs.readFileSync(this.config['csl_path'], 'utf-8');
 
         return new CSL.Engine({
             retrieveLocale: () => {
