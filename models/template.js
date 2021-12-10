@@ -79,14 +79,19 @@ module.exports = class Template {
         });
     }
 
-    constructor (graph, config) {
-        this.config = config;
+    /**
+     * Get data from graph and make a web app
+     * @param {object} graph - Graph class
+     */
+
+    constructor (graph) {
+        this.config = new Config();
 
         this.types = {};
         this.tags = {};
 
         graph.files = graph.files.map((file) => {
-            const linkSymbol = (this.config.link_symbol || null);
+            const linkSymbol = (this.config.opts.link_symbol || null);
 
             file.content = Template.convertLinks(file, file.content, linkSymbol);
 
@@ -104,8 +109,8 @@ module.exports = class Template {
 
         this.custom_css = null;
 
-        if (this.config.custom_css === true && this.config['custom_css_path'] !== '') {
-            this.custom_css = fs.readFileSync(this.config['custom_css_path'], 'utf-8');
+        if (this.config.opts.custom_css === true && this.config.opts['custom_css_path'] !== '') {
+            this.custom_css = fs.readFileSync(this.config.opts['custom_css_path'], 'utf-8');
         }
 
         nunjucks.configure(path.join(__dirname, '../'), { autoescape: true });
@@ -130,13 +135,13 @@ module.exports = class Template {
             }).sort(function (a, b) { return a.title.localeCompare(b.title); }),
 
             graph: {
-                config: this.config,
+                config: this.config.opts,
                 data: JSON.stringify(graph.data),
                 minValues: Config.minValues
             },
 
             translation: translation,
-            lang: this.config.lang,
+            lang: this.config.opts.lang,
 
             colors: this.colors(),
 
@@ -144,7 +149,7 @@ module.exports = class Template {
 
             // from config
 
-            views: this.config.views || [],
+            views: this.config.opts.views || [],
 
             types: Object.keys(this.types).map(function(type) {
                 return { name: type, nodes: this.types[type] };
@@ -157,13 +162,13 @@ module.exports = class Template {
             usedQuoteRef: graph.getUsedCitationReferences(),
 
             metadata: {
-                title: config.metas_title,
-                author: config.metas_author,
-                description: config.metas_description,
-                keywords: config.metas_keywords
+                title: this.config.opts.metas_title,
+                author: this.config.opts.metas_author,
+                description: this.config.opts.metas_description,
+                keywords: this.config.opts.metas_keywords
             },
 
-            focusIsActive: !(this.config.focus_max <= 0),
+            focusIsActive: !(this.config.opts.focus_max <= 0),
 
             // stats
 
@@ -205,11 +210,11 @@ module.exports = class Template {
         const replacementColor = 'grey';
         let types;
     
-        const typesRecord = Object.keys(this.config.record_types)
-            .map(function(key) { return {prefix: 'n_', name: key, color: this.config.record_types[key] || replacementColor}; }, this);
+        const typesRecord = Object.keys(this.config.opts.record_types)
+            .map(function(key) { return {prefix: 'n_', name: key, color: this.config.opts.record_types[key] || replacementColor}; }, this);
     
-        const typesLinks = Object.keys(this.config.link_types)
-            .map(function(key) { return {prefix: 'l_', name: key, color: this.config.link_types[key].color || replacementColor}; }, this);
+        const typesLinks = Object.keys(this.config.opts.link_types)
+            .map(function(key) { return {prefix: 'l_', name: key, color: this.config.opts.link_types[key].color || replacementColor}; }, this);
     
         types = typesRecord.concat(typesLinks);
     
@@ -219,7 +224,7 @@ module.exports = class Template {
             .map(type => `.${type.prefix}${type.name} {color:var(--${type.prefix}${type.name}); fill:var(--${type.prefix}${type.name}); stroke:var(--${type.prefix}${type.name});}`, this)
     
         // add specifics parametered colors from config
-        types.push({prefix: '', name: 'highlight', color: this.config.graph_highlight_color});
+        types.push({prefix: '', name: 'highlight', color: this.config.opts.graph_highlight_color});
     
         let globalsStyles = types.map(type => `--${type.prefix}${type.name}: ${type.color};`)
     

@@ -10,6 +10,8 @@ const fs = require('fs')
     , CSL = require('citeproc')
     , Citr = require('@zettlr/citr');
 
+const Config = require('./config');
+
 /**
  * Class to get the Cosmoscope data
  * from the config options and some parameters
@@ -87,9 +89,9 @@ module.exports = class Graph {
      * @param {array} params - Options from Graph.validParams to change the Cosmocope content
      */
 
-    constructor (params, config) {
+    constructor (params) {
 
-        this.config = config;
+        this.config = new Config();
 
         this.errors = [];
 
@@ -146,8 +148,8 @@ module.exports = class Graph {
         this.files = this.files.map(this.scanLinksnContexts, this);
 
         this.validTypes = {
-            records: Object.keys(this.config.record_types),
-            links: Object.keys(this.config.link_types)
+            records: Object.keys(this.config.opts.record_types),
+            links: Object.keys(this.config.opts.link_types)
         }
 
         /**
@@ -171,15 +173,15 @@ module.exports = class Graph {
 
         this.files = this.files.map(this.findBacklinks, this);
 
-        if (this.config.focus_max > 0) {
+        if (this.config.opts.focus_max > 0) {
             this.files = this.files.map(this.evalConnectionLevels, this); }
 
         if (this.params.includes('citeproc')) {
 
-            if (this.config['bibliography_path'] && this.config['csl_path'] && this.config['bibliography_locales_path']) {
+            if (this.config.canCiteproc() === true) {
                 this.library = {};
     
-                let libraryFileContent = fs.readFileSync(this.config['bibliography_path'], 'utf-8');
+                let libraryFileContent = fs.readFileSync(this.config.opts['bibliography_path'], 'utf-8');
                 libraryFileContent = JSON.parse(libraryFileContent);
     
                 for (const item of libraryFileContent) {
@@ -212,9 +214,9 @@ module.exports = class Graph {
      */
 
     getFilesNames () {
-        if (!this.config.files_origin) { return []; }
+        if (!this.config.opts.files_origin) { return []; }
 
-        return fs.readdirSync(this.config.files_origin, 'utf8')
+        return fs.readdirSync(this.config.opts.files_origin, 'utf8')
             .filter(fileName => path.extname(fileName) === '.md');
     }
 
@@ -230,7 +232,7 @@ module.exports = class Graph {
         const file = {};
 
         file.name = fileName;
-        file.filePath = path.join(this.config.files_origin, fileName);
+        file.filePath = path.join(this.config.opts.files_origin, fileName);
         file.lastEditDate = fs.statSync(file.filePath).mtime;
         
         file.contain = fs.readFileSync(file.filePath, 'utf8');
@@ -451,7 +453,7 @@ module.exports = class Graph {
         file.focusLevels = [];
 
         const nodeId = file.metas.id
-            , maxLevel = this.config.focus_max;
+            , maxLevel = this.config.opts.focus_max;
 
         let index = [] // store all levels
             , idsList = []; // contains all handled node ids
@@ -526,7 +528,7 @@ module.exports = class Graph {
      */
 
     getLinkStyle (linkType) {
-        const linkTypeConfig = this.config.link_types[linkType];
+        const linkTypeConfig = this.config.opts.link_types[linkType];
         let stroke, color;
 
         if (linkTypeConfig) {
@@ -630,8 +632,8 @@ module.exports = class Graph {
      */
 
     getCSL () {
-        const xmlLocal = fs.readFileSync(this.config['bibliography_locales_path'], 'utf-8')
-            , cslStyle = fs.readFileSync(this.config['csl_path'], 'utf-8');
+        const xmlLocal = fs.readFileSync(this.config.opts['bibliography_locales_path'], 'utf-8')
+            , cslStyle = fs.readFileSync(this.config.opts['csl_path'], 'utf-8');
 
         return new CSL.Engine({
             retrieveLocale: () => {
@@ -659,7 +661,14 @@ module.exports = class Graph {
         for (let i = 0; i < extractions.length; i++) {
             const extraction = extractions[i];
 
-            const quotes = Citr.parseSingle(extraction);
+            let quotes;
+
+            try {
+                quotes = Citr.parseSingle(extraction);
+            } catch (error) {
+                quotes = [];
+            }
+
             // there could be several quotes from one key
             for (const q of quotes) {
 

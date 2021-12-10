@@ -272,7 +272,6 @@ module.exports = class Config {
             'files_origin',
             'export_target',
             'csl_path',
-            'csl_path',
             'bibliography_path',
             'bibliography_locales_path',
             'custom_css_path'
@@ -379,5 +378,23 @@ module.exports = class Config {
         }
         
         return msg.join('\n');
+    }
+
+    /**
+     * If the config allow citeproc process
+     * @returns {boolean}
+     */
+
+    canCiteproc () {
+        if (
+            this.opts['csl_path'] !== '' &&
+            this.opts['bibliography_path'] !== '' &&
+            this.opts['bibliography_locales_path'] !== ''
+        )
+        {
+            return true;
+        }
+
+        return false;
     }
 }
