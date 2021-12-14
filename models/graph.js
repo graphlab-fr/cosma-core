@@ -732,7 +732,7 @@ module.exports = class Graph {
      */
 
     getUsedCitationReferences () {
-        if (this.config.canCiteproc() === false) { return null; }
+        if (this.params.includes('citeproc') === false || this.config.canCiteproc() === false) { return null; }
 
         const refs = Object.values(this.library).filter(item => item.used === true);
 
