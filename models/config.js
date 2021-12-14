@@ -383,13 +383,10 @@ module.exports = class Config {
      */
 
     canCiteproc () {
-        if (this.params.includes('citeproc') === false) {
-            return false; }
-
         if (
-            this.opts['bibliography'] === '' &&
-            this.opts['csl_locale'] === '' &&
-            this.opts['css_custom'] === ''
+            this.opts['csl'] === '' ||
+            this.opts['bibliography'] === '' ||
+            this.opts['csl_locale'] === ''
         )
         {
             return false;
@@ -404,9 +401,6 @@ module.exports = class Config {
      */
 
     canCssCustom () {
-        if (this.params.includes('css_custom') === false) {
-            return false; }
-
         if (this.opts['css_custom'] === '') {
             return false; }
 

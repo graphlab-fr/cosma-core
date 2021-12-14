@@ -180,7 +180,7 @@ module.exports = class Graph {
         if (this.config.opts.focus_max > 0) {
             this.files = this.files.map(this.evalConnectionLevels, this); }
 
-        if (this.config.canCiteproc() === true) {
+        if (this.params.includes('citeproc') === true && this.config.canCiteproc() === true) {
             this.library = {};
 
             let libraryFileContent = fs.readFileSync(this.config.opts['bibliography'], 'utf-8');
@@ -629,8 +629,8 @@ module.exports = class Graph {
      */
 
     getCSL () {
-        const xmlLocal = fs.readFileSync(this.config.opts['bibliography_locales_path'], 'utf-8')
-            , cslStyle = fs.readFileSync(this.config.opts['csl_path'], 'utf-8');
+        const xmlLocal = fs.readFileSync(this.config.opts['csl_locale'], 'utf-8')
+            , cslStyle = fs.readFileSync(this.config.opts['csl'], 'utf-8');
 
         return new CSL.Engine({
             retrieveLocale: () => {
@@ -732,7 +732,7 @@ module.exports = class Graph {
      */
 
     getUsedCitationReferences () {
-        if (this.params.includes('citeproc') === false) { return null; }
+        if (this.config.canCiteproc() === false) { return null; }
 
         const refs = Object.values(this.library).filter(item => item.used === true);
 

@@ -108,8 +108,8 @@ module.exports = class Template {
         });
 
         this.custom_css = null;
-        if (this.config.canCssCustom() === true) {
-            this.custom_css = fs.readFileSync(this.config.opts['custom_css_path'], 'utf-8'); }
+        if (graph.params.includes('css_custom') === true && this.config.canCssCustom() === true) {
+            this.custom_css = fs.readFileSync(this.config.opts['css_custom'], 'utf-8'); }
 
         nunjucks.configure(path.join(__dirname, '../'), { autoescape: true });
 
