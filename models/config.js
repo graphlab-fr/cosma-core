@@ -36,16 +36,15 @@ module.exports = class Config {
         attraction_vertical: 0,
         attraction_horizontal: 0,
         views: {},
-        metas_title: '',
-        metas_author: '',
-        metas_description: '',
-        metas_keywords: [],
+        title: '',
+        author: '',
+        description: '',
+        keywords: [],
         link_symbol: '',
-        csl_path: '',
-        bibliography_path: '',
-        bibliography_locales_path: '',
-        custom_css: false,
-        custom_css_path: '',
+        csl: '',
+        bibliography: '',
+        csl_locale: '',
+        css_custom: '',
         devtools: false,
         minify: false,
         lang: 'fr'
@@ -271,10 +270,9 @@ module.exports = class Config {
         this.report.paths = [
             'files_origin',
             'export_target',
-            'csl_path',
-            'bibliography_path',
-            'bibliography_locales_path',
-            'custom_css_path'
+            'bibliography',
+            'csl_locale',
+            'css_custom',
         ].filter((option) => {
             return Config.isInvalidPath(this.opts[option]);
         }).map((invalidPath) => {
@@ -298,7 +296,6 @@ module.exports = class Config {
             'history',
             'graph_highlight_on_hover',
             'graph_arrows',
-            'custom_css',
             'devtools',
             'minify'
         ].filter((option) => {
@@ -386,15 +383,33 @@ module.exports = class Config {
      */
 
     canCiteproc () {
+        if (this.params.includes('citeproc') === false) {
+            return false; }
+
         if (
-            this.opts['csl_path'] !== '' &&
-            this.opts['bibliography_path'] !== '' &&
-            this.opts['bibliography_locales_path'] !== ''
+            this.opts['bibliography'] === '' &&
+            this.opts['csl_locale'] === '' &&
+            this.opts['css_custom'] === ''
         )
         {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
+    }
+
+    /**
+     * If the config allow css_custom process
+     * @returns {boolean}
+     */
+
+    canCssCustom () {
+        if (this.params.includes('css_custom') === false) {
+            return false; }
+
+        if (this.opts['css_custom'] === '') {
+            return false; }
+
+        return true;
     }
 }

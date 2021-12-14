@@ -108,10 +108,8 @@ module.exports = class Template {
         });
 
         this.custom_css = null;
-
-        if (this.config.opts.custom_css === true && this.config.opts['custom_css_path'] !== '') {
-            this.custom_css = fs.readFileSync(this.config.opts['custom_css_path'], 'utf-8');
-        }
+        if (this.config.canCssCustom() === true) {
+            this.custom_css = fs.readFileSync(this.config.opts['custom_css_path'], 'utf-8'); }
 
         nunjucks.configure(path.join(__dirname, '../'), { autoescape: true });
 
@@ -162,10 +160,10 @@ module.exports = class Template {
             usedQuoteRef: graph.getUsedCitationReferences(),
 
             metadata: {
-                title: this.config.opts.metas_title,
-                author: this.config.opts.metas_author,
-                description: this.config.opts.metas_description,
-                keywords: this.config.opts.metas_keywords
+                title: this.config.opts.title,
+                author: this.config.opts.author,
+                description: this.config.opts.description,
+                keywords: this.config.opts.keywords
             },
 
             focusIsActive: !(this.config.opts.focus_max <= 0),

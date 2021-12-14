@@ -24,7 +24,12 @@ module.exports = class Graph {
      * @static
      */
 
-    static validParams = ['publish', 'citeproc', 'minify'];
+    static validParams = [
+        'publish',
+        'css_custom',
+        'citeproc',
+        'minify'
+    ];
 
     /**
      * Catch links from Markdown file content
@@ -140,8 +145,7 @@ module.exports = class Graph {
         });
 
         if (this.thereAreDuplicates()) {
-            
-        }
+            this.errors.push('Some record ids are duplicated. The graph is broke.'); }
 
         delete this.filesIdnName;
 
@@ -176,27 +180,20 @@ module.exports = class Graph {
         if (this.config.opts.focus_max > 0) {
             this.files = this.files.map(this.evalConnectionLevels, this); }
 
-        if (this.params.includes('citeproc')) {
+        if (this.config.canCiteproc() === true) {
+            this.library = {};
 
-            if (this.config.canCiteproc() === true) {
-                this.library = {};
-    
-                let libraryFileContent = fs.readFileSync(this.config.opts['bibliography_path'], 'utf-8');
-                libraryFileContent = JSON.parse(libraryFileContent);
-    
-                for (const item of libraryFileContent) {
-                    this.library[item.id] = item; }
-    
-                this.citeproc = this.getCSL();
-    
-                this.files = this.files.map(this.catchQuoteKeys, this);
-                this.files = this.files.map(this.convertQuoteKeys, this);
-                this.files = this.files.map(this.getBibliography, this);
-            } else {
-                this.params = this.params.filter(param => param !== 'citeproc');
-                this.errors.push('You cannot process quotes: parameters are missing. Please complete your preferences.');
-            }
+            let libraryFileContent = fs.readFileSync(this.config.opts['bibliography'], 'utf-8');
+            libraryFileContent = JSON.parse(libraryFileContent);
 
+            for (const item of libraryFileContent) {
+                this.library[item.id] = item; }
+
+            this.citeproc = this.getCSL();
+
+            this.files = this.files.map(this.catchQuoteKeys, this);
+            this.files = this.files.map(this.convertQuoteKeys, this);
+            this.files = this.files.map(this.getBibliography, this);
         }
 
         this.data = { // serialize for D3
