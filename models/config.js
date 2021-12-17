@@ -379,7 +379,7 @@ module.exports = class Config {
             .map((invalidOption) => {
                 return lang.config.errors[invalidOption][this.opts.lang];
             })
-            .join('');
+            .join(', ');
     }
 
     /**
