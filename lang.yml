@@ -249,3 +249,66 @@ right_panel:
     btn_download:
       fr: Télécharger
       en: Download
+
+config:
+  errors:
+    files_origin:
+      fr: Le chemin du répertoire est invalid
+      en: The file directory path is invalid
+    export_target:
+      fr: Le chemin d'export du cosmocope est invalide
+      en: The cosmocope directory path is invalid
+    csl:
+      fr: Le chemin vers le fichier de style bibliographique est invalide
+      en: The path to the bibliographic style file is invalid
+    bibliography:
+      fr: Le chemin vers le fichier de références bibliographiques est invalide
+      en: The path to the bibliographic reference file is invalid
+    csl_locale:
+      fr: Le chemin vers le fichier de format des notices bibliographiques est invalide
+      en: The path to the bibliographic record format file is invalid
+    css_custom:
+      fr: Le chemin vers le fichier de styles personnalisés est invalide
+      en: The path to the custom style file is invalid
+    focus_max:
+      fr: Le nombre de niveaux de focus est invalid
+      en: The number of focus levels is invalid
+    graph_text_size:
+      fr: La taille de texte des étiquettes du graphe est trop faible
+      en: The text size of the graph labels is too low
+    attraction_force:
+      fr: La force d'attraction des nœuds du graphe est trop faible
+      en: The force of attraction of the graph nodes is too low
+    attraction_distance_max:
+      fr: La force d'attraction maximale des nœuds du graphe est trop faible
+      en: The maximum attraction force of the graph nodes is too low
+    attraction_vertical:
+      fr: La force d'attraction verticale des nœuds du graphe est trop faible
+      en: The vertical attraction force of the graph nodes is too low
+    attraction_horizontal:
+      fr: La force d'attraction horizontale des nœuds du graphe est trop faible
+      en: The horizontal attraction force of the graph nodes is too low
+    history:
+      fr: La commande d'enregistrement de l'historique est invalide
+      en: The history recording command is invalid
+    graph_highlight_on_hover:
+      fr: La commande de surbrillance des nœuds au survoal est invalide
+      en: The command to highlight nodes on the flyover is invalid
+    graph_arrows:
+      fr: La commande de fléchage des liens est invalide
+      en: The link arrow command is invalid
+    devtools:
+      fr: La commande d'activation des outils de développement est invalide
+      en: The activation command for the devtools is invalid
+    minify:
+      fr: La commande de réduction de l'export est invalide
+      en: The export reduction command is invalid
+    record_types:
+      fr: La liste des types de fiches est invalide
+      en: The list of record types is invalid
+    link_types:
+      fr: La liste des types de liens est invalide
+      en: The list of link types is invalid
+    lang:
+      fr: La langue est inconnue
+      en: The language is unknown

@@ -8,6 +8,8 @@ const path = require('path')
     , fs = require('fs')
     , yml = require('js-yaml');
 
+const lang = require('./lang');
+
 /**
  * Class to manage the user config
  */
@@ -186,6 +188,18 @@ module.exports = class Config {
     constructor (opts = undefined) {
         const filePath = Config.getFilePath();
 
+        /**
+         * All options & their value from the config
+         * @type object
+         */
+        this.opts;
+
+        /**
+         * Path of the config JSON/YAML file
+         * @type string
+         */
+        this.path;
+
         if (fs.existsSync(filePath) === false) {
             this.opts = Config.base;
             this.save();
@@ -201,7 +215,12 @@ module.exports = class Config {
 
         this.opts = Object.assign(this.opts, opts);
 
-        this.report = {};
+        /**
+         * List of invalid fields
+         * @type array
+         */
+        this.report = [];
+
         this.verif();
     }
 
@@ -267,19 +286,20 @@ module.exports = class Config {
      */
 
     verif () {
-        this.report.paths = [
+        const paths = [
             'files_origin',
             'export_target',
+            'csl',
             'bibliography',
             'csl_locale',
             'css_custom',
         ].filter((option) => {
             return Config.isInvalidPath(this.opts[option]);
         }).map((invalidPath) => {
-            return `The path ${invalidPath} is invalid.`;
+            return invalidPath;
         });
 
-        this.report.numbers = [
+        const numbers = [
             'focus_max',
             'graph_text_size',
             'attraction_force',
@@ -289,10 +309,10 @@ module.exports = class Config {
         ].filter((option) => {
             return Config.isInvalidNumber(option, this.opts[option]);
         }).map((invalidNumber) => {
-            return `The value of ${invalidNumber} option is too low or invalid.`;
+            return invalidNumber;
         });
 
-        this.report.bools = [
+        const bools = [
             'history',
             'graph_highlight_on_hover',
             'graph_arrows',
@@ -301,23 +321,26 @@ module.exports = class Config {
         ].filter((option) => {
             return typeof this.opts[option] !== 'boolean';
         }).map((invalidBool) => {
-            return `The value of ${invalidBool} option is invalid.`;
+            return invalidBool;
         });
 
-        this.report.record_types = (
+        const record_types = (
             Config.isInvalidRecordTypes(this.opts['record_types']) ?
-            true : 'The records type list is invalid.'
+            null : 'record_types'
         );
 
-        this.report.link_types = (
+        const link_types = (
             Config.isInvalidLinkTypes(this.opts['link_types']) ?
-            true : 'The links type list is invalid.'
+            null : 'link_types'
         );
 
-        this.report.lang = (
+        const lang = (
             Config.isInvalidLangage(this.opts['lang']) ?
-            true : 'The langage option is not supported.'
+            null : 'lang'
         );
+
+        this.report = [...paths, ...numbers, ...bools, record_types, link_types, lang]
+            .filter(invalidOption => invalidOption !== null);
     }
 
     /**
@@ -352,29 +375,11 @@ module.exports = class Config {
      */
 
     writeReport () {
-        if (this.isValid() === true) {
-            return ''; }
-
-        let msg = [];
-
-        for (const key in this.report) {
-            if (this.report[key] === true) {
-                continue; }
-
-            if (typeof this.report[key] === 'string') {
-                msg.push(this.report[key]);
-                continue;
-            }
-
-            // we conclude that this.report[key] is array
-
-            if (this.report[key].length === 0) {
-                continue; }
-
-            msg = msg.concat(this.report[key]);
-        }
-        
-        return msg.join('\n');
+        return this.report
+            .map((invalidOption) => {
+                return lang.config.errors[invalidOption][this.opts.lang];
+            })
+            .join('');
     }
 
     /**
