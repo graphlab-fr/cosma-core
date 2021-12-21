@@ -27,9 +27,9 @@ module.exports = class Config {
         history: true,
         focus_max: 2,
         record_types: { undefined: '#858585' },
-        link_types: { undefined: { stroke: 'simple', color: '#cccccc' } },
+        link_types: { undefined: { stroke: 'simple', color: '#e1e1e1' } },
         graph_background_color: '#ffffff',
-        graph_highlight_color: '#ee2121',
+        graph_highlight_color: '#ff6a6a',
         graph_highlight_on_hover: true,
         graph_text_size: 10,
         graph_arrows: true,
@@ -54,7 +54,7 @@ module.exports = class Config {
 
     /**
      * Get the context of the process
-     * @returns {string} - 'electron' or 'other'
+     * @returns {'electron', 'other'} - 'electron' or 'other'
      * @static
      */
 
@@ -180,6 +180,52 @@ module.exports = class Config {
     }
 
     /**
+     * Get config options from the (config file) path
+     * @return {mixed} - Config option or undefined if errors
+     */
+
+    static get () {
+        const configFilePath = Config.getFilePath();
+
+        try {
+            let fileContent = fs.readFileSync(configFilePath, 'utf8');
+
+            switch (path.extname(configFilePath)) {
+                case '.json':
+                    fileContent = JSON.parse(fileContent);
+                    break;
+
+                case '.yml':
+                    fileContent = yml.safeLoad(fileContent);
+                    break;
+            }
+
+            return fileContent;
+        } catch (error) {
+            return undefined;
+        }
+    }
+
+    /**
+     * Config opts to overwrite the graph config for generate sample cosmoscope
+     * @return {object} - Config.opts for sample
+     */
+
+    static getSampleConfig () {
+        return Object.assign({}, Config.base, {
+            files_origin: path.join(__dirname, '../sample'),
+            record_types: {
+                documentation: '#147899',
+                important: '#aa0000'
+            },
+            attraction_force: 600,
+            attraction_distance_max: 800,
+            graph_text_size: 15,
+            title: 'Démo de Cosma'
+        })
+    }
+
+    /**
      * Create a user config.
      * @param {object} opts - Options to change from current config or the base config
      * @param {string} path - Path to config file (JSON or YAML)
@@ -194,18 +240,11 @@ module.exports = class Config {
          */
         this.opts;
 
-        /**
-         * Path of the config JSON/YAML file
-         * @type string
-         */
-        this.path;
-
         if (fs.existsSync(filePath) === false) {
             this.opts = Config.base;
             this.save();
         } else {
-            this.path = filePath;
-            this.opts = Object.assign(Config.base, this.get());
+            this.opts = Object.assign({}, Config.base, Config.get());
         }
 
         if (!this.opts) {
@@ -253,31 +292,6 @@ module.exports = class Config {
         } catch (error) {
             console.log(error);
             return false;
-        }
-    }
-
-    /**
-     * Get config options from the (config file) path
-     * @return {mixed} - Config option or undefined if errors
-     */
-
-    get () {
-        try {
-            let fileContent = fs.readFileSync(this.path, 'utf8');
-
-            switch (path.extname(this.path)) {
-                case '.json':
-                    fileContent = JSON.parse(fileContent);
-                    break;
-
-                case '.yml':
-                    fileContent = yml.safeLoad(fileContent);
-                    break;
-            }
-
-            return fileContent;
-        } catch (error) {
-            return undefined;
         }
     }
 

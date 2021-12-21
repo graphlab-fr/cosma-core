@@ -37,7 +37,7 @@
     <aside class="menu list-content-container">
 
         <header role="banner">
-            {% if publishMode === false %}
+            {% if uiContext === true %}
             <div id="menu-electron" hidden>
                 <button id="electron-record-new" title="Nouvelle fiche">{% include "icons/doc.plaintext.svg" %}</button>
                 <button id="electron-back" title="Précédent" class="icon-chevron">{% include "icons/chevron.left.svg" %}</button>
@@ -146,7 +146,9 @@
 
             <button onclick="resetView()">{{ translation.left_panel.menu_views.btn_reset[lang] }} (Alt + R)</button>
 
-            <button id="view-save" onclick="saveView()" hidden>{{ translation.left_panel.menu_views.btn_save[lang] }}</button>
+            {% if uiContext === true %}
+            <button id="view-save" onclick="saveView()">{{ translation.left_panel.menu_views.btn_save[lang] }}</button>
+            {% endif %}
 
             <span class="tooltip">?
                 <span class="tooltiptext">{{ translation.left_panel.menu_views.tooltip[lang] }}</span>

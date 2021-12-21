@@ -28,7 +28,9 @@ module.exports = class Graph {
         'publish',
         'css_custom',
         'citeproc',
-        'minify'
+        'minify',
+        'sample',
+        'empty'
     ];
 
     /**
@@ -130,6 +132,15 @@ module.exports = class Graph {
          * Contains all processed files and their content, data, stats
          * @type array
          */
+
+        this.files;
+
+        if (this.params.includes('sample')) {
+            this.config.opts.files_origin = undefined;
+        }
+        if (this.params.includes('empty')) {
+            this.config.opts = Config.getSampleConfig();
+        }
 
         this.files = this.getFilesNames();
         this.files = this.files.map(this.serializeFiles, this);

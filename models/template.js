@@ -85,7 +85,7 @@ module.exports = class Template {
      */
 
     constructor (graph) {
-        this.config = new Config();
+        this.config = new Config(graph.config.opts);
 
         this.types = {};
         this.tags = {};
@@ -167,6 +167,8 @@ module.exports = class Template {
             },
 
             focusIsActive: !(this.config.opts.focus_max <= 0),
+
+            uiContext: (Config.getContext() === 'electron' && graph.params.includes('publish') === false),
 
             // stats
 

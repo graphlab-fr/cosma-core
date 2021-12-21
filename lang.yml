@@ -250,6 +250,58 @@ right_panel:
       fr: Télécharger
       en: Download
 
+windows:
+  preferences:
+    title:
+      fr: Préférences
+      en: Preferences
+  linktype_add:
+    title:
+      fr: Ajouter type de lien
+      en: Add link type
+  linktype_update:
+    title:
+      fr: Modifier type de lien
+      en: Update link type
+  recordtype_add:
+    title:
+      fr: Ajouter type de fiche
+      en: Add record type
+  recordtype_update:
+    title:
+      fr: Modifier type de fiche
+      en: Update record type
+  view_add:
+    title:
+      fr: Ajouter une vue
+      en: Add view
+  view_update:
+    title:
+      fr: Modifier une vue
+      en: Update view
+
+dialog:
+  btn:
+    select:
+      fr: Sélectionner
+      en: Select
+  files_origin:
+    title:
+      fr: Sélectionner répertoire des fiches
+      en: Select records directory
+  bibliography:
+    title:
+      fr: Sélectionner fichier des références bibliographiques
+      en: Select bibliographic reference file
+  csl:
+    title:
+      fr: Sélectionner fichier de style bibliographique
+      en: Select bibliographic style file
+  csl_locale:
+    title:
+      fr: Sélectionner fichier de traduction bibliographique
+      en: Select bibliographic translation file
+
 config:
   errors:
     files_origin:

@@ -12,14 +12,14 @@
 	--indicator-background-color: #fafafa;
 	--lateral-background-color: white;
 	/* typography */
-	--sans: sans-serif;
-	--serif: "Georgia", serif;
-	--mono: "IBM Plex Mono", "Consolas", "Monaco", monospace;
+	--sans: system-ui, -apple-system, 'San Francisco', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
+	--serif: "Georgia", 'Garamond', 'Time New Roman', 'Times', serif;
+	--mono: 'Consolas', "Courrier New", 'Courrier', monospace;
 	--condensed: "Avenir Next Condensed", 'Arial Condensed', sans-serif;
 	/* global size */
 	font-size: 62.5%;
 	/* others */
-	--shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	--shadow: 0 1px 3px rgba(3, 2, 2, 0.12), 0 1px 2px rgba(0,0,0,0.24);
   --offblack: rgb(51, 51, 51);
   --offwhite: rgb(253, 252, 251);
   --gray: #d6d6d6;
@@ -694,5 +694,3 @@ article#credits h1.metas-title {
 	border-top: 1px solid var(--border-color);
 	border-bottom: 1px solid var(--border-color);
 }
-
-
