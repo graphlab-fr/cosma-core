@@ -136,10 +136,10 @@ module.exports = class Graph {
         this.files;
 
         if (this.params.includes('sample')) {
-            this.config.opts.files_origin = undefined;
+            this.config.opts = Config.getSampleConfig();
         }
         if (this.params.includes('empty')) {
-            this.config.opts = Config.getSampleConfig();
+            this.config.opts.files_origin = undefined;
         }
 
         this.files = this.getFilesNames();
