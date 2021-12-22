@@ -255,6 +255,10 @@ windows:
     title:
       fr: Préférences
       en: Preferences
+  record:
+    title:
+      fr: Nouvelle fiche
+      en: New record
   linktype_add:
     title:
       fr: Ajouter type de lien
@@ -285,6 +289,9 @@ dialog:
     select:
       fr: Sélectionner
       en: Select
+    cancel:
+      fr: Annuler
+      en: Cancel
   files_origin:
     title:
       fr: Sélectionner répertoire des fiches
@@ -301,6 +308,29 @@ dialog:
     title:
       fr: Sélectionner fichier de traduction bibliographique
       en: Select bibliographic translation file
+  files_origin_unknown:
+    title:
+      fr: Répertoire des fiches inconnu
+      en: Unknown record directory
+    message:
+      fr: Veuillez compléter vos préférences avant de créer des fiches
+      en: Please complete your preferences before creating records
+  record_overwriting:
+    title:
+      fr: Écrasement de fichier
+      en: File overwriting
+    message:
+      fr: Voulez-vous écraser le fichier $1 ? Il sera irrécupérable.
+      en: Please complete your preferences before creating records. It will be irretrievable.
+
+record:
+  errors:
+    title:
+      fr: Le titre n'est pas défini
+      en: The title is not defined
+    type:
+      fr: Ce type n'est pas enregistré
+      en: This type is not registered
 
 config:
   errors:

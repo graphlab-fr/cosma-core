@@ -9,6 +9,9 @@ const path = require('path')
     , yml = require('js-yaml')
     , moment = require('moment');
 
+const Config = require('./config')
+    , lang = require('./lang');
+
 module.exports = class Record {
 
     /**
@@ -24,41 +27,81 @@ module.exports = class Record {
     /**
      * Generate a record.
      * @param {string} title - Title of the record.
-     * @param {string} type - Type of the record, validate from the config.
-     * @param {array} tags - List of tags of the record.
+     * @param {string} type - Type of the record, registred into the config.
+     * @param {string} tags - List of tags of the record.
+     * @param {string} content - Text content if the record.
+     * @param {string} fileName - Text content (Markdown) if the record.
+     * @example new Record('My record', 'concept', 'tag 1,tag 2', 'Lorem *ipsum*', 'my-record');
      */
 
-    constructor (title, type, tags, config) {
+    constructor (title, type = 'undefined', tags = '', content = '', fileName = title) {
+        /**
+         * @type string
+         */
         this.title = title;
+        /**
+         * @type number
+         * @example 20210704100343
+         */
         this.id = Record.generateId();
+        /**
+         * @type string
+         * @default 'undefined'
+         * @example 20210704100343
+         */
         this.type = type;
+        /**
+         * @type array
+         */
+        this.tags
 
-        if (tags !== '') {
-            this.tags = tags.split(',');
-        }
+        if (tags !== '') { this.tags = tags.split(','); }
 
-        this.content = yml.safeDump(this);
-        this.content = '---\n' + this.content + '---\n\n';
+        /**
+         * @type string
+         */
+        this.ymlFrontMatter = yml.safeDump(this);
+        this.ymlFrontMatter = '---\n' + this.ymlFrontMatter + '---\n\n';
+        /**
+         * @type string
+         */
+        this.content = this.ymlFrontMatter + content;
+        /**
+         * from Config().opts
+         * @type object
+         */
+        this.config = new Config().opts;
+        /**
+         * Markdown file name, with its extension
+         * @type string
+         * @exemple 'my idea.md'
+         */
+        this.fileName = `${fileName}.md`
+        /**
+         * Path to Markdown file destination
+         * @type string
+         */
+        this.path = path.join(this.config.files_origin, `${fileName}.md`);
+        /**
+         * Invalid fields
+         * @type array
+         */
+        this.report = [];
 
-        this.config = config;
-
-        this.path = path.join(this.config.files_origin, `${title}.md`);
-
+        this.verif();
     }
 
     /**
      * Save the record to the config 'files_origin' path option
-     * @param {boolean} - If can overwrite
+     * @param {boolean} force - If can overwrite
      * @return {mixed} - True if the record is saved, false if fatal error
      * or the errors array
      */
 
     save (force = false) {
         try {
-            const errs = this.getErrors();
-
-            if (errs.length !== 0) {
-                return errs;
+            if (this.isValid() === false) {
+                return;
             }
 
             if (this.willOverwrite() === true && force === false) {
@@ -74,20 +117,41 @@ module.exports = class Record {
     }
 
     /**
-     * Verif if the record metas are correct
-     * @return {array} - Error message for each correction to do.
+     * Store invalid fields into this.report
      */
 
-    getErrors () {
-        let errs = [];
-
+    verif () {
         if (this.title === '') {
-            errs.push('Le titre n\'est pas défini.'); }
+            this.report.push('title'); }
 
         if (this.config.record_types[this.type] === undefined) {
-            errs.push('Ce type n\'est pas enregistré.'); }
+            this.report.push('type'); }
+    }
 
-        return errs;
+    /**
+     * Check 'this.report' array.
+     * If it is empty : TRUE
+     * @returns {boolean}
+     */
+
+    isValid () {
+        if (this.report.length === 0) {
+            return true; }
+
+        return false;
+    }
+
+    /**
+     * Tranform 'this.report' array (contains error list) to a string
+     * @returns {string}
+     */
+
+    writeReport () {
+        return this.report
+            .map((invalidField) => {
+                return lang.getFor(lang.i.record.errors[invalidField]);
+            })
+            .join(', ');
     }
 
     /**

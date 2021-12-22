@@ -8,8 +8,6 @@ const path = require('path')
     , fs = require('fs')
     , yml = require('js-yaml');
 
-const lang = require('./lang');
-
 /**
  * Class to manage the user config
  */
@@ -296,7 +294,7 @@ module.exports = class Config {
     }
 
     /**
-     * Verif if the config options are correct
+     * Store invalid fields into this.report
      */
 
     verif () {
@@ -389,9 +387,11 @@ module.exports = class Config {
      */
 
     writeReport () {
+        const lang = require('./lang');
+
         return this.report
             .map((invalidOption) => {
-                return lang.config.errors[invalidOption][this.opts.lang];
+                return lang.getFor(lang.i.config.errors[invalidOption]);
             })
             .join(', ');
     }
