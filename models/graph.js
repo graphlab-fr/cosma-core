@@ -10,7 +10,8 @@ const fs = require('fs')
     , CSL = require('citeproc')
     , Citr = require('@zettlr/citr');
 
-const Config = require('./config');
+const Config = require('./config')
+    , lang = require('./lang');
 
 /**
  * Class to get the Cosmoscope data
@@ -92,6 +93,64 @@ module.exports = class Graph {
     }
 
     /**
+     * For the arrays contains in this.report object
+     * make data object become strings
+     * @returns {array} - Object of strings array
+     */
+
+    static reportToSentences (report) {
+        report.ignored_files = report.ignored_files.map((data) => {
+            return lang.getWith(lang.i.graph_report['ignored_files'].item_message, [data.fileName, data.invalidMeta]);
+        }).join('\n-');
+
+        report.duplicates = report.duplicates.map((data) => {
+            return lang.getWith(lang.i.graph_report['duplicates'].item_message, [data.id, data.files.join(', ')]);
+        }).join('\n-');
+
+        report.type_record_change = report.type_record_change.map((data) => {
+            return lang.getWith(lang.i.graph_report['type_record_change'].item_message, [data.fileName]);
+        }).join('\n-');
+
+        report.type_link_change = report.type_link_change.map((data) => {
+            return lang.getWith(lang.i.graph_report['type_link_change'].item_message, [data.fileName]);
+        }).join('\n-');
+
+        report.link_invalid = report.link_invalid.map((data) => {
+            return lang.getWith(lang.i.graph_report['link_invalid'].item_message, [data.targetId, data.fileName]);
+        }).join('\n-');
+
+        report.link_no_target = report.link_no_target.map((data) => {
+            return lang.getWith(lang.i.graph_report['link_no_target'].item_message, [data.targetId, data.fileName]);
+        }).join('\n-');
+
+        report.quotes_without_reference = report.quotes_without_reference.map((data) => {
+            return lang.getWith(lang.i.graph_report['quotes_without_reference'].item_message, [data.quoteId, data.fileName]);
+        }).join('\n-');
+
+
+        return `${lang.getFor(lang.i.graph_report['ignored_files'].head_message)}
+${report.ignored_files}
+
+${lang.getFor(lang.i.graph_report['duplicates'].head_message)}
+${report.duplicates}
+
+${lang.getFor(lang.i.graph_report['type_record_change'].head_message)}
+${report.type_record_change}
+
+${lang.getFor(lang.i.graph_report['type_link_change'].head_message)}
+${report.type_link_change}
+
+${lang.getFor(lang.i.graph_report['link_invalid'].head_message)}
+${report.link_invalid}
+
+${lang.getFor(lang.i.graph_report['link_no_target'].head_message)}
+${report.link_no_target}
+
+${lang.getFor(lang.i.graph_report['quotes_without_reference'].head_message)}
+${report.quotes_without_reference}`
+    }
+
+    /**
      * Set params and lauch all the process on files from 'files_origin' dir
      * @param {array} params - Options from Graph.validParams to change the Cosmocope content
      */
@@ -114,17 +173,17 @@ module.exports = class Graph {
 
         this.report = {
             /** @exemple push object { fileName: '', invalidMeta: '' } */
-            ignoredFiles: [],
+            ignored_files: [],
             /** @exemple push object { fileName: '', type: '' } */
-            typeRecordChange: [],
+            type_record_change: [],
             /** @exemple push object { fileName: '', type: '' } */
-            typeLinkChange: [],
+            type_link_change: [],
             /** @exemple push object { fileName: '', targetId: '' } */
-            linkInvalid: [],
+            link_invalid: [],
             /** @exemple push object { fileName: '', targetId: '' } */
-            linkNoTarget: [],
+            link_no_target: [],
             /** @exemple push object { fileName: '', quoteId: '' } */
-            quotesWithoutReference: [],
+            quotes_without_reference: [],
             duplicates: []
         };
 
@@ -263,12 +322,12 @@ module.exports = class Graph {
 
     verifFile (file) {
         if (!file.metas.id || isNaN(file.metas.id) === true) {
-            this.report.ignoredFiles.push({ fileName: file.name, invalidMeta: 'id' });
+            this.report.ignored_files.push({ fileName: file.name, invalidMeta: 'id' });
             return false;
         }
 
         if (!file.metas.title) {
-            this.report.ignoredFiles.push({ fileName: file.name, invalidMeta: 'title' });
+            this.report.ignored_files.push({ fileName: file.name, invalidMeta: 'title' });
             return false;
         }
 
@@ -369,7 +428,7 @@ module.exports = class Graph {
 
     checkRecordType (file) {
         if (this.validTypes.records.includes(file.metas.type) === false) {
-            this.report.typeRecordChange.push({ fileName: file.name, type: file.metas.type });
+            this.report.type_record_change.push({ fileName: file.name, type: file.metas.type });
 
             file.metas.type = 'undefined';
 
@@ -393,12 +452,12 @@ module.exports = class Graph {
     checkLinkTargetnSource (file) {
         file.links = file.links.filter((link) => {
             if (isNaN(Number(link.target.id)) === true) {
-                this.report.linkInvalid.push({ targetId: link.target.id, fileName: file.name })
+                this.report.link_invalid.push({ targetId: link.target.id, fileName: file.name })
                 return false;
             }
 
             if (this.filesId.includes(link.target.id) === false) {
-                this.report.linkNoTarget.push({ targetId: link.target.id, fileName: file.name })
+                this.report.link_no_target.push({ targetId: link.target.id, fileName: file.name })
                 return false;
             }
 
@@ -407,7 +466,7 @@ module.exports = class Graph {
 
         file.links = file.links.map((link) => {
             if (this.validTypes.links.includes(link.type) === false) {
-                this.report.typeLinkChange.push({ fileName:file.name, type: link.type });
+                this.report.type_link_change.push({ fileName:file.name, type: link.type });
 
                 link.type = 'undefined';
             }
@@ -603,38 +662,6 @@ module.exports = class Graph {
     }
 
     /**
-     * For the arrays contains in this.report object
-     * make data object become strings
-     * @returns {array} - Object of strings array
-     */
-
-    reportToSentences () {
-        this.report.ignoredFiles = this.report.ignoredFiles.map((data) => {
-            return `Ignored file ${data.fileName} has no valid ${data.invalidMeta}`;
-        });
-        this.report.duplicates = this.report.duplicates.map((data) => {
-            return `Id ${data.id} is duplicated for files ${data.files.join(', ')}`;
-        });
-        this.report.typeRecordChange = this.report.typeRecordChange.map((data) => {
-            return `Unknow type "${data.type}" of file ${data.fileName}, changed to "undefined".`;
-        });
-        this.report.typeLinkChange = this.report.typeLinkChange.map((data) => {
-            return `Unknow link type "${data.type}" from file ${data.fileName}, changed to "undefined".`;
-        });
-        this.report.linkInvalid = this.report.linkInvalid.map((data) => {
-            return `Ignored link "${data.targetId}" from file ${data.fileName} is not a string of numbers.`;
-        });
-        this.report.linkNoTarget = this.report.linkNoTarget.map((data) => {
-            return `Ignored link "${data.targetId}" from file ${data.fileName} has no target.`;
-        });
-        this.report.quotesWithoutReference = this.report.quotesWithoutReference.map((data) => {
-            return `Quote key "${data.fileName}" from file ${data.quoteId} is not defined from the CSL library.`;
-        });
-
-        return this.report;
-    }
-
-    /**
      * Get 'citeproc' engine, from library (JSON CSL) and config files (XML, CSL)
      * @returns {CSL} - Engine for quote process
      */
@@ -682,7 +709,7 @@ module.exports = class Graph {
 
                 if (!this.library[q.id]) {
                     // if the quote id is not defined from library
-                    this.report.quotesWithoutReference.push({ fileName: file.name, quoteId: q.id })
+                    this.report.quotes_without_reference.push({ fileName: file.name, quoteId: q.id })
                     continue quoteExtraction;
                 }
 

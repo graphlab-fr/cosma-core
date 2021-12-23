@@ -263,7 +263,7 @@ module.exports = class Config {
 
     /**
      * Save the config options to the (file) path
-     * @return {mixed} - True if the config file is saved, false if fatal error
+     * @return {boolean} - True if the config file is saved, false if fatal error
      * or the errors array
      */
 
@@ -424,5 +424,14 @@ module.exports = class Config {
             return false; }
 
         return true;
+    }
+
+    /**
+     * If the config allow minify process
+     * @returns {boolean}
+     */
+
+    canMinify () {
+        return false; // Not actually
     }
 }

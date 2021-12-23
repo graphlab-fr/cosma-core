@@ -251,7 +251,7 @@ right_panel:
       en: Download
 
 windows:
-  preferences:
+  config:
     title:
       fr: Préférences
       en: Preferences
@@ -259,6 +259,18 @@ windows:
     title:
       fr: Nouvelle fiche
       en: New record
+  export:
+    title:
+      fr: Partager le cosmoscope
+      en: Share the cosmoscope
+  history:
+    title:
+      fr: Historique
+      en: History
+  report:
+    title:
+      fr: Rapport d'alertes
+      en: Warnings report
   linktype_add:
     title:
       fr: Ajouter type de lien
@@ -283,8 +295,15 @@ windows:
     title:
       fr: Modifier une vue
       en: Update view
+  history_update:
+    title:
+      fr: Modifier description de l'entrée
+      en: Update the record description
 
 dialog:
+  file_filter:
+    fr: Fichiers $1
+    en: $1 files
   btn:
     select:
       fr: Sélectionner
@@ -308,6 +327,14 @@ dialog:
     title:
       fr: Sélectionner fichier de traduction bibliographique
       en: Select bibliographic translation file
+  css_custom:
+    title:
+      fr: Sélectionner fichier de style CSS
+      en: Select CSS style file
+  export_target:
+    title:
+      fr: Sélectionner un répertoire d'export
+      en: Select an export directory
   files_origin_unknown:
     title:
       fr: Répertoire des fiches inconnu
@@ -394,3 +421,54 @@ config:
     lang:
       fr: La langue est inconnue
       en: The language is unknown
+
+graph_report:
+  ignored_files:
+    head_message:
+      fr: "Les fichiers suivants n'ont pas été intégrés au graphe :"
+      en: "The following files have not been included in the graph:"
+    item_message:
+      fr: "$1 : $2 invalide"
+      en: "$1 : $2 invalid"
+  duplicates:
+    head_message:
+      fr: "Des doublons d'identifiant on été trouvé dans les fichiers suivants :"
+      en: "Duplicate identifiers were found in the following files:"
+    item_message:
+      fr: "Id '$1' depuis $2"
+      en: "Id '$1' from $2"
+  type_record_change:
+    head_message:
+      fr: "The unknown type of the following records has been automatically changed to 'undefined':"
+      en: "The unknown type of the following records has been automatically changed to 'undefined':"
+    item_message:
+      fr: "$1"
+      en: "$1"
+  type_link_change:
+    head_message:
+      fr: "Le type de lien inconnu des fiches suivantes a été automatiquement modifié à 'undefined' :"
+      en: "The unknown link type of the following records was automatically changed to 'undefined':"
+    item_message:
+      fr: "$1"
+      en: "$1"
+  link_invalid:
+    head_message:
+      fr: "Les liens suivants sont invalides :"
+      en: "The following links are invalid:"
+    item_message:
+      fr: "'$1' depuis $2"
+      en: "'$1' from $2"
+  link_no_target:
+    head_message:
+      fr: "Les liens suivants n'ont pas de cible :"
+      en: "The following links do not have a target:"
+    item_message:
+      fr: "'$1' depuis $2"
+      en: "'$1' from $2"
+  quotes_without_reference:
+    head_message:
+      fr: "Les clés de citations suivantes n'ont pas de référence dans le répertoire bibliographique :"
+      en: "The following citation keys do not have a reference in the bibliographic directory:"
+    item_message:
+      fr: "'$1' depuis $2"
+      en: "'$1' from $2"
