@@ -179,7 +179,7 @@ module.exports = class Config {
 
     /**
      * Get config options from the (config file) path
-     * @return {mixed} - Config option or undefined if errors
+     * @return {object} - Config option or base config (Config.base) if errors
      */
 
     static get () {
@@ -200,7 +200,7 @@ module.exports = class Config {
 
             return fileContent;
         } catch (error) {
-            return undefined;
+            return Config.base;
         }
     }
 
