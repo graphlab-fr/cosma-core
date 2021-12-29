@@ -1,7 +1,7 @@
 graph:
   btn_zoom_reset:
-    fr: Recentrer
-    en: Recenter
+    fr: Réinitialiser
+    en: Reset
   btn_focus:
     fr: Focus
     en: Focus
@@ -10,8 +10,8 @@ left_panel:
 
     header:
       spatialization_bar_desc:
-        fr: spatialisation (Espace)
-        en: spatialization (Space)
+        fr: Spatialisation (Espace)
+        en: Spatialization (Space)
 
     input_search:
         placeholder:
@@ -39,17 +39,19 @@ left_panel:
         en: Views
       btn_reset:
         fr: Réinitialiser la vue actuelle
-        en: Reset the current view
+        en: Reset current view
       btn_save:
         fr: Sauvegarder la vue actuelle
-        en: Save the current view
+        en: Save current view
       tooltip:
         fr: >
           Enregistre l'état actuel de l'interface
-          (types et mots-clés actifs, mode focus) et crée un raccourci vers cet état dans le menu Vues.
+          (types et mots-clés actifs, mode focus)
+          et crée un raccourci vers cet état dans le menu Vues.
         en: >
-          Saves the current state of the interface
-          (active types and keywords, focus mode) and set a shortcut to this state in the Views menu.
+          Save the current state of the interface
+          (selected node, types and keywords, focus)
+          and creates a shortcut to this state in the Views section.
 
     menu_controls:
       title:
@@ -67,37 +69,35 @@ left_panel:
 
       form_attraction:
         title:
-          fr: Attraction
-          en: Attraction
+          fr: Forces
+          en: Forces
         help:
           fr: >
-            Contrôlez la répartition des nœuds dans l’espace, la force de répulsion,
-            la distance maximum sur laquelle ils se déploient et la pression sur les
-            axes verticaux et horizontaux.
+            Contrôlez la répartition des nœuds dans l’espace
+            en modifiant la simulation des forces.
           en: >
-            Check the distribution of the nodes in space, the repulsion force, the
-            maximum distance they extend and the pressure on the vertical and
-            horizontal axes. vertical and horizontal axes.
+            Tweak the force-layout simulation to control
+            the way nodes are displayed.
         input_force:
-          fr: force
-          en: force
+          fr: répulsion
+          en: repulsion
         input_distance_max:
           fr: distance max
-          en: distance max
+          en: max distance
         input_vertical:
-          fr: verticale
-          en: vertical
+          fr: attraction verticale
+          en: vertical attraction
         input_horizontal:
-          fr: horizontale
-          en: horizontal
+          fr: attraction horizontale
+          en: horizontal attraction
 
       form_text:
         title:
-          fr: Texte
-          en: Text
+          fr: Étiquettes
+          en: Labels
         input_size:
-          fr: taille
-          en: size
+          fr: taille du texte
+          en: font size
 
     footer:
       btn_data:
@@ -111,7 +111,7 @@ left_panel:
         en: About
       publish_mark:
         fr: Fabriqué avec Cosma –
-        en: Build with Cosma –
+        en: Made with Cosma –
 
 right_panel:
 
@@ -120,15 +120,15 @@ right_panel:
     header:
       btn_close:
         fr: Fermer (Echap)
-        en: Close (Escap)
+        en: Close (Escape)
 
     metadata:
       id:
         fr: id
         en: id
       last_edit:
-        fr: dernière édition
-        en: last edit
+        fr: dernière modification
+        en: last modified
       type:
         fr: type
         en: type
@@ -142,7 +142,7 @@ right_panel:
 
     footer:
       list_links:
-        fr: lien
+        fr: liens
         en: links
       list_backlinks:
         fr: rétroliens
@@ -154,8 +154,8 @@ right_panel:
       en: Help
 
     documentation_link_href:
-      fr: https://graphlab-fr.github.io/cosma/fr.html#utilisation-du-cosmoscope
-      en: https://graphlab-fr.github.io/cosma/en.html#using-the-cosmoscope
+      fr: https://cosma.graphlab.fr/docs/
+      en: https://cosma.graphlab.fr/docs/
     documentation_link_placeholder: 
       fr: Cliquez ici pour accéder à la documentation de Cosma
       en: Click here to access Cosma's documentation
@@ -170,21 +170,21 @@ right_panel:
           en: Space
         effect:
           fr: Réactiver l'algorithme de dessin du graphe
-          en: Reactivate the graph drawing algorithm
+          en: Re-run the force-layout algorithm
       s:
         key:
           fr: S
           en: S
         effect:
           fr: Déplacer le curseur dans le champ Recherche
-          en: Move the cursor to the Search field
+          en: Move the cursor to Search
       alt_click:
         key:
           fr: Alt + clic
           en: Alt + click
         effect:
           fr: (sur un type de fiche) Désélectionner les autres types
-          en: (on one type of record) Deselect other types
+          en: (on a record type) Deselect other types
       r:
         key:
           fr: R
@@ -197,15 +197,15 @@ right_panel:
           fr: Alt + R
           en: Alt + R
         effect:
-          fr: Réinitialiser tous les paramètres visuels
-          en: Reset all visual settings
+          fr: Réinitialiser l'affichage
+          en: Reset the display
       c:
         key:
           fr: C
           en: C
         effect:
-          fr: Zoomer sur le nœud de la fiche active
-          en: Zoom in on the node of the active record
+          fr: Zoomer et centrer sur le nœud sélectionné
+          en: Zoom in on the selected node
       f:
         key:
           fr: F
@@ -216,10 +216,10 @@ right_panel:
       escap:
         key:
           fr: Echap
-          en: Escap
+          en: Escape
         effect:
-          fr: Fermer la fiche
-          en: Close the record
+          fr: Fermer la fiche sélectionnée
+          en: Close the active record
 
   credits:
     version:
@@ -230,22 +230,25 @@ right_panel:
       en: License
     ANR_program:
       fr: Programme ANR
-      en: ANR schedule
+      en: ANR research programme
 
   bibliography_data:
     title:
       fr: Données bibliographiques
-      en: Bibliography data
+      en: Bibliographical data
     description:
       fr: >
         Les données ci-dessous correspondent aux références citées dans ce cosmoscope.
-        Elles sont en Citation Style Language, exprimé en JSON. Ce format est
-        reconnu notamment par Zotero, Mendeley et Papers. Cliquez sur le bouton
-        ci-dessous pour télécharger les données.
+        Elles sont structurées conformément au standard Citation Style Language et exprimées en JSON.
+        Ce format est reconnu par la plupart des logiciels de gestion bibliographique,
+        comme Zotero, Mendeley ou Papers.
+        Cliquez sur le bouton ci-dessous pour télécharger les données.
       en: >
-        The data below correspond to the references cited in this cosmoscope. They
-        are in Citation Style Language, expressed in JSON. This format is recognised
-        by Zotero, Mendeley and Papers. Click on the button below to download the data.
+        The data below correspond to the references cited in this cosmoscope.
+        They are structured according to the Citation Style Language standard and expressed in JSON.
+        This format is recognized by most popular bibliographic management software,
+        such as Zotero, Mendeley or Papers.
+        Click on the button below to download the data.
     btn_download:
       fr: Télécharger
       en: Download
@@ -262,7 +265,7 @@ windows:
   export:
     title:
       fr: Partager le cosmoscope
-      en: Share the cosmoscope
+      en: Share cosmoscope
   history:
     title:
       fr: Historique
@@ -270,35 +273,35 @@ windows:
   report:
     title:
       fr: Rapport d'alertes
-      en: Warnings report
+      en: Warnings log
   linktype_add:
     title:
-      fr: Ajouter type de lien
+      fr: Ajouter un type de lien
       en: Add link type
   linktype_update:
     title:
-      fr: Modifier type de lien
-      en: Update link type
+      fr: Modifier le type de lien
+      en: Modify link type
   recordtype_add:
     title:
-      fr: Ajouter type de fiche
+      fr: Ajouter un type de fiche
       en: Add record type
   recordtype_update:
     title:
-      fr: Modifier type de fiche
-      en: Update record type
+      fr: Modifier le type de fiche
+      en: Modify record type
   view_add:
     title:
       fr: Ajouter une vue
       en: Add view
   view_update:
     title:
-      fr: Modifier une vue
-      en: Update view
+      fr: Renommer la vue
+      en: Rename view
   history_update:
     title:
-      fr: Modifier description de l'entrée
-      en: Update the record description
+      fr: Modifier la description de l'entrée
+      en: Edit the entry description
 
 dialog:
   file_filter:
@@ -313,141 +316,141 @@ dialog:
       en: Cancel
   files_origin:
     title:
-      fr: Sélectionner répertoire des fiches
-      en: Select records directory
+      fr: Répertoire des fiches
+      en: Records directory
   bibliography:
     title:
-      fr: Sélectionner fichier des références bibliographiques
-      en: Select bibliographic reference file
+      fr: Données bibliographiques (JSON)
+      en: Bibliographical data (JSON)
   csl:
     title:
-      fr: Sélectionner fichier de style bibliographique
-      en: Select bibliographic style file
+      fr: Style bibliographique (CSL)
+      en: Bibliographical style (CSL)
   csl_locale:
     title:
-      fr: Sélectionner fichier de traduction bibliographique
-      en: Select bibliographic translation file
+      fr: Localisation bibliographique (XML)
+      en: Bibliographical locale (XML)
   css_custom:
     title:
-      fr: Sélectionner fichier de style CSS
-      en: Select CSS style file
+      fr: CSS personnalisée
+      en: Custom CSS
   export_target:
     title:
-      fr: Sélectionner un répertoire d'export
-      en: Select an export directory
+      fr: Répertoire d'export
+      en: Export directory
   files_origin_unknown:
     title:
-      fr: Répertoire des fiches inconnu
-      en: Unknown record directory
+      fr: Répertoire des fiches manquant
+      en: Missing records directory
     message:
-      fr: Veuillez compléter vos préférences avant de créer des fiches
-      en: Please complete your preferences before creating records
+      fr: Veuillez indiquer un répertoire de fiches dans la configuration
+      en: Please set the records directory in the configuration
   record_overwriting:
     title:
-      fr: Écrasement de fichier
-      en: File overwriting
+      fr: Un fichier existe déjà avec ce nom
+      en: This file name is already taken
     message:
-      fr: Voulez-vous écraser le fichier $1 ? Il sera irrécupérable.
-      en: Please complete your preferences before creating records. It will be irretrievable.
+      fr: Voulez-vous écraser le fichier $1 ? Cette opération est irréversible.
+      en: Do you wish to overwrite $1 ? This operation cannot be reversed.
 
 record:
   errors:
     title:
-      fr: Le titre n'est pas défini
-      en: The title is not defined
+      fr: Titre manquant
+      en: Missing title
     type:
-      fr: Ce type n'est pas enregistré
-      en: This type is not registered
+      fr: Type inconnu
+      en: Unknown type
 
 config:
   errors:
     files_origin:
-      fr: Le chemin du répertoire est invalid
-      en: The file directory path is invalid
+      fr: Le chemin vers le répertoire de fiches sélectionné est invalide
+      en: Invalid records directory path
     export_target:
-      fr: Le chemin d'export du cosmocope est invalide
-      en: The cosmocope directory path is invalid
-    csl:
-      fr: Le chemin vers le fichier de style bibliographique est invalide
-      en: The path to the bibliographic style file is invalid
+      fr: Le chemin vers le répertoire d'export du cosmocope est invalide
+      en: Invalid export directory path
     bibliography:
       fr: Le chemin vers le fichier de références bibliographiques est invalide
-      en: The path to the bibliographic reference file is invalid
+      en: Invalid bibliographical data file path
+    csl:
+      fr: Le chemin vers le fichier de style bibliographique est invalide
+      en: Invalid bibliographical style file path
     csl_locale:
-      fr: Le chemin vers le fichier de format des notices bibliographiques est invalide
-      en: The path to the bibliographic record format file is invalid
+      fr: Le chemin vers le fichier de localisation bibliographique est invalide
+      en: Invalid bibliographical locale file path
     css_custom:
-      fr: Le chemin vers le fichier de styles personnalisés est invalide
-      en: The path to the custom style file is invalid
+      fr: Le chemin vers la CSS personnalisée est invalide
+      en: Invalid custom CSS file path
     focus_max:
-      fr: Le nombre de niveaux de focus est invalid
-      en: The number of focus levels is invalid
+      fr: Le niveau maximum de focus est invalide
+      en: Invalid maximum focus level
     graph_text_size:
-      fr: La taille de texte des étiquettes du graphe est trop faible
-      en: The text size of the graph labels is too low
+      fr: La taille du texte des étiquettes doit être supérieure ou égale à 5 
+      en: Labels font size must be 5 or higher
     attraction_force:
-      fr: La force d'attraction des nœuds du graphe est trop faible
-      en: The force of attraction of the graph nodes is too low
+      fr: La force de répulsion doit être supérieure ou égale à 50
+      en: Repulsion force must be 50 or higher
     attraction_distance_max:
-      fr: La force d'attraction maximale des nœuds du graphe est trop faible
-      en: The maximum attraction force of the graph nodes is too low
+      fr: La distance maximum doit être supérieure ou égale à …
+      en: Maximum distance between nodes must be … or higher
     attraction_vertical:
-      fr: La force d'attraction verticale des nœuds du graphe est trop faible
-      en: The vertical attraction force of the graph nodes is too low
+      fr: La force d'attraction verticale doit être supérieure ou égale à …
+      en: Vertical attraction must be … or higher
     attraction_horizontal:
-      fr: La force d'attraction horizontale des nœuds du graphe est trop faible
-      en: The horizontal attraction force of the graph nodes is too low
+      fr: La force d'attraction verticale doit être supérieure ou égale à …
+      en: Horizontal attraction must be … or higher
     history:
       fr: La commande d'enregistrement de l'historique est invalide
-      en: The history recording command is invalid
+      en: Invalid history recording command
     graph_highlight_on_hover:
-      fr: La commande de surbrillance des nœuds au survoal est invalide
-      en: The command to highlight nodes on the flyover is invalid
+      fr: La commande de surbrillance des nœuds au survol est invalide
+      en: Invalid command to highlight nodes on the flyover
     graph_arrows:
       fr: La commande de fléchage des liens est invalide
-      en: The link arrow command is invalid
+      en: Invalid link arrow command
     devtools:
       fr: La commande d'activation des outils de développement est invalide
-      en: The activation command for the devtools is invalid
+      en: Invalid devtools activation command
     minify:
-      fr: La commande de réduction de l'export est invalide
-      en: The export reduction command is invalid
+      fr: La commande de compression de l'export est invalide
+      en: Invalid export minification command
     record_types:
       fr: La liste des types de fiches est invalide
-      en: The list of record types is invalid
+      en: Invalid record types list
     link_types:
       fr: La liste des types de liens est invalide
-      en: The list of link types is invalid
+      en: Invalid link types list
     lang:
-      fr: La langue est inconnue
-      en: The language is unknown
+      fr: La langue n'est pas configurée
+      en: Language not set
 
 graph_report:
   ignored_files:
     head_message:
-      fr: "Les fichiers suivants n'ont pas été intégrés au graphe :"
-      en: "The following files have not been included in the graph:"
+      fr: "Les fichiers suivants ont été ignorés :"
+      en: "The following files have been ignored:"
     item_message:
       fr: "$1 : $2 invalide"
       en: "$1 : $2 invalid"
   duplicates:
     head_message:
-      fr: "Des doublons d'identifiant on été trouvé dans les fichiers suivants :"
+      fr: "Des doublons d'identifiants ont été trouvés dans les fichiers suivants :"
       en: "Duplicate identifiers were found in the following files:"
     item_message:
-      fr: "Id '$1' depuis $2"
-      en: "Id '$1' from $2"
+      fr: "id '$1' depuis $2"
+      en: "id '$1' from $2"
   type_record_change:
     head_message:
-      fr: "The unknown type of the following records has been automatically changed to 'undefined':"
-      en: "The unknown type of the following records has been automatically changed to 'undefined':"
+      fr: "Les fichiers suivants ont un type de fiche inconnu qui a été interprété comme 'undefined':"
+      en: "The following records' type is unknown and has been interpreted as 'undefined':"
     item_message:
       fr: "$1"
       en: "$1"
   type_link_change:
     head_message:
-      fr: "Le type de lien inconnu des fiches suivantes a été automatiquement modifié à 'undefined' :"
-      en: "The unknown link type of the following records was automatically changed to 'undefined':"
+      fr: "Les fichiers suivants comportent un type de lien inconnu qui a été interprété comme 'undefined':"
+      en: "The following records contain an unknown link type which has been interpreted as 'undefined':"
     item_message:
       fr: "$1"
       en: "$1"
@@ -467,8 +470,8 @@ graph_report:
       en: "'$1' from $2"
   quotes_without_reference:
     head_message:
-      fr: "Les clés de citations suivantes n'ont pas de référence dans le répertoire bibliographique :"
-      en: "The following citation keys do not have a reference in the bibliographic directory:"
+      fr: "Les clés de citations suivantes n'ont pas été trouvées dans les données bibliographiques :"
+      en: "The following citation keys are not present in the bibliographical data:"
     item_message:
       fr: "'$1' depuis $2"
       en: "'$1' from $2"
