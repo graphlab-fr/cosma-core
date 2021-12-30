@@ -386,20 +386,20 @@ config:
       fr: Le niveau maximum de focus est invalide
       en: Invalid maximum focus level
     graph_text_size:
-      fr: La taille du texte des étiquettes doit être supérieure ou égale à 5 
-      en: Labels font size must be 5 or higher
+      fr: La taille du texte des étiquettes doit être supérieure ou égale à $1 
+      en: Labels font size must be $1 or higher
     attraction_force:
-      fr: La force de répulsion doit être supérieure ou égale à 50
-      en: Repulsion force must be 50 or higher
+      fr: La force de répulsion doit être supérieure ou égale à $1
+      en: Repulsion force must be $1 or higher
     attraction_distance_max:
-      fr: La distance maximum doit être supérieure ou égale à …
-      en: Maximum distance between nodes must be … or higher
+      fr: La distance maximum doit être supérieure ou égale à $1
+      en: Maximum distance between nodes must be $1 or higher
     attraction_vertical:
-      fr: La force d'attraction verticale doit être supérieure ou égale à …
-      en: Vertical attraction must be … or higher
+      fr: La force d'attraction verticale doit être supérieure ou égale à $1
+      en: Vertical attraction must be $1 or higher
     attraction_horizontal:
-      fr: La force d'attraction verticale doit être supérieure ou égale à …
-      en: Horizontal attraction must be … or higher
+      fr: La force d'attraction verticale doit être supérieure ou égale à $1
+      en: Horizontal attraction must be $1 or higher
     history:
       fr: La commande d'enregistrement de l'historique est invalide
       en: Invalid history recording command
