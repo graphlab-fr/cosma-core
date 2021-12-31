@@ -475,3 +475,122 @@ graph_report:
     item_message:
       fr: "'$1' depuis $2"
       en: "'$1' from $2"
+
+app_menu:
+  about:
+    fr: À propos
+    en: About
+  preferences:
+    fr: Préférences…
+    en: Preferences…
+  services:
+    fr: Services
+    en: Services
+  hide:
+    fr: Masquer Cosma
+    en: Hide Cosma
+  hide_others:
+    fr: Masquer les autres
+    en: Hide others
+  unhide:
+    fr: Tout afficher
+    en: Show all
+  quit:
+    fr: Quitter Cosma
+    en: Quit Cosma
+  file:
+    fr: Fichier
+    en: File
+  new_cosmoscope:
+    fr: Nouveau cosmoscope
+    en: New cosmoscope
+  new_cosmoscope_quotes:
+    fr: Nouveau cosmoscope avec citations
+    en: New cosmoscope with quotes
+  new_record:
+    fr: Nouvelle fiche…
+    en: New record…
+  share:
+    fr: Partager…
+    en: Share…
+  print_record:
+    fr: Imprimer la fiche…
+    en: Print record
+  history:
+    fr: Historique…
+    en: History…
+  edit:
+    fr: Éditer
+    en: Edit
+  undo:
+    fr: Annuler
+    en: Undo
+  redo:
+    fr: Rétablir
+    en: Redo
+  cut:
+    fr: Couper
+    en: Cut
+  copy:
+    fr: Copier
+    en: Copy
+  paste:
+    fr: Coller
+    en: Paste
+  delete:
+    fr: Supprimer
+    en: Delete
+  select_all:
+    fr: Tout sélectionner
+    en: Select all
+  speech:
+    fr: Parole
+    en: Speech
+  start_speaking:
+    fr: Commencer la lecture
+    en: Start speaking
+  stop_speaking:
+    fr: Arrêter la lecture
+    en: Stop speaking
+  view:
+    fr: Affichage
+    en: View
+  record_back:
+    fr: Fiche précédante
+    en: Previous record
+  record_forward:
+    fr: Fiche suivante
+    en: Next record
+  reload:
+    fr: Recharger
+    en: Reload
+  reset_zoom:
+    fr: Réinitialiser le zoom
+    en: Reset zoom
+  zoom_in:
+    fr: Zommer
+    en: Zoom in
+  zoom_out:
+    fr: Dezommer
+    en: Zoom out
+  fullscreen:
+    fr: Plein écran
+    en: Full screen
+  dev_tools:
+    fr: Outils de développement
+    en: Dev tools
+  window:
+    fr: Fenêtre
+    en: Window
+  close:
+    fr: Fermer
+    en: Close
+  help:
+    fr: Aide
+    en: Help
+  manual:
+    fr: Documentation
+    en: Manual
+  shortcuts:
+    fr: Raccourcis clavier
+    en: Shortcuts

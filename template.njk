@@ -230,11 +230,11 @@
             </button>
             {% endif %}
 
-            <button onclick="openRecord('help', false)">
+            <button class="btn-help" onclick="openRecord('help', false)">
                 {{ translation.left_panel.footer.btn_help[lang] }}
             </button>
 
-            <button class="about" onclick="openRecord('credits', false)">
+            <button class="btn-about" onclick="openRecord('credits', false)">
                 {% if publishMode %}
                     {{ translation.left_panel.footer.publish_mark[lang] + " " + translation.left_panel.footer.btn_about[lang] }}
                 {% else %}
