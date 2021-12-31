@@ -99,55 +99,93 @@ module.exports = class Graph {
      */
 
     static reportToSentences (report) {
-        report.ignored_files = report.ignored_files.map((data) => {
-            return lang.getWith(lang.i.graph_report['ignored_files'].item_message, [data.fileName, data.invalidMeta]);
-        }).join('\n-');
+        let msg = [];
 
-        report.duplicates = report.duplicates.map((data) => {
-            return lang.getWith(lang.i.graph_report['duplicates'].item_message, [data.id, data.files.join(', ')]);
-        }).join('\n-');
+        if (report.ignored_files) {
+            msg.push(
+                lang.getFor(lang.i.graph_report['ignored_files'].head_message)
+            );
 
-        report.type_record_change = report.type_record_change.map((data) => {
-            return lang.getWith(lang.i.graph_report['type_record_change'].item_message, [data.fileName]);
-        }).join('\n-');
+            msg.push(
+                report.ignored_files.map((data) => {
+                    return lang.getWith(lang.i.graph_report['ignored_files'].item_message, [data.fileName, data.invalidMeta]);
+                }).join('\n')
+            );
+        } 
 
-        report.type_link_change = report.type_link_change.map((data) => {
-            return lang.getWith(lang.i.graph_report['type_link_change'].item_message, [data.fileName]);
-        }).join('\n-');
+        if (report.duplicates) {
+            msg.push(
+                lang.getFor(lang.i.graph_report['duplicates'].head_message)
+            );
 
-        report.link_invalid = report.link_invalid.map((data) => {
-            return lang.getWith(lang.i.graph_report['link_invalid'].item_message, [data.targetId, data.fileName]);
-        }).join('\n-');
+            msg.push(
+                report.duplicates.map((data) => {
+                    return lang.getWith(lang.i.graph_report['duplicates'].item_message, [data.id, data.files.join(', ')]);
+                }).join('\n')
+            );
+        }
 
-        report.link_no_target = report.link_no_target.map((data) => {
-            return lang.getWith(lang.i.graph_report['link_no_target'].item_message, [data.targetId, data.fileName]);
-        }).join('\n-');
+        if (report.type_record_change) {
+            msg.push(
+                lang.getFor(lang.i.graph_report['type_record_change'].head_message)
+            );
 
-        report.quotes_without_reference = report.quotes_without_reference.map((data) => {
-            return lang.getWith(lang.i.graph_report['quotes_without_reference'].item_message, [data.quoteId, data.fileName]);
-        }).join('\n-');
+            msg.push(
+                report.type_record_change.map((data) => {
+                    return lang.getWith(lang.i.graph_report['type_record_change'].item_message, [data.fileName]);
+                }).join('\n')
+            );
+        }
 
+        if (report.type_link_change) {
+            msg.push(
+                lang.getFor(lang.i.graph_report['type_link_change'].head_message)
+            );
 
-        return `${lang.getFor(lang.i.graph_report['ignored_files'].head_message)}
-${report.ignored_files}
+            msg.push(
+                report.type_link_change.map((data) => {
+                    return lang.getWith(lang.i.graph_report['type_link_change'].item_message, [data.fileName]);
+                }).join('\n')
+            );
+        }
 
-${lang.getFor(lang.i.graph_report['duplicates'].head_message)}
-${report.duplicates}
+        if (report.link_invalid) {
+            msg.push(
+                lang.getFor(lang.i.graph_report['link_invalid'].head_message)
+            );
 
-${lang.getFor(lang.i.graph_report['type_record_change'].head_message)}
-${report.type_record_change}
+            msg.push(
+                report.link_invalid.map((data) => {
+                    return lang.getWith(lang.i.graph_report['link_invalid'].item_message, [data.targetId, data.fileName]);
+                }).join('\n')
+            );
+        }
 
-${lang.getFor(lang.i.graph_report['type_link_change'].head_message)}
-${report.type_link_change}
+        if (report.link_no_target) {
+            msg.push(
+                lang.getFor(lang.i.graph_report['link_no_target'].head_message)
+            );
 
-${lang.getFor(lang.i.graph_report['link_invalid'].head_message)}
-${report.link_invalid}
+            msg.push(
+                report.link_no_target.map((data) => {
+                    return lang.getWith(lang.i.graph_report['link_no_target'].item_message, [data.targetId, data.fileName]);
+                }).join('\n')
+            );
+        }
 
-${lang.getFor(lang.i.graph_report['link_no_target'].head_message)}
-${report.link_no_target}
+        if (report.quotes_without_reference) {
+            msg.push(
+                lang.getFor(lang.i.graph_report['quotes_without_reference'].head_message)
+            );
 
-${lang.getFor(lang.i.graph_report['quotes_without_reference'].head_message)}
-${report.quotes_without_reference}`
+            msg.push(
+                report.quotes_without_reference.map((data) => {
+                    return lang.getWith(lang.i.graph_report['quotes_without_reference'].item_message, [data.quoteId, data.fileName]);
+                }).join('\n')
+            );
+        }
+
+        return msg.join('\n\n');
     }
 
     /**
