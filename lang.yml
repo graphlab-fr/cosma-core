@@ -506,7 +506,7 @@ app_menu:
     en: New cosmoscope
   new_cosmoscope_quotes:
     fr: Nouveau cosmoscope avec citations
-    en: New cosmoscope with quotes
+    en: New cosmoscope with citations
   new_record:
     fr: Nouvelle fiche…
     en: New record…
@@ -515,7 +515,7 @@ app_menu:
     en: Share…
   print_record:
     fr: Imprimer la fiche…
-    en: Print record
+    en: Print record…
   history:
     fr: Historique…
     en: History…
@@ -556,7 +556,7 @@ app_menu:
     fr: Affichage
     en: View
   record_back:
-    fr: Fiche précédante
+    fr: Fiche précédente
     en: Previous record
   record_forward:
     fr: Fiche suivante
@@ -568,17 +568,17 @@ app_menu:
     fr: Réinitialiser le zoom
     en: Reset zoom
   zoom_in:
-    fr: Zommer
+    fr: Augmenter le zoom
     en: Zoom in
   zoom_out:
-    fr: Dezommer
+    fr: Réduire le zoom
     en: Zoom out
   fullscreen:
     fr: Plein écran
     en: Full screen
   dev_tools:
     fr: Outils de développement
-    en: Dev tools
+    en: Developer tools
   window:
     fr: Fenêtre
     en: Window
