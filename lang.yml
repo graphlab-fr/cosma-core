@@ -180,8 +180,8 @@ right_panel:
           en: Move the cursor to Search
       alt_click:
         key:
-          fr: Alt + clic
-          en: Alt + click
+          fr: Alt + clic
+          en: Alt + click
         effect:
           fr: (sur un type de fiche) Désélectionner les autres types
           en: (on a record type) Deselect other types
@@ -314,6 +314,9 @@ dialog:
     cancel:
       fr: Annuler
       en: Cancel
+    ok:
+      fr: Ok
+      en: Ok
   files_origin:
     title:
       fr: Répertoire des fiches
@@ -352,6 +355,10 @@ dialog:
     message:
       fr: Voulez-vous écraser le fichier $1 ? Cette opération est irréversible.
       en: Do you wish to overwrite $1 ? This operation cannot be reversed.
+  delete_all:
+    message:
+      fr: Voulez-vous vraiment tout supprimer ?
+      en: Do you really want to delete everything?
 
 record:
   errors:
@@ -424,6 +431,10 @@ config:
     lang:
       fr: La langue n'est pas configurée
       en: Language not set
+  info:
+    lang:
+      fr: Le changement de langue sera effectif après un redémarrage de l'application
+      en: The change of language will be effective after a restart of the app
 
 graph_report:
   ignored_files:
