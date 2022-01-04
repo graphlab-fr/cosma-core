@@ -380,46 +380,124 @@ windows:
     title:
       fr: Nouvelle fiche
       en: New record
+    fields:
+      title:
+        fr: Titre
+        en: Title
+      type:
+        fr: Type
+        en: Type
+      keywords:
+        fr: Mots-clés
+        en: Keywords
   export:
     title:
       fr: Partager le cosmoscope
       en: Share cosmoscope
+    fields:
+      export:
+        fr: Exporter vers
+        en: Export to
+      css_custom:
+        fr: CSS personnalisé
+        en: Custom CSS
+      citeproc:
+        fr: Traiter les citations
+        en: Handle quotation
+      minify:
+        fr: Réduire la taille de l'export
+        en: Minify export size
+    btns:
+      select:
+        fr: Sélectionner
+        en: Select
   history:
     title:
       fr: Historique
       en: History
+    table_header:
+      date:
+        fr: Date
+        en: Date
+      description:
+        fr: Description
+        en: Description
+    btns:
+      update:
+        fr: Modifier la description
+        en: Edit description
+      open_cosmoscope:
+        fr: Ouvrir dans Cosma
+        en: Open in Cosma
+      open_finder:
+        fr: Localiser le fichier
+        en: Locate file
+      open_report:
+        fr: Rapport d'erreurs
+        en: Error report
+      delete:
+        fr: Supprimer
+        en: Delete
+      delete_all:
+        fr: Tout supprimer…
+        en: Delete all…
   report:
     title:
       fr: Rapport d'alertes
       en: Warnings log
-  linktype_add:
+  linktype:
     title:
-      fr: Ajouter un type de lien
-      en: Add link type
-  linktype_update:
+      add:
+        fr: Ajouter un type de lien
+        en: Add link type
+      update:
+        fr: Modifier le type de lien
+        en: Modify link type
+    fields:
+      name:
+        fr: Nom
+        en: Name
+      stroke:
+        fr: Tracé
+        en: Stroke
+      color:
+        fr: Couleur
+        en: Color
+  recordtype:
     title:
-      fr: Modifier le type de lien
-      en: Modify link type
-  recordtype_add:
+      add:
+        fr: Ajouter un type de fiche
+        en: Add record type
+      update:
+        fr: Modifier le type de fiche
+        en: Modify record type
+    fields:
+      name:
+        fr: Nom
+        en: Name
+      color:
+        fr: Couleur
+        en: Color
+  view:
     title:
-      fr: Ajouter un type de fiche
-      en: Add record type
-  recordtype_update:
-    title:
-      fr: Modifier le type de fiche
-      en: Modify record type
-  view_add:
-    title:
-      fr: Ajouter une vue
-      en: Add view
-  view_update:
-    title:
-      fr: Renommer la vue
-      en: Rename view
+      add:
+        fr: Ajouter une vue
+        en: Add view
+      update:
+        fr: Renommer la vue
+        en: Rename view
+    fields:
+      name:
+        fr: Nom
+        en: Name
   history_update:
     title:
       fr: Modifier la description de l'entrée
       en: Edit the entry description
+    fields:
+      description:
+        fr: Description
+        en: Description
 
 dialog:
   file_filter:
