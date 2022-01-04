@@ -46,7 +46,6 @@ module.exports = class Config {
         csl_locale: '',
         css_custom: '',
         devtools: false,
-        minify: false,
         lang: 'fr'
     };
 
@@ -424,14 +423,5 @@ module.exports = class Config {
             return false; }
 
         return true;
-    }
-
-    /**
-     * If the config allow minify process
-     * @returns {boolean}
-     */
-
-    canMinify () {
-        return false; // Not actually
     }
 }

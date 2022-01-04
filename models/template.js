@@ -177,15 +177,6 @@ module.exports = class Template {
             date: moment().format()
         });
 
-        // try {
-        //     if (graph.params.includes('minify')) {
-        //         const minify = require('html-minifier').minify;
-        //         this.html = minify(this.html, { minifyCSS: true, minifyJS: true });
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
-
     }
     
     registerType (fileType, fileId) {

@@ -29,7 +29,6 @@ module.exports = class Graph {
         'publish',
         'css_custom',
         'citeproc',
-        'minify',
         'sample',
         'empty'
     ];
