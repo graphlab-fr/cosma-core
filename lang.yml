@@ -353,6 +353,15 @@ windows:
       lang:
         fr: Sélectionner une langue d'affichage
         en: Select a display language
+      name:
+        fr: Nom
+        en: Name
+      color:
+        fr: Couleur
+        en: Color
+      look:
+        fr: Apparence
+        en: Look
     btns:
       add:
         fr: Ajouter
@@ -463,6 +472,19 @@ windows:
       color:
         fr: Couleur
         en: Color
+    strokes:
+      simple:
+        fr: simple
+        en: simple
+      double:
+        fr: double
+        en: double
+      dotted:
+        fr: pointillés
+        en: dotted
+      dash:
+        fr: tirets
+        en: dash
   recordtype:
     title:
       add:
