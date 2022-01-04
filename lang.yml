@@ -399,11 +399,11 @@ windows:
         fr: Exporter vers
         en: Export to
       css_custom:
-        fr: CSS personnalisé
+        fr: CSS personnalisée
         en: Custom CSS
       citeproc:
         fr: Traiter les citations
-        en: Handle quotation
+        en: Process citations
       minify:
         fr: Réduire la taille de l'export
         en: Minify export size
