@@ -17,6 +17,13 @@ module.exports = {
     i: content,
 
     /**
+     * Get the current used langage flag
+     * @type string
+     */
+
+    flag: config.lang,
+
+    /**
      * Get the translate for a multilingual object
      * @param {object} i - Object with lang flag, as 'fr'
      * @returns {string} - The string that corresponds to the optional language

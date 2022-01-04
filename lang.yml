@@ -258,6 +258,124 @@ windows:
     title:
       fr: Préférences
       en: Preferences
+    nav:
+      general:
+        fr: Général
+        en: General
+      record_types:
+        fr: Types de fiches
+        en: Record types
+      link_types:
+        fr: Types de liens
+        en: Link types
+      graph:
+        fr: Graphe
+        en: Graph
+      metas:
+        fr: Métadonnées
+        en: Metas
+      bibliography:
+        fr: Bibliographie
+        en: Bibliography
+      views:
+        fr: Vues
+        en: Views
+      advanced:
+        fr: Avancé
+        en: Advanced
+    fields:
+      files_origin:
+        fr: Répertoire des fiches
+        en: Directory of records
+      history:
+        fr: Enregistrer automatiquement les cosmoscopes dans l’historique
+        en: Automatically save cosmoscopes in the history
+      focus_max:
+        fr: Niveau maximum de focus
+        en: Maximum focus level
+      graph_background_color:
+        fr: Couleur de fond
+        en: Background color
+      graph_highlight_color:
+        fr: Couleur de surbrillance
+        en: Highlight color
+      graph_highlight_on_hover:
+        fr: Surbrillance des nœuds au survol
+        en: Highlighting of nodes on mouse-over
+      graph_text_size:
+        fr: Taille du texte des étiquettes
+        en: Label text size
+      graph_arrows:
+        fr: Afficher des flèches sur les liens
+        en: Show arrows on links
+      attraction_force:
+        fr: Force d'attraction
+        en: Strength of attraction
+      attraction_distance_max:
+        fr: Distance maximum entre les nœuds
+        en: Maximum distance between nodes
+      attraction_vertical:
+        fr: Attraction verticale
+        en: Vertical attraction
+      attraction_horizontal:
+        fr: Attraction horizontale
+        en: Horizontal attraction
+      title:
+        fr: Titre
+        en: Title
+      author:
+        fr: Auteur
+        en: Author
+      description:
+        fr: Description
+        en: Description
+      keywords:
+        fr: Mots-clés
+        en: Keywords
+      link_symbol:
+        fr: Symbole de lien
+        en: Link symbol
+      csl:
+        fr: Style bibliographique (CSL)
+        en: Bibliographic style (CSL)
+      bibliography:
+        fr: Données bibliographiques (CSL JSON)
+        en: Bibliographic data (CSL JSON)
+      csl_locale:
+        fr: Localisation (XML)
+        en: Localisation (XML)
+      css_custom:
+        fr: CSS personnalisée
+        en: Custom CSS
+      devtools:
+        fr: Afficher les outils de développement
+        en: Show development tools
+      lang:
+        fr: Sélectionner une langue d'affichage
+        en: Select a display language
+    btns:
+      add:
+        fr: Ajouter
+        en: Add
+      update:
+        fr: Modifier
+        en: Update
+      rename:
+        fr: Renommer
+        en: Rename
+      delete:
+        fr: Supprimer
+        en: Delete
+      delete_all:
+        fr: Tout supprimer…
+        en: Delete all…
+    help:
+      csl:
+        fr: Télécharger des styles
+        en: Download styles
+      csl_locale:
+        fr: Télécharger des fichiers de localisation
+        en: Download localisation files
   record:
     title:
       fr: Nouvelle fiche
