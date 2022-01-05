@@ -577,6 +577,13 @@ dialog:
     message:
       fr: Voulez-vous vraiment tout supprimer ?
       en: Do you really want to delete everything?
+  print:
+    title:
+      fr: Enregistrer le PDF
+      en: Save PDF
+    error:
+      fr: Erreur de l'impression PDF
+      en: PDF printing error
 
 record:
   errors:

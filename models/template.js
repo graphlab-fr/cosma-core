@@ -9,8 +9,7 @@ const fs = require('fs')
     , nunjucks = require('nunjucks')
     , mdIt = require('markdown-it')()
     , mdItAttr = require('markdown-it-attrs')
-    , moment = require('moment')
-    , yamlEditor = require('js-yaml');
+    , moment = require('moment');
 
 const app = require('../../package.json');
 
@@ -113,6 +112,8 @@ module.exports = class Template {
 
         nunjucks.configure(path.join(__dirname, '../'), { autoescape: true });
 
+        moment.locale(this.config.opts.lang);
+
         this.html = nunjucks.render('template.njk', {
 
             publishMode: (graph.params.includes('publish') === true),
@@ -124,7 +125,7 @@ module.exports = class Template {
                     title: file.metas.title,
                     type: file.metas.type,
                     tags: file.metas.tags.join(', '),
-                    lastEditDate: file.metas.lastEditDate,
+                    lastEditDate: moment(file.lastEditDate).format('LLLL'),
                     content: file.content,
                     links: file.links,
                     backlinks: file.backlinks,
