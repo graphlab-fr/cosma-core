@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="generator" content="https://cosma.graphlab.fr/">
+    <meta name="generator" content="{{ app.homepage }}">
     {% for meta, value in metadata %}
     <meta name="{{ meta }}" content="{{ value }}">
     {% endfor %}
@@ -37,7 +37,7 @@
     <aside class="menu list-content-container">
 
         <header role="banner">
-            {% if uiContext === true %}
+            {% if guiContext === true %}
             <div id="menu-electron" hidden>
                 <button id="electron-record-new" title="Nouvelle fiche">{% include "icons/add.svg" %}</button>
                 <button id="electron-back" title="Précédent" class="icon-chevron">{% include "icons/back.svg" %}</button>
@@ -146,7 +146,7 @@
 
             <button onclick="resetView()">{{ translation.left_panel.menu_views.btn_reset[lang] }} (Alt + R)</button>
 
-            {% if uiContext === true %}
+            {% if guiContext === true %}
             <button id="view-save" onclick="saveView()">{{ translation.left_panel.menu_views.btn_save[lang] }}</button>
             {% endif %}
 
@@ -423,15 +423,15 @@
                 {% endif %}
 
                 <p>
-                    {{ translation.right_panel.credits.version[lang] }} 1.0.1
+                    {{ translation.right_panel.credits.version[lang] }} {{ app.version }}
                     •
-                    {{ translation.right_panel.credits.license[lang] }} GNU GPL 3.0</p>
+                    {{ translation.right_panel.credits.license[lang] }} {{ app.license }}</p>
 
                 <ul>
-                    <li>Arthur Perret</li>
-                    <li>Guillaume Brioudes</li>
-                    <li>Olivier Le Deuff</li>
-                    <li>Clément Borel</li>
+                    {% for person in app.contributors %}
+                    <li>{{ person }}</li>
+                    {% endfor %}
+
                     <li>{{ translation.right_panel.credits.ANR_program[lang] }} <a href="https://hyperotlet.hypotheses.org/">HyperOtlet</a></li>
                 </ul>
 

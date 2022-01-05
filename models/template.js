@@ -12,6 +12,8 @@ const fs = require('fs')
     , moment = require('moment')
     , yamlEditor = require('js-yaml');
 
+const app = require('../../package.json');
+
 // markdown-it plugin
 mdIt.use(mdItAttr, {
     leftDelimiter: '{',
@@ -168,13 +170,15 @@ module.exports = class Template {
 
             focusIsActive: !(this.config.opts.focus_max <= 0),
 
-            uiContext: (Config.getContext() === 'electron' && graph.params.includes('publish') === false),
+            guiContext: (Config.getContext() === 'electron' && graph.params.includes('publish') === false),
 
             // stats
 
             nblinks: graph.data.links.length,
 
-            date: moment().format()
+            date: moment().format(),
+
+            app: app // app version, description, license…
         });
 
     }
