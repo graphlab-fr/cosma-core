@@ -24,9 +24,7 @@ mdIt.use(mdItAttr, {
 const Graph = require('./graph');
 const Config = require('./config');
 
-const translation = yamlEditor.safeLoad(
-    fs.readFileSync(path.join(__dirname, '../lang.yml'), 'utf8')
-);
+const translation = require('./lang').i;
 
 /**
  * Class to get the Cosmoscope source code

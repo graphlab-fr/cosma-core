@@ -193,7 +193,7 @@ module.exports = class Config {
                     break;
 
                 case '.yml':
-                    fileContent = yml.safeLoad(fileContent);
+                    fileContent = yml.load(fileContent);
                     break;
             }
 
