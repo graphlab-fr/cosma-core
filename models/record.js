@@ -60,7 +60,7 @@ module.exports = class Record {
         /**
          * @type string
          */
-        this.ymlFrontMatter = yml.safeDump(this);
+        this.ymlFrontMatter = yml.dump(this);
         this.ymlFrontMatter = '---\n' + this.ymlFrontMatter + '---\n\n';
         /**
          * @type string
