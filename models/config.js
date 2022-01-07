@@ -390,6 +390,9 @@ module.exports = class Config {
 
         return this.report
             .map((invalidOption) => {
+                if (Object.keys(Config.minValues).includes(invalidOption)) {
+                    return lang.getWith(lang.i.config.errors[invalidOption], [Config.minValues[invalidOption]]);
+                }
                 return lang.getFor(lang.i.config.errors[invalidOption]);
             })
             .join(', ');
