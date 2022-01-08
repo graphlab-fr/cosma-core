@@ -593,6 +593,9 @@ record:
     type:
       fr: Type inconnu
       en: Unknown type
+    id:
+      fr: Identifiant invalid
+      en: Invalid id
 
 config:
   errors:
