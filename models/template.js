@@ -7,7 +7,10 @@
 const fs = require('fs')
     , path = require('path')
     , nunjucks = require('nunjucks')
-    , mdIt = require('markdown-it')()
+    , mdIt = require('markdown-it')({
+        linkify: true,
+        breaks: true
+    })
     , mdItAttr = require('markdown-it-attrs')
     , moment = require('moment');
 
