@@ -327,8 +327,7 @@ module.exports = class Config {
             'history',
             'graph_highlight_on_hover',
             'graph_arrows',
-            'devtools',
-            'minify'
+            'devtools'
         ].filter((option) => {
             return typeof this.opts[option] !== 'boolean';
         }).map((invalidBool) => {
