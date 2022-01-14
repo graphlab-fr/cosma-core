@@ -36,12 +36,7 @@ function registerView() {
  */
 
 function saveView() {
-    const tempInput = document.createElement('input');
-    document.body.appendChild(tempInput);
-    tempInput.value = registerView();
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
+    navigator.clipboard.write(registerView());
 }
 
 /**
