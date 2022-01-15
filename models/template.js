@@ -14,7 +14,7 @@ const fs = require('fs')
     , mdItAttr = require('markdown-it-attrs')
     , moment = require('moment');
 
-const app = require('../../package.json');
+const app = require('../package.json');
 
 // markdown-it plugin
 mdIt.use(mdItAttr, {
