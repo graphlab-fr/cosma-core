@@ -213,7 +213,7 @@ module.exports = class Config {
             , lang = require('./lang');
 
         return Object.assign({}, Config.base, {
-            files_origin: path.join(__dirname, '../', opts.lang),
+            files_origin: path.join(__dirname, '../sample', opts.lang),
             record_types: {
                 documentation: '#147899',
                 important: '#aa0000'
@@ -222,7 +222,8 @@ module.exports = class Config {
             attraction_distance_max: 800,
             graph_text_size: 15,
             title: lang.getFor(lang.i.demo.title),
-            description: lang.getFor(lang.i.demo.description)
+            description: lang.getFor(lang.i.demo.description),
+            lang: opts.lang
         })
     }
 
