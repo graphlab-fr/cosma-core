@@ -11,6 +11,7 @@ const path = require('path')
     , slugify = require('slugify');
 
 const Config = require('./config')
+    , Graph = require('./graph')
     , lang = require('./lang');
 
 module.exports = class Record {
@@ -27,7 +28,8 @@ module.exports = class Record {
      */
 
     static massSave (data) {
-        let i = 1;
+        
+        let i = Record.getIndexToMassSave();
 
         let report = [];
 
@@ -38,7 +40,7 @@ module.exports = class Record {
                 item.tags,
                 item.content,
                 item.filename,
-                Record.generateOutDalyId() + i
+                Record.generateOutDailyId() + i
             );
 
             const result = record.save(true);
@@ -67,9 +69,49 @@ module.exports = class Record {
         return Number(moment().format('YYYYMMDDHHmmss'));
     }
 
-    static generateOutDalyId () {
-        const maxHour = 24, maxMinute = 60, maxSecond = 60
+    /**
+     * Get an id, as Record.generateId(), but out of the daily hour, minute, second
+     * The hour, minute, second are out of the daily common time, as 25 hours, 84 minutes and 61 secondes
+     * @return {number} - unique 14 caracters number as 20220115246165
+     */
+
+    static generateOutDailyId () {
+        const maxHour = 24, maxMinute = 60, maxSecond = 60;
         return Number(moment().format('YYYYMMDD') + maxHour + maxMinute + maxSecond);
+    }
+
+    /**
+     * Test if an id is out of today common time
+     * @return {boolean}
+     */
+
+    static isTodayOutDailyId (idTest) {
+        let todayOutDailyId = Record.generateOutDailyId();
+        // An id from common time or from another day will be negative
+        if (idTest - todayOutDailyId >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get the index from which to create new records in the mass
+     * The index depends on the identifier of the last record created in the mass
+     * The index is obtained via the Graph analysis
+     * @return {number}
+     */
+
+    static getIndexToMassSave () {
+        const todayMassSavedRecordIds = new Graph().files // get graph analyse
+            .map(file => file.metas.id)
+            .filter(Record.isTodayOutDailyId) // ignore not today mass saved records id
+            .sort();
+
+        // 'todayMassSavedRecordIds' can be empty
+        let lastId = todayMassSavedRecordIds[todayMassSavedRecordIds.length - 1] || undefined;
+        // 20220115246695 - 20220115246060 = 635, the index for the next record is 635 + 1
+        return lastId - Record.generateOutDailyId() + 1 || 1;
     }
 
     /**
