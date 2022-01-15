@@ -17,11 +17,13 @@ module.exports = class Record {
 
     /**
      * Save several records from a JSON object
-     * @param {object} data - 
+     * @param {object} data - Array of objects
      * @return {mixed} - Invalid items key or true
      * @example
-     * Record.massSave({
-     * })
+     * Record.massSave([
+     *  { title: 'Idea 1', type: 'ideas', tags: 'tag 1,tag 2' ... }
+     *  { title: 'Concept 1', type: 'concept' ... }
+     * ])
      */
 
     static massSave (data) {
@@ -81,7 +83,7 @@ module.exports = class Record {
      * @example new Record('My record', 'concept', 'tag 1,tag 2', 'Lorem *ipsum*', 'my-record', 20210704100343);
      */
 
-    constructor (title, type = 'undefined', tags = '', content = '', fileName = slugify(title, { remove: /[*+~.()'"!:@]/g }), id = Record.generateId()) {
+    constructor (title, type = 'undefined', tags = '', content = '', fileName = title, id = Record.generateId()) {
         /**
          * @type string
          */
@@ -123,12 +125,16 @@ module.exports = class Record {
          * @type string
          * @exemple 'my idea.md'
          */
-        this.fileName = `${fileName}.md`
+        this.fileName = slugify(fileName, {
+            replacement: ' ',
+            remove: /[&*+~.'"!:@]/g,
+        });
+        this.fileName = `${this.fileName}.md`;
         /**
          * Path to Markdown file destination
          * @type string
          */
-        this.path = path.join(this.config.files_origin, `${fileName}.md`);
+        this.path = path.join(this.config.files_origin, this.fileName);
         /**
          * Invalid fields
          * @type array
