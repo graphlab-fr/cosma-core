@@ -715,6 +715,22 @@ graph_report:
       fr: "'$1' depuis $2"
       en: "'$1' from $2"
 
+demo:
+  title:
+    fr: Démo de Cosma
+    en: Cosma demo
+  description:
+    fr: >
+      Cosma est un logiciel de visualisation et de partage pour les travailleurs de la connaissance.
+      À partir d’un répertoire de fichiers rédigés en Markdown, Cosma génère une collection de fiches
+      au format HTML, rassemblées dans un fichier unique : le cosmoscope.
+      Ce cosmoscope de démonstration a été exporté avec Cosma.
+    en: >
+      Cosma is a visualisation and sharing software for knowledge workers.
+      From a directory of files written in Markdown, Cosma generates a collection of cards
+      in HTML format, assembled in a single file: the cosmoscope.
+      This demonstration cosmoscope has been exported with Cosma.
+
 app_menu:
   about:
     fr: À propos
