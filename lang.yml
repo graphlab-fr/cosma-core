@@ -525,7 +525,7 @@ windows:
       fr: Manuel d'utilisation
       en: User manual
     src:
-      fr: cosma-manuel-d'utilisation.html
+      fr: cosma-manuel-d-utilisation.html
       en: cosma-user-manual.html
 
 dialog:
