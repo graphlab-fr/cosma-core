@@ -520,6 +520,13 @@ windows:
       description:
         fr: Description
         en: Description
+  doc:
+    title:
+      fr: Manuel d'utilisation
+      en: User manual
+    src:
+      fr: cosma-manuel-d'utilisation.html
+      en: cosma-user-manual.html
 
 dialog:
   file_filter:
