@@ -286,7 +286,7 @@ windows:
     fields:
       files_origin:
         fr: Répertoire des fiches
-        en: Directory of records
+        en: Records directory
       history:
         fr: Enregistrer automatiquement les cosmoscopes dans l’historique
         en: Automatically save cosmoscopes in the history
@@ -525,8 +525,8 @@ windows:
       fr: Manuel d'utilisation
       en: User manual
     src:
-      fr: manuel-d-utilisation.html
-      en: user-manual.html
+      fr: cosma-manuel-utilisation.html
+      en: cosma-user-manual.html
 
 dialog:
   file_filter:
