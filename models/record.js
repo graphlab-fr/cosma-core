@@ -222,9 +222,6 @@ module.exports = class Record {
 
         if (new RegExp(/^[0-9]{14}$/gs).test(this.id) === false) {
             this.report.push('id'); }
-
-        if (this.config.record_types[this.type] === undefined) {
-            this.report.push('type'); }
     }
 
     /**
