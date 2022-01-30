@@ -345,7 +345,11 @@ module.exports = class Graph {
         delete file.metas.__content;
         delete file.contain;
 
-        file.metas.tags = file.metas.tags || [];
+        file.metas.tags = file.metas['tags'] || file.metas['keywords'] || [];
+
+        if (typeof file.metas.tags === 'string') {
+            file.metas.tags = [];
+        }
 
         return file;
     }
