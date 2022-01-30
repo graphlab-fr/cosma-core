@@ -286,7 +286,7 @@ windows:
     fields:
       files_origin:
         fr: Répertoire des fiches
-        en: Directory of records
+        en: Records directory
       history:
         fr: Enregistrer automatiquement les cosmoscopes dans l’historique
         en: Automatically save cosmoscopes in the history
@@ -525,7 +525,7 @@ windows:
       fr: Manuel d'utilisation
       en: User manual
     src:
-      fr: cosma-manuel-d-utilisation.html
+      fr: cosma-manuel-utilisation.html
       en: cosma-user-manual.html
 
 dialog:
@@ -606,6 +606,15 @@ record:
 
 config:
   errors:
+    no_name:
+      fr: La configuration n'a pas de nom
+      en: The configuration has no name
+    name_already_used:
+      fr: Ce nom de configuration est déjà utilisé
+      en: This name is already used
+    invalid_path:
+      fr: Le chemin vers la configruation est invalide
+      en: The config file path is invalid
     files_origin:
       fr: Le chemin vers le répertoire de fiches sélectionné est invalide
       en: Invalid records directory path
@@ -666,6 +675,10 @@ config:
     lang:
       fr: La langue n'est pas configurée
       en: Language not set
+  list:
+    label:
+      fr: Liste des configurations enregistrées
+      en: List of saved configurations
   info:
     lang:
       fr: Le changement de langue sera effectif après un redémarrage de l'application
