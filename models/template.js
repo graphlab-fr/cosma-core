@@ -53,9 +53,8 @@ module.exports = class Template {
             link = Graph.normalizeLinks(link).target.id;
     
             if (link === NaN) { return extract; } // link is not a number
-    
-            const associatedMetas = file.links.find(function(i) {
-                return i.target.id === link; });
+
+            const associatedMetas = file.links.find(i => i.target.id === link);
     
             // link is not registred into file metas
             if (associatedMetas === undefined) { return extract; }
@@ -69,13 +68,18 @@ module.exports = class Template {
         });
     }
 
-    static markLinkContext(file, fileLinks, linkSymbol) {
+    static markLinkContext(fileLinks, linkSymbol) {
         return fileLinks.map((link) => {
-            linkSymbol = linkSymbol || `[[${link.target.id}]]`;
+            link.context = link.context.replaceAll(/\[\[((\w:[0-9]{14})|([0-9]{14}))\]\]/g, (match) => {
+                // extract link id, without '[[' & ']]' caracters
+                match = match.slice(0, -2).slice(2); 
 
-            if (link.context === null) { return link; }
+                if (linkSymbol !== undefined) {
+                    return `*${linkSymbol.trim()}*{.id-context}`
+                }
 
-            link.context = link.context.replaceAll('[[' + link.target.id + ']]', `<mark>${linkSymbol}</mark>`);
+                return `*&#91;&#91;${match}&#93;&#93;*{.id-context}`
+            });
 
             return link;
         });
@@ -92,16 +96,24 @@ module.exports = class Template {
         this.types = {};
         this.tags = {};
 
+        moment.locale(this.config.opts.lang);
+
+        const templateEngine = new nunjucks.Environment(
+            new nunjucks.FileSystemLoader(path.join(__dirname, '../'))
+        );
+
+        templateEngine.addFilter('markdown', (input) => {
+            return mdIt.render(input);
+        })
+
         graph.files = graph.files.map((file) => {
-            const linkSymbol = (this.config.opts.link_symbol || null);
+            const linkSymbol = (this.config.opts.link_symbol || undefined);
 
             file.content = Template.convertLinks(file, file.content, linkSymbol);
 
-            file.content = mdIt.render(file.content); // Markdown to HTML
+            file.links = Template.markLinkContext(file.links, linkSymbol);
 
-            file.links = Template.markLinkContext(file, file.links, linkSymbol);
-
-            file.backlinks = Template.markLinkContext(file, file.backlinks, linkSymbol);
+            file.backlinks = Template.markLinkContext(file.backlinks, linkSymbol);
 
             this.registerType(file.metas.type, file.metas.id);
             this.registerTags(file.metas.tags, file.metas.id);
@@ -113,11 +125,7 @@ module.exports = class Template {
         if (graph.params.includes('css_custom') === true && this.config.canCssCustom() === true) {
             this.custom_css = fs.readFileSync(this.config.opts['css_custom'], 'utf-8'); }
 
-        nunjucks.configure(path.join(__dirname, '../'), { autoescape: true });
-
-        moment.locale(this.config.opts.lang);
-
-        this.html = nunjucks.render('template.njk', {
+        this.html = templateEngine.render('template.njk', {
 
             publishMode: (graph.params.includes('publish') === true),
 

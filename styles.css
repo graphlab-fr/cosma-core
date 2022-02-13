@@ -512,6 +512,11 @@ main.record-container:not(.active) {
 	margin-top: 0.8rem;
 }
 
+.id-context {
+	font-style: normal;
+	background-color: rgba(20, 120, 153, 0.2);
+}
+
 /** Graph
 ------------------------------------------------------------*/
 

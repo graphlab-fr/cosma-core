@@ -282,7 +282,7 @@
             </header>
 
             <main class="record-content">
-                {{ record.content | safe }}
+                {{ record.content | markdown | safe }}
 
                 {% if record.bibliography %}
                 <section class="bibliography">
@@ -309,7 +309,7 @@
                             <span class="record-type-point n_{{ link.target.type }}">⬤</span>
                             <span>{{ link.target.title }}</span>
                             <div class="record-links-context">
-                                {{ link.context | safe }}
+                                {{ link.context | markdown | safe }}
                             </div>
                         </li>
                         {% endfor %}
@@ -330,7 +330,7 @@
                             <span class="record-type-point n_{{ backlink.source.type }}">⬤</span>
                             <span>{{ backlink.source.title }}</span>
                             <div class="record-links-context">
-                                {{ backlink.context | safe }}
+                                {{ backlink.context | markdown | safe }}
                             </div>
                         </li>
                         {% endfor %}

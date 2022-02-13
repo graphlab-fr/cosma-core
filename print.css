@@ -84,7 +84,8 @@
 		margin-top: 2mm;
 	}
 
-	mark {
+	.id-context {
+		font-style: normal;
 		text-decoration: underline;
 	}
 }

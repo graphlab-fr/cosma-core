@@ -447,7 +447,7 @@ module.exports = class Graph {
             if (links === null) { continue; }
 
             links = deleteDupicates(links)
-                .map(links => Number(links));
+                .map(link => Graph.normalizeLinks(link).target.id);
 
             file.contexts.push({
                 paraph: paraph,
