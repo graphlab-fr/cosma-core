@@ -35,8 +35,15 @@ function registerView() {
  * Copy registerView() output on clipboard
  */
 
-function saveView() {
-    navigator.clipboard.write(registerView());
+ function saveView() {
+    navigator.permissions.query({ name: 'clipboard-write' })
+        .then(result => {
+            if (result.state === 'granted') {
+                var blob = new Blob([registerView()], {type: 'text/plain'});
+                var item = new ClipboardItem({'text/plain': blob});
+                navigator.clipboard.write([item]);
+            }
+        })
 }
 
 /**
