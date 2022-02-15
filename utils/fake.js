@@ -115,5 +115,5 @@ function fakeLink () {
 }
 
 function fakeImage () {
-    return `![${faker.lorem.sentence(1)}](${faker.random.image()})`
+    return `![${faker.lorem.sentence(1)}](${faker.image.animals()})`
 }
