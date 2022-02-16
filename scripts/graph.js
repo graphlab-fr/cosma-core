@@ -53,10 +53,10 @@ window.updateForces = function () {
         .distanceMax(graphProperties.attraction_distance_max);
 
     simulation.force("forceX")
-        .strength(graphProperties.attraction_horizontal)
+        .strength(graphProperties.attraction_vertical)
 
     simulation.force("forceY")
-        .strength(graphProperties.attraction_vertical)
+        .strength(graphProperties.attraction_horizontal)
 
     // restarts the simulation
     simulation.alpha(1).restart();
