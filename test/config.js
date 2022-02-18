@@ -142,11 +142,11 @@ describe('Config verif', () => {
             }
 
             const viewDecodeKey = JSON.stringify(viewJson);
-            const viewEncoreKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64')
+            const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64')
 
             const config = new Config({
                 views: {
-                    test: viewEncoreKey
+                    test: viewEncodeKey
                 }
             });
     
@@ -155,16 +155,3 @@ describe('Config verif', () => {
     })
 
 });
-
-// const config = new Config({
-//     record_types: {
-//         undefined: '#000000',
-//         invalid_record_type: {
-//             color: '#000000'
-//         }
-//     },
-//     link_types: {
-//         undefined: { stroke: 'invalid_stroke', color: '#000000' },
-//         invalid_link_type: { stroke: 'simple', invalid_attribute: '#000000' }
-//     }
-// });

@@ -4,7 +4,7 @@ const path = require('path')
 const Graph = require('./models/graph')
     , Template = require('./models/template');
 
-const graph = new Graph(['fake'])
+const graph = new Graph(['fake', 'publish'])
     , template = new Template(graph);
 
 fs.writeFile('cosmoscope.html', template.html, (err) => {

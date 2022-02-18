@@ -77,8 +77,18 @@ module.exports = {
     files: fakeFiles,
     config: Object.assign({}, Config.base, {
         record_types: fakeRecordTypes,
-        link_types: fakeLinkTypes
-    })
+        link_types: fakeLinkTypes,
+        title: 'Test',
+        description: 'This cosmoscope was automatically generated with example data in order to test the functionality of the software.',
+        keywords: ['test', 'sample'],
+        link_symbol: '→',
+        lang: 'en',
+        views: {
+            test1: fakeView(),
+            test2: fakeView(),
+            test3: fakeView()
+        }
+    }),
 };
 
 function fakeMardownTab (nbCols, nbRows) {
@@ -126,4 +136,27 @@ function fakeLink () {
 
 function fakeImage () {
     return `![${faker.lorem.sentence(1)}](${faker.image.animals()})`
+}
+
+function fakeView () {
+    const id = faker.helpers.randomize(fakeIds);
+
+    const viewJson = {
+        recordId: id,
+        filters: [
+            faker.helpers.randomize(Object.keys(fakeRecordTypes)),
+            faker.helpers.randomize(Object.keys(fakeRecordTypes))
+        ],
+        focus: {
+            fromRecordId: id,
+            level: 1
+        }
+    }
+
+    const viewDecodeKey = JSON.stringify(viewJson);
+    const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64')
+
+    console.log(viewEncodeKey);
+
+    return viewEncodeKey;
 }
