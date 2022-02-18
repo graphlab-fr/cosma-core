@@ -11,6 +11,7 @@ const Record = require('../models/record')
 
 const NB_NODES = 50
     , fakeRecordTypes = {
+        'undefined': '#858585',
         'idea': '#e41a1c',
         'concept': '#377eb8',
         'note': '#4daf4a',
@@ -20,7 +21,8 @@ const NB_NODES = 50
         'task': '#a65628',
         'object': '#f781bf'
     }
-    ,fakeLinkTypes = {
+    , fakeLinkTypes = {
+        'undefined': { 'stroke': 'simple', 'color': '#e1e1e1' },
         'g': {
             'stroke': 'dotted',
             'color': '#e1e1e1'
@@ -31,8 +33,13 @@ const NB_NODES = 50
         }
     }
 
-let fakeFiles = [];
-let fakeIds = [];
+let fakeFiles = []
+    , fakeIds = []
+    , fakeTags = [];
+
+for (let i = 0; i < 20; i++) {
+    fakeTags.push(faker.random.word());
+}
 
 for (let i = 0; i < NB_NODES; i++) {
     let fakeId = Record.generateOutDailyId() + i
@@ -48,7 +55,10 @@ for (let i = 0; i < NB_NODES; i++) {
                 title: faker.name.title(),
                 type: faker.helpers.randomize(Object.keys(fakeRecordTypes)),
                 id: fakeId,
-                tags: []
+                tags: [
+                    faker.helpers.randomize(fakeTags),
+                    faker.helpers.randomize(fakeTags)
+                ]
             },
             content: [
                 faker.lorem.paragraphs(2, fakeLink()),
