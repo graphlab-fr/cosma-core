@@ -132,6 +132,22 @@ module.exports = class Config {
         return true;
     }
 
+    static isInvalidViews (views) {
+        for (const viewName in views) {
+            const viewKey = views[viewName];
+            const viewKeyDecode = Buffer.from(viewKey, 'base64').toString();
+            let viewKeyJson
+
+            try {
+                viewKeyJson = JSON.parse(viewKeyDecode);
+            } catch (err) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     static isInvalidLangage (lang) {
         if (Config.validLangages[lang] === undefined) {
             return false; }
@@ -354,7 +370,12 @@ module.exports = class Config {
             null : 'lang'
         );
 
-        this.report = [...paths, ...numbers, ...bools, record_types, link_types, lang]
+        const views = (
+            Config.isInvalidViews(this.opts['views']) ?
+            null : 'views'
+        );
+
+        this.report = [...paths, ...numbers, ...bools, record_types, link_types, lang, views]
             .filter(invalidOption => invalidOption !== null);
     }
 

@@ -9,7 +9,15 @@ npm run modules
 git submodule foreach git pull origin master
 ```
 
-We use cosma-core to debug the interfaces. Use the these commands to get a test-cosmoscope:
+## Debug
+
+We use cosma-core to debug the interfaces.
+
+```
+npm test
+```
+
+Use the these commands to get a test-cosmoscope:
 
 ```
 npm i
