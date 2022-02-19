@@ -6,6 +6,7 @@
 
 const fs = require('fs')
     , path = require('path')
+    , glob = require("glob")
     , ymlFM = require('yaml-front-matter')
     , CSL = require('citeproc')
     , Citr = require('@zettlr/citr');
@@ -239,7 +240,7 @@ module.exports = class Graph {
             this.config.opts.files_origin = undefined;
         }
 
-        this.files = this.getFilesNames();
+        this.files = this.getFilesPaths();
         this.files = this.files.map(this.serializeFiles, this);
 
         if (this.params.includes('fake')) {
@@ -325,26 +326,29 @@ module.exports = class Graph {
      * @example [ 'file1.md', 'file2.md' ]
      */
 
-    getFilesNames () {
+    getFilesPaths () {
         if (!this.config.opts.files_origin) { return []; }
 
-        return fs.readdirSync(this.config.opts.files_origin, 'utf8')
-            .filter(fileName => path.extname(fileName) === '.md');
+        const files = glob.sync('**/*.md', {
+            cwd: this.config.opts.files_origin
+        }).map(file => path.join(this.config.opts.files_origin, file))
+
+        return files;
     }
 
     /**
      * Read the files content
      * Separate files metas (from YAML front matter) and content
      * Get some information on file as file name, last edit date…
-     * @param {array} fileName - from this.getFilesNames()
+     * @param {array} fileName - from this.getFilesPaths()
      * @returns {array} - Array of files objets
      */
 
-    serializeFiles(fileName) {
+    serializeFiles(filePath) {
         const file = {};
 
-        file.name = fileName;
-        file.filePath = path.join(this.config.opts.files_origin, fileName);
+        file.filePath = filePath;
+        file.name = path.basename(filePath);
         file.lastEditDate = fs.statSync(file.filePath).mtime;
         
         file.contain = fs.readFileSync(file.filePath, 'utf8');
