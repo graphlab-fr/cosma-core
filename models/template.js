@@ -8,6 +8,7 @@ const fs = require('fs')
     , path = require('path')
     , nunjucks = require('nunjucks')
     , mdIt = require('markdown-it')({
+        html: true,
         linkify: true,
         breaks: true
     })

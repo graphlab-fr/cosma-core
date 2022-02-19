@@ -4,6 +4,8 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
+const path = require('path')
+
 const { faker } = require('@faker-js/faker');
 
 const Record = require('../models/record')
@@ -62,6 +64,7 @@ for (let i = 0; i < NB_NODES; i++) {
             },
             content: [
                 faker.lorem.paragraphs(2, fakeLink()),
+                '<div class="box info">Boîte personnaliée en CSS</div>',
                 [fakeMardownQuote(), fakeLink()].join(' '),
                 faker.lorem.paragraphs(1),
                 [fakeMardownTab(3, 4), fakeLink()].join(' '),
@@ -81,13 +84,14 @@ module.exports = {
         title: 'Test',
         description: 'This cosmoscope was automatically generated with example data in order to test the functionality of the software.',
         keywords: ['test', 'sample'],
-        link_symbol: '→',
+        link_symbol: '🔗',
         lang: 'en',
         views: {
             test1: fakeView(),
             test2: fakeView(),
             test3: fakeView()
-        }
+        },
+        css_custom: path.join(__dirname, 'fake.css')
     }),
 };
 
@@ -154,9 +158,7 @@ function fakeView () {
     }
 
     const viewDecodeKey = JSON.stringify(viewJson);
-    const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64')
-
-    console.log(viewEncodeKey);
+    const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64');
 
     return viewEncodeKey;
 }
