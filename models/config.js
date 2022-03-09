@@ -203,9 +203,16 @@ module.exports = class Config {
             configFilePath = Config.getFilePath();
         }
 
-        try {
-            let fileContent = fs.readFileSync(configFilePath, 'utf8');
+        let fileContent
 
+        try {
+            fileContent = fs.readFileSync(configFilePath, 'utf8');
+        } catch (error) {
+            console.error("The config file cannot be read.");
+            return Config.base;
+        }
+
+        try {
             switch (path.extname(configFilePath)) {
                 case '.json':
                     fileContent = JSON.parse(fileContent);
@@ -218,6 +225,7 @@ module.exports = class Config {
 
             return fileContent;
         } catch (error) {
+            console.error("The config file cannot be parsed.\n", error);
             return Config.base;
         }
     }
