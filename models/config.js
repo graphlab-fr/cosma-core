@@ -194,11 +194,14 @@ module.exports = class Config {
 
     /**
      * Get config options from the (config file) path
+     * @param {string} - Path to a config file
      * @return {object} - Config option or base config (Config.base) if errors
      */
 
-    static get () {
-        const configFilePath = Config.getFilePath();
+    static get (configFilePath = Config.getFilePath()) {
+        if (fs.existsSync(configFilePath === false)) {
+            return Config.base;
+        }
 
         try {
             let fileContent = fs.readFileSync(configFilePath, 'utf8');
@@ -279,6 +282,10 @@ module.exports = class Config {
         this.report = [];
 
         this.verif();
+
+        if (this.isValid() === false) {
+            this.fix();
+        }
     }
 
     /**
@@ -403,6 +410,16 @@ module.exports = class Config {
         }
 
         return true;
+    }
+
+    /**
+     * Fix the config : for each invalid option, get the Config.base value
+     */
+
+    fix () {
+        for (const invalidOpt of this.report) {
+            this.opts[invalidOpt] = Config.base[invalidOpt];
+        }
     }
 
     /**

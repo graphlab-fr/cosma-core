@@ -192,11 +192,12 @@ module.exports = class Graph {
     /**
      * Set params and lauch all the process on files from 'files_origin' dir
      * @param {array} params - Options from Graph.validParams to change the Cosmocope content
+     * @param {object} opts - Options from Config
      */
 
-    constructor (params) {
+    constructor (params, opts = undefined) {
 
-        this.config = new Config();
+        this.config = new Config(opts);
 
         this.errors = [];
 
