@@ -198,9 +198,9 @@ module.exports = class Config {
      * @return {object} - Config option or base config (Config.base) if errors
      */
 
-    static get (configFilePath = Config.getFilePath()) {
-        if (fs.existsSync(configFilePath === false)) {
-            return Config.base;
+    static get (configFilePath) {
+        if (configFilePath === undefined || fs.existsSync(configFilePath) === false) {
+            configFilePath = Config.getFilePath();
         }
 
         try {
