@@ -447,11 +447,11 @@ module.exports = class Graph {
         if (paraphs === null) { return file; }
 
         for (const paraph of paraphs) {
-            let links = paraph.match(/(?<=\[\[\s*).*?(?=\s*\]\])/gs);
+            let links = new Set(paraph.match(/(?<=\[\[\s*).*?(?=\s*\]\])/gs));
 
             if (links === null) { continue; }
 
-            links = deleteDupicates(links)
+            links = Array.from(links)
                 .map(link => Graph.normalizeLinks(link).target.id);
 
             file.contexts.push({
@@ -460,16 +460,16 @@ module.exports = class Graph {
             });
         }
 
-        file.links = file.content.match(/(?<=\[\[\s*).*?(?=\s*\]\])/gs);
+        file.links = new Set(file.content.match(/(?<=\[\[\s*).*?(?=\s*\]\])/gs));
 
-        if (file.links === null) {
+        if (file.links.size === 0) {
             file.links = [];
             return file;
         }
 
-        file.links = deleteDupicates(file.links)
+        file.links = Array.from(file.links)
             .map(Graph.normalizeLinks);
-        
+
         return file;
     }
 
