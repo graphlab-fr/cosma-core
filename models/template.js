@@ -123,12 +123,12 @@ module.exports = class Template {
         });
 
         this.custom_css = null;
-        if (graph.params.includes('css_custom') === true && this.config.canCssCustom() === true) {
+        if (graph.params.has('css_custom') === true && this.config.canCssCustom() === true) {
             this.custom_css = fs.readFileSync(this.config.opts['css_custom'], 'utf-8'); }
 
         this.html = templateEngine.render('template.njk', {
 
-            publishMode: (graph.params.includes('publish') === true),
+            publishMode: (graph.params.has('publish') === true),
 
             records: graph.files.map(function (file) {
 

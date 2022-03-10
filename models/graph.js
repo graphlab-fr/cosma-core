@@ -195,15 +195,15 @@ module.exports = class Graph {
      * @param {object} opts - Options from Config
      */
 
-    constructor (params, opts = undefined) {
+    constructor (params = [], opts = undefined) {
 
         this.config = new Config(opts);
 
         this.errors = [];
 
-        this.params = [];
-        if (params) { // valid params
-            this.params = params.filter(parm => Graph.validParams.includes(parm)); }
+        this.params = new Set(
+            params.filter(parm => Graph.validParams.includes(parm))
+        );
 
         /**
          * Store all report data (objects) into arrays
@@ -234,17 +234,17 @@ module.exports = class Graph {
 
         this.files;
 
-        if (this.params.includes('sample')) {
+        if (this.params.has('sample')) {
             this.config.opts = Config.getSampleConfig();
         }
-        if (this.params.includes('empty')) {
+        if (this.params.has('empty')) {
             this.config.opts.files_origin = undefined;
         }
 
         this.files = this.getFilesPaths();
         this.files = this.files.map(this.serializeFiles, this);
 
-        if (this.params.includes('fake')) {
+        if (this.params.has('fake')) {
             let { files, config } = require('../utils/fake');
             this.config.opts = config;
             this.files = files;
@@ -297,7 +297,7 @@ module.exports = class Graph {
         if (this.config.opts.focus_max > 0) {
             this.files = this.files.map(this.evalConnectionLevels, this); }
 
-        if (this.params.includes('citeproc') === true && this.config.canCiteproc() === true) {
+        if (this.params.has('citeproc') === true && this.config.canCiteproc() === true) {
             this.library = {};
 
             let libraryFileContent = fs.readFileSync(this.config.opts['bibliography'], 'utf-8');
@@ -824,7 +824,7 @@ module.exports = class Graph {
      */
 
     getUsedCitationReferences () {
-        if (this.params.includes('citeproc') === false || this.config.canCiteproc() === false) { return null; }
+        if (this.params.has('citeproc') === false || this.config.canCiteproc() === false) { return null; }
 
         const refs = Object.values(this.library).filter(item => item.used === true);
 
