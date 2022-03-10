@@ -268,11 +268,6 @@ module.exports = class Graph {
 
         this.files = this.files.map(this.scanLinksnContexts, this);
 
-        this.validTypes = {
-            records: Object.keys(this.config.opts.record_types),
-            links: Object.keys(this.config.opts.link_types)
-        }
-
         /**
          * Ids from all files
          * @type array
@@ -282,8 +277,6 @@ module.exports = class Graph {
 
         this.files = this.files.map(this.checkRecordType, this);
         this.files = this.files.map(this.checkLinkTargetnSource, this);
-
-        delete this.validTypes;
 
         /**
          * Links from all files
@@ -481,7 +474,7 @@ module.exports = class Graph {
      */
 
     checkRecordType (file) {
-        if (this.validTypes.records.includes(file.metas.type) === false) {
+        if (this.config.getTypesRecords().has(file.metas.type) === false) {
             this.report.type_record_change.push({ fileName: file.name, type: file.metas.type });
 
             file.metas.type = 'undefined';
@@ -519,7 +512,7 @@ module.exports = class Graph {
         });
 
         file.links = file.links.map((link) => {
-            if (this.validTypes.links.includes(link.type) === false) {
+            if (this.config.getTypesLinks().has(link.type) === false) {
                 this.report.type_link_change.push({ fileName:file.name, type: link.type });
 
                 link.type = 'undefined';

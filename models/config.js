@@ -477,4 +477,16 @@ module.exports = class Config {
 
         return true;
     }
+
+    getTypesRecords () {
+        return new Set(
+            Object.keys(this.opts.record_types)
+        );
+    }
+
+    getTypesLinks () {
+        return new Set(
+            Object.keys(this.opts.link_types)
+        );
+    }
 }
