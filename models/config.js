@@ -111,7 +111,7 @@ module.exports = class Config {
      * @static
      */
 
-    static validLinkStrokes = ['simple', 'double', 'dotted', 'dash'];
+    static validLinkStrokes = new Set(['simple', 'double', 'dotted', 'dash']);
 
     static isInvalidPath (path) {
         if (!path) { return false; }
@@ -182,7 +182,7 @@ module.exports = class Config {
                 typeof linkTypes[key]['color'] !== 'string' ||
                 linkTypes[key]['stroke'] === undefined ||
                 typeof linkTypes[key]['stroke'] !== 'string' ||
-                Config.validLinkStrokes.includes(linkTypes[key]['stroke']) === false
+                Config.validLinkStrokes.has(linkTypes[key]['stroke']) === false
             )
             {
                 return false;
