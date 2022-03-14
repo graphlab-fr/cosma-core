@@ -273,7 +273,7 @@ module.exports = class Graph {
          * @type array
          */
 
-        this.filesId = this.files.map(file => file.metas.id);
+        this.filesId = new Set(this.files.map(file => file.metas.id));
 
         this.files = this.files.map(this.checkRecordType, this);
         this.files = this.files.map(this.checkLinkTargetnSource, this);
@@ -503,7 +503,7 @@ module.exports = class Graph {
                 return false;
             }
 
-            if (this.filesId.includes(link.target.id) === false) {
+            if (this.filesId.has(link.target.id) === false) {
                 this.report.link_no_target.push({ targetId: link.target.id, fileName: file.name })
                 return false;
             }
@@ -570,7 +570,7 @@ module.exports = class Graph {
             , maxLevel = this.config.opts.focus_max;
 
         let index = [] // store all levels
-            , idsList = []; // contains all handled node ids
+            , idsList = new Set(); // contains all handled node ids
 
         index.push([nodeId]); // add the node as "zero" level
 
@@ -588,7 +588,7 @@ module.exports = class Graph {
                 }
 
                 // ignore ids already registered into another level to avoid infinity loop
-                result = result.filter(target => idsList.includes(target) === false);
+                result = result.filter(target => idsList.has(target) === false);
 
                 level = level.concat(result);
             }
@@ -602,7 +602,7 @@ module.exports = class Graph {
             level = deleteDupicates(level);
 
             index.push(level);
-            idsList = index.flat();
+            idsList = new Set(index.flat());
         }
 
         file.focusLevels = index.slice(1); // ignore level "zero"
