@@ -181,7 +181,7 @@ module.exports = class Template {
 
             focusIsActive: !(this.config.opts.focus_max <= 0),
 
-            guiContext: (Config.getContext() === 'electron' && graph.params.includes('publish') === false),
+            guiContext: (Config.getContext() === 'electron' && graph.params.has('publish') === false),
 
             // stats
 
