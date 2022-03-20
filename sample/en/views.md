@@ -4,8 +4,6 @@ id: 20210901144304
 type: documentation
 ---
 
-You can save the current state of the interface (selected record, active filters, focus mode…) for quick access. This works like a bookmark: click on the Save View button and enter a name; this adds an button with that name to the Views section in the left side menu of the cosmoscope.
+At any time, the state of the graph (selected record, active filters, focus mode) can be saved for quick access. This works like a bookmark. Click the Save view button under Views in the Menu and enter a name. This adds an eponymous button to the Views section. Clicking this button applies all settings that were active at the time the view was saved. Clicking the button again restores the normal view.
 
-Clicking the button for a view applies all settings that were active at the time the view was saved. Clicking the button again restores the normal view.
-
-Saved views can be accessed in any cosmoscope, including when opened outside of Cosma, but they can only be created and deleted from within Cosma.
+Views are preserved when exported. However, it is not possible to create a new view from an export. This is only possible from within Cosma.

@@ -1,5 +1,5 @@
 ---
-title: Citations et bibliographies
+title: Citations
 id: 20210901134745
 type: documentation
 ---

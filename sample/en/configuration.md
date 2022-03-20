@@ -4,6 +4,8 @@ id: 20210901145632
 type: documentation
 ---
 
+[[20210901131627]] Cosma can be configured extensively. The GUI version includes a Preferences window. The CLI version reads configuration text files written in YAML.
+
 ## Required parameters
 
 - Records directory: path to the directory containing your Markdown files.
@@ -26,7 +28,7 @@ The graph parameters can be changed live in the cosmoscope. This allows you to t
 - Highlight color: the color that is applied to nodes and links when hovering and selecting them.
 - Repulsion: this is the overall strength of the simulated force. The higher the value, the longer the links between nodes are.
 - Maximum distance between nodes: this is the maximum threshold for repulsion between nodes.
-- Vertical/horizontal attraction: force of attraction to the vertical/horizontal axis, from 0 to 1. A value of `0' means that the parameter is disabled. Applying a vertical/horizontal force “tightens” the graph and brings isolated nodes closer to the center.
+- Vertical/horizontal attraction: force of attraction to the vertical/horizontal axis, from 0 to 1. A value of 0 means that the parameter is disabled. Applying a vertical/horizontal force “tightens” the graph and brings isolated nodes closer to the center.
 
 ## Additional parameters
 
@@ -41,7 +43,7 @@ In order to design your custom CSS, you can :
 
 - click on Development then Show Web Inspector (requires clicking on Preferences then Enable Development Tools) ;
 - open the cosmoscope in your web browser and use the browser's development tools;
-- or you can consult Cosma's source code, specifically `/cosmoscope/template.njk` (for the HTML structure of the cosmoscope), `/cosmoscope/styles.css` and `/cosmoscope/print.css` (for the print styles).
+- or you can examine Cosma's source code, specifically `/cosmoscope/template.njk` (for the HTML structure of the cosmoscope), `/cosmoscope/styles.css` and `/cosmoscope/print.css` (for the print styles).
 
 **Tip:** cosmoscope styles use CSS variables to define the colors and fonts. You can redefine these variables to change all the interface elements they apply to. In the example below, the `custom.css` file contains declarations that change the fonts used in the cosmoscope:
 

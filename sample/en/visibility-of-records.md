@@ -1,5 +1,5 @@
 ---
-title: Effect of filters and focus mode
+title: Visibility of records
 id: 20210901150958
 type: important
 ---

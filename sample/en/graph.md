@@ -4,20 +4,20 @@ id: 20210901142644
 type: documentation
 ---
 
-The graph in the central area of the cosmoscope displays labeled and interrelated nodes. Each node corresponds to a record; the label corresponds to the title of the record. The links correspond to the links established between the records via their identifiers.
+The central area of the cosmoscope is an interactive graph of labelled nodes. Each node corresponds to a record; the label corresponds to the title of the record. The links correspond to the links established between the records via their identifiers.
 
 Hovering over a node temporarily highlights it and its connections. Clicking on a node highlights it and its connections and opens the corresponding record.
 
-You can zoom in and out of the graph freely with the mouse, the touchpad, by double-clicking on the graph background, or with the dedicated buttons at the bottom left. Press the `C` key to zoom in on a selected node. Press the `R` key to reset the zoom.
+You can zoom in and out of the graph freely with a mouse or touchpad, by double-clicking on the graph background or with the dedicated buttons at the bottom left. Press `C` to zoom in on a selected node (whose record is open). The Reset button (shortcut: `R`) resets the zoom.
 
-Nodes are laid out in space by a force simulation algorithm. A colored bar at the top left of the cosmoscope indicates the status of the simulation. Click on it (shortcut: `Space` key) to start an additional simulation cycle (this does not reset the simulation but rather gives the graph a little “jolt”).
+Nodes are organised in space by a force simulation algorithm. A coloured bar at the top of the Menu indicates the state of the drawing process (active or finished). Click on this bar (shortcut: `Space`) to start an additional simulation cycle. This does not reset the graph but re-runs the algorithm on the existing graph, improving its layout.
 
-**Tip:** a few presses of the `Space` key will gradually untangle the graph.
+If you have a particularly tangled graph, pressing `Space` a few times will progressively untangle it.
 
-Nodes can be moved slightly by clicking and dragging but stay under the influence of the simulation, so it is not possible to arrange them manually in an arbitrary way.
+The graph is not fixed: nodes can be moved by click and drag. However, the nodes and links remain permanently subject to the simulation, so it is not possible to arrange them manually. Modifying the records may change the arrangement of the nodes in space.
 
-The display of the graph can be changed temporarily via the controls under Graph parameters in the left side panel. To change the display permanently, change the default values of the corresponding settings in Preferences.
+The way the graph is displayed can be changed temporarily via the controls under Graph settings in the Menu. To change the display permanently, change the default values of the corresponding settings in Preferences › Graph.
 
-**Tip:** change the repulsion and maximum distance between nodes to adapt the display to your screen resolution and size. Add a vertical/horizontal attraction to tighten the graph and bring isolated nodes closer to the center.
+Change the strength and maximum distance between nodes to adapt the display to your screen resolution and size. Add vertical/horizontal attraction to tighten the graph and bring isolated nodes closer to the center.
 
-While it is possible to display the cosmoscope on all types of screens, it is not optimized for mobile devices, as touch does not provide access to certain interactions such as hovering, and small screens greatly limit the usefulness of the graph.
+The graph can be displayed on all types of screens but is not optimised for mobile devices: touch does not give access to certain interactions such as hovering, and small screens greatly limit the usefulness of the graph.

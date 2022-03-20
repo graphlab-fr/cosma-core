@@ -1,11 +1,15 @@
 ---
-title: Contenu des fichiers
+title: File contents
 id: 20210901133951
 type: documentation
 ---
 
-Cosma interprets the files as being written in plain Markdown.
+Cosma interprets files as being written in [CommonMark](https://spec.commonmark.org/0.30/), a strictly defined version of Markdown, a popular lightweight markup language. Check out the [CommonMark tutorial](https://commonmark.org/help/) to learn Markdown in 10 minutes.
 
-[Markdown reference and tutorial](https://commonmark.org/help/)
+Cosma renders Markdown files into HTML. Therefore, Markdown files can also include HTML code, as well as vector images in SVG.
 
-Only the text files will be rendered. Images, for example, are not embedded in the cosmoscope and will only be displayed if the path resolves to a valid URL.
+Bitmap images can also be rendered using the Markdown syntax. However, the actual image files are not included when exporting a cosmoscope. To ensure that images are displayed in the export, you should use images hosted on the web, including them via their URL. Example:
+
+```markdown
+![Alternative text](http://domain.com/image.jpg)
+```

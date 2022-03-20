@@ -6,7 +6,7 @@ type: documentation
 
 Click on New record to open the record creation form.
 
-Record title is mandatory. Additionally, you can also assign a type to the record. Record types need to defined beforehand in Preferences. You can also add arbitrary keywords to the record, separated by commas.
+Entering a title is mandatory. Additionally, you can also assign a type to the record. Record types need to defined beforehand in Preferences. You can also add arbitrary keywords to the record, separated by commas.
 
 Clicking OK creates a new record in the records directory specified in Preferences.
 
