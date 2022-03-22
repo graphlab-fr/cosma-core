@@ -27,7 +27,6 @@ function registerView() {
 
     let key = JSON.stringify(viewObj);
     key = window.btoa(key);
-    key = encodeURIComponent(key);
     return key;
 }
 

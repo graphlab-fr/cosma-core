@@ -654,6 +654,9 @@ config:
     history:
       fr: La commande d'enregistrement de l'historique est invalide
       en: Invalid history recording command
+    views:
+      fr: L'enregistrement de la vue a échoué
+      en: View registration failed
     graph_highlight_on_hover:
       fr: La commande de surbrillance des nœuds au survol est invalide
       en: Invalid command to highlight nodes on the flyover
