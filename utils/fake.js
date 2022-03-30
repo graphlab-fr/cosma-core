@@ -67,7 +67,7 @@ for (let i = 0; i < NB_NODES; i++) {
                 '# Main title',
                 '<div class="box info">Custom CSS box</div>',
                 '## Sub title',
-                [fakeMardownQuote(), fakeLink()].join(' '),
+                [fakeMardownQuote(), fakeLink(), fakeLink()].join(' '),
                 [faker.lorem.paragraphs(1), '{.red}'].join(' '),
                 '### Sub-sub title',
                 [fakeMardownTab(3, 4), fakeLink()].join(' '),
