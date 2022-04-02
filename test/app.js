@@ -6,7 +6,10 @@ describe('App', async () => {
     let browser, page;
 
     it('should open', async () => {
-        browser = await puppeteer.launch();
+        browser = await puppeteer.launch({
+            headless: false,
+            devtools: true
+        });
         page = await browser.newPage();
         const response = await page.goto(
             'file://' + path.join(__dirname, '../cosmoscope.html'),
@@ -75,6 +78,40 @@ describe('App', async () => {
                 result.push(isHidden);
             }
             assert.ok(result.every(e => e === true));
+        });
+    });
+
+    describe('record footer links', async () => {
+        // it('should links context only highlight the id fo the targeted record', async () => {
+            
+        // });
+
+        it('should backlinks context only highlight the id fo the current record', async () => {
+            const result = await page.evaluate(() => {
+                const allRecordsContainer = document.querySelectorAll('.record')
+
+                let i = 0, recordContainer = allRecordsContainer[i];
+                while (recordContainer.querySelector('.record-backlinks-list') === null) {
+                    // find the first record container with backlinks
+                    recordContainer = allRecordsContainer[i];
+                    i++;
+                }
+
+                const id = recordContainer.id;
+
+                const firstBacklinkContext = recordContainer
+                    .querySelector('.record-backlinks-list')
+                    .querySelector('.record-links-context')
+
+                const foreignIdsMarkup = firstBacklinkContext.querySelectorAll('[data-target-id]');
+
+                const ids = new Set(
+                    Array.from(foreignIdsMarkup).map(elt => elt.dataset.targetId)
+                );
+
+                return ids.has(id) && ids.size === 1;
+            });
+            assert.ok(result);
         });
     });
 

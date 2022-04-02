@@ -76,10 +76,10 @@ module.exports = class Template {
                 match = match.slice(0, -2).slice(2); 
 
                 if (linkSymbol !== undefined) {
-                    return `*${linkSymbol.trim()}*{.id-context}`
+                    return `*${linkSymbol.trim()}*{.id-context data-target-id=${match}}`
                 }
 
-                return `*&#91;&#91;${match}&#93;&#93;*{.id-context}`
+                return `*&#91;&#91;${match}&#93;&#93;*{.id-context data-target-id=${match}}`
             });
 
             return link;
