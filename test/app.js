@@ -2,6 +2,8 @@ const assert = require('assert')
     , path = require('path')
     , puppeteer = require('puppeteer');
 
+require('../index'); // generate the App
+
 describe('App', async () => {
     let browser, page;
 
