@@ -36,17 +36,20 @@ const NB_NODES = 50
     }
 
 let fakeFiles = []
-    , fakeIds = []
+    , fakeIds = (() => {
+        const ids = [];
+        for (let i = 0; i < NB_NODES; i++) ids.push(Record.generateOutDailyId() + i)
+        return ids;
+    })()
     , fakeTags = [];
 
 for (let i = 0; i < 20; i++) {
     fakeTags.push(faker.random.word());
 }
 
-for (let i = 0; i < NB_NODES; i++) {
-    let fakeId = Record.generateOutDailyId() + i
 
-    fakeIds.push(fakeId);
+for (let i = 0; i < NB_NODES; i++) {
+    let fakeId = fakeIds[i];
 
     fakeFiles.push(
         {
@@ -63,14 +66,14 @@ for (let i = 0; i < NB_NODES; i++) {
                 ]
             },
             content: [
-                faker.lorem.paragraphs(2, fakeLink()),
+                faker.lorem.paragraphs(3, fakeLink()),
                 '# Main title',
                 '<div class="box info">Custom CSS box</div>',
                 '## Sub title',
                 [fakeMardownQuote(), fakeLink(), fakeLink()].join(' '),
                 [faker.lorem.paragraphs(1), '{.red}'].join(' '),
                 '### Sub-sub title',
-                [fakeMardownTab(3, 4), fakeLink()].join(' '),
+                [fakeMardownTab(3, 4), fakeLink(), fakeLink()].join(' '),
                 faker.lorem.paragraphs(1),
                 fakeImage(),
                 faker.lorem.paragraphs(1)
