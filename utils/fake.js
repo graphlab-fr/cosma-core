@@ -52,14 +52,14 @@ for (let i = 0; i < NB_NODES; i++) {
         {
             name: faker.system.commonFileName('md'),
             filePath: faker.system.filePath(),
-            lastEditDate: faker.time.recent('unix'),
+            lastEditDate: faker.date.past(),
             metas: {
                 title: faker.name.title(),
-                type: faker.helpers.randomize(Object.keys(fakeRecordTypes)),
+                type: faker.random.arrayElement(Object.keys(fakeRecordTypes)),
                 id: fakeId,
                 tags: [
-                    faker.helpers.randomize(fakeTags),
-                    faker.helpers.randomize(fakeTags)
+                    faker.random.arrayElement(fakeTags),
+                    faker.random.arrayElement(fakeTags)
                 ]
             },
             content: [
@@ -135,10 +135,10 @@ function fakeMardownQuote () {
 function fakeLink () {
     let linkPrefix = '';
     if ((fakeIds.length % 12) === 0) {
-        linkPrefix = faker.helpers.randomize(Object.keys(fakeLinkTypes)) + ':'
+        linkPrefix = faker.random.arrayElement(Object.keys(fakeLinkTypes)) + ':'
     }
 
-    return `[[${linkPrefix}${faker.helpers.randomize(fakeIds)}]]`
+    return `[[${linkPrefix}${faker.random.arrayElement(fakeIds)}]]`
 }
 
 function fakeImage () {
@@ -146,13 +146,13 @@ function fakeImage () {
 }
 
 function fakeView () {
-    const id = faker.helpers.randomize(fakeIds);
+    const id = faker.random.arrayElement(fakeIds);
 
     const viewJson = {
         recordId: id,
         filters: [
-            faker.helpers.randomize(Object.keys(fakeRecordTypes)),
-            faker.helpers.randomize(Object.keys(fakeRecordTypes))
+            faker.random.arrayElement(Object.keys(fakeRecordTypes)),
+            faker.random.arrayElement(Object.keys(fakeRecordTypes))
         ],
         focus: {
             fromRecordId: id,
