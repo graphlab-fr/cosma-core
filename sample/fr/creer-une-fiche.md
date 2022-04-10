@@ -4,10 +4,16 @@ id: 20210901133623
 type: documentation
 ---
 
-Cliquez sur Nouvelle fiche pour ouvrir le formulaire de création de fiche de Cosma.
+Cliquez sur Fichier › Nouvelle fiche (`Ctrl/Cmd + N`) pour ouvrir le formulaire de création de fiche de Cosma.
 
-Le titre est obligatoire. Vous pouvez aussi assigner un type à la fiche, à définir préalablement dans la configuration. Vous pouvez également ajouter des mots-clés arbitraires à la fiche, en les séparant par des virgules.
+Le titre est obligatoire. Les autres champs sont facultatifs.
 
-Cliquez sur OK crée une fiche dans le répertoire indiqué dans Préférences › Répertoire des fiches (ou dans le répertoire par défaut si aucun répertoire n'a été renseigné).
+Vous pouvez assigner un type à la fiche. Le type doit être défini préalablement dans la configuration (Préférences › Types de fiche).
+
+Vous pouvez également ajouter des mots-clés à la fiche. Les mots-clés doivent être séparés par des virgules. Exemple : `mots-clé 1, mot-clé 2`.
+
+Cliquez sur OK pour créer la fiche.
+
+**Note :** le nom de fichier est généré à partir du titre. Pour une meilleure interopérabilité entre les différents systèmes d'exploitation, le nom de fichier ne contient que des caractères alphanumériques non accentués et des tirets. Exemple : une fiche intitulée « Métadonnées web sémantique » sera enregistrée comme `metadonnees-web-semantique.md`.
 
 Créer une fiche de cette manière génère un fichier conforme au [[20210901133701]] format de données requis par Cosma.

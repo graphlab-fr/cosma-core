@@ -1,5 +1,5 @@
 ---
-title: Effet des modifications d’affichage
+title: Visibilité des fiches
 id: 20210901150958
 type: important
 ---

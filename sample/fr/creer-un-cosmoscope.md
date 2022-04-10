@@ -12,13 +12,8 @@ Cliquez sur Nouveau cosmoscope (raccourci : `Cmd`/`Ctrl` + `R`) pour lancer la g
 
 ## Cosmoscope avec traitement des citations
 
-Cliquez sur Nouveau cosmoscope avec citations (raccourci : `Maj` + `Cmd`/`Ctrl` + `R`) pour lancer la génération d'un nouveau cosmoscope en activant le traitement des citations. Ceci nécessite de renseigner au moins un fichier de données bibliographiques dans Préférences › [Paramètres facultatifs](#parametres-facultatifs).
+Cliquez sur Nouveau cosmoscope avec citations (raccourci : `Maj` + `Cmd`/`Ctrl` + `R`) pour lancer la génération d'un nouveau cosmoscope en activant le traitement des citations.
 
 ## Gestion des erreurs
 
-Cosma crée automatiquement un rapport d'erreurs qui décrit les problèmes éventuellement rencontrés durant la génération d'un cosmoscope. Les erreurs peuvent être de deux types :
-
-- des données empêchent le traitement d'un fichier (titre manquant, identifiant non unique) ;
-- des données sont inconnues (type de fiche ou de lien non reconnu, lien vers un identifiant non reconnu).
-
-Cliquez sur Afficher l'historique pour consulter les rapports d'erreurs associés à chaque cosmoscope généré.
+Cosma crée automatiquement un rapport d'erreurs qui décrit les problèmes éventuellement rencontrés durant la génération d'un cosmoscope. Cliquez sur Fichier › Historique (`Cmd/Ctrl + H`) et sélectionnez une entrée pour consulter le rapport d'erreurs associé.

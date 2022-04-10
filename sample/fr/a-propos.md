@@ -1,12 +1,12 @@
 ---
-title: Présentation
+title: À propos de Cosma
 id: 20210901132721
 type: documentation
 ---
 
 [[20210901131627]] Cosma est un logiciel de visualisation de graphe documentaire. Il permet de représenter des notes interreliées sous la forme d’un réseau interactif dans une interface web. Le logiciel est conçu pour fonctionner avec des fichiers texte en Markdown et s’adapte aussi bien à une petite collection (centaine de documents) qu’à une vaste documentation (jusqu'à plusieurs milliers de documents).
 
-Cosma est développé dans le cadre du programme de recherche ANR [HyperOtlet](https://hyperotlet.hypotheses.org/).
+Cosma a été développé initialement dans le cadre du programme de recherche ANR [HyperOtlet](https://hyperotlet.hypotheses.org/).
 
 ## Spécificités de Cosma
 
@@ -38,8 +38,6 @@ L'idée de Cosma est née dans le cadre d'une recherche doctorale conduite par A
 
 Néanmoins, des efforts importants ont été entrepris dès le prototype pour concevoir soigneusement les différents aspects de l'outil, qu'il s'agisse de la visualisation de données ou de l'interaction humain-machine, notamment grâce à la participation de chercheurs spécialistes de ces domaines. Et Cosma est au cœur d'une dynamique de recherche que nous espérons inscrire dans la durée.
 
-La version actuelle de Cosma est encore en bêta. Elle sera citable via DOI prochainement.
+Cosma peut être cité dans une bibliographie de la manière suivante :
 
-La première version de Cosma, rétroactivement libellée alpha, est archivée sur Zenodo. Elle peut être citée dans une bibliographie de la manière suivante :
-
-> Arthur Perret, Guillaume Brioudes, Clément Borel, & Olivier Le Deuff. (2021). Cosma (alpha). Zenodo. <https://doi.org/10.5281/zenodo.4734377>
+> Arthur Perret, Guillaume Brioudes, Clément Borel, & Olivier Le Deuff. (2021). Cosma. Zenodo. <https://doi.org/10.5281/zenodo.5920615>

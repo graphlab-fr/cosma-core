@@ -1,5 +1,5 @@
 ---
-title: Filtrer l’affichage par types
+title: Types
 id: 20210901143447
 type: documentation
 ---
