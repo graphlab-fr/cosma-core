@@ -11,7 +11,7 @@ const { faker } = require('@faker-js/faker');
 const Record = require('../models/record')
     , Config = require('../models/config');
 
-const NB_NODES = 50
+const NB_NODES = 10
     , fakeRecordTypes = {
         'undefined': '#858585',
         'idea': '#e41a1c',
@@ -70,10 +70,10 @@ for (let i = 0; i < NB_NODES; i++) {
                 '# Main title',
                 '<div class="box info">Custom CSS box</div>',
                 '## Sub title',
-                [fakeMardownQuote(), fakeLink(), fakeLink()].join(' '),
+                [fakeMardownQuote(), fakeLink()].join(' '),
                 [faker.lorem.paragraphs(1), '{.red}'].join(' '),
                 '### Sub-sub title',
-                [fakeMardownTab(3, 4), fakeLink(), fakeLink()].join(' '),
+                fakeMardownTab(3, 4),
                 faker.lorem.paragraphs(1),
                 fakeImage(),
                 faker.lorem.paragraphs(1)
@@ -90,7 +90,7 @@ module.exports = {
         title: 'Test',
         description: 'This cosmoscope was automatically generated with example data in order to test the functionality of the software.',
         keywords: ['test', 'sample'],
-        link_symbol: '🔗',
+        // link_symbol: '🔗',
         lang: 'en',
         views: {
             test1: fakeView(),
@@ -137,7 +137,7 @@ function fakeMardownQuote () {
 
 function fakeLink () {
     let linkPrefix = '';
-    if ((fakeIds.length % 12) === 0) {
+    if (Math.random() < 0.3) {
         linkPrefix = faker.random.arrayElement(Object.keys(fakeLinkTypes)) + ':'
     }
 
