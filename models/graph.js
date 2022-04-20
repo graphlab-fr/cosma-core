@@ -245,9 +245,8 @@ module.exports = class Graph {
         this.files = this.files.map(this.serializeFiles, this);
 
         if (this.params.has('fake')) {
-            let { files, config } = require('../utils/fake');
-            this.config.opts = config;
-            this.files = files;
+            let { files: fakeFiles } = require('../utils/fake');
+            this.files = fakeFiles;
         }
 
         this.files = this.files.filter(this.verifFile, this);

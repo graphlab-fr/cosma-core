@@ -11,7 +11,7 @@ const { faker } = require('@faker-js/faker');
 const Record = require('../models/record')
     , Config = require('../models/config');
 
-const NB_NODES = 50
+const NB_NODES = 10
     , fakeRecordTypes = {
         'undefined': '#858585',
         'idea': '#e41a1c',
@@ -36,41 +36,44 @@ const NB_NODES = 50
     }
 
 let fakeFiles = []
-    , fakeIds = []
+    , fakeIds = (() => {
+        const ids = [];
+        for (let i = 0; i < NB_NODES; i++) ids.push(Record.generateOutDailyId() + i)
+        return ids;
+    })()
     , fakeTags = [];
 
 for (let i = 0; i < 20; i++) {
     fakeTags.push(faker.random.word());
 }
 
-for (let i = 0; i < NB_NODES; i++) {
-    let fakeId = Record.generateOutDailyId() + i
 
-    fakeIds.push(fakeId);
+for (let i = 0; i < NB_NODES; i++) {
+    let fakeId = fakeIds[i];
 
     fakeFiles.push(
         {
             name: faker.system.commonFileName('md'),
             filePath: faker.system.filePath(),
-            lastEditDate: faker.time.recent('unix'),
+            lastEditDate: faker.date.past(),
             metas: {
                 title: faker.name.title(),
-                type: faker.helpers.randomize(Object.keys(fakeRecordTypes)),
+                type: faker.random.arrayElement(Object.keys(fakeRecordTypes)),
                 id: fakeId,
                 tags: [
-                    faker.helpers.randomize(fakeTags),
-                    faker.helpers.randomize(fakeTags)
+                    faker.random.arrayElement(fakeTags),
+                    faker.random.arrayElement(fakeTags)
                 ]
             },
             content: [
-                faker.lorem.paragraphs(2, fakeLink()),
+                faker.lorem.paragraphs(3, fakeLink()),
                 '# Main title',
                 '<div class="box info">Custom CSS box</div>',
                 '## Sub title',
                 [fakeMardownQuote(), fakeLink()].join(' '),
                 [faker.lorem.paragraphs(1), '{.red}'].join(' '),
                 '### Sub-sub title',
-                [fakeMardownTab(3, 4), fakeLink()].join(' '),
+                fakeMardownTab(3, 4),
                 faker.lorem.paragraphs(1),
                 fakeImage(),
                 faker.lorem.paragraphs(1)
@@ -87,7 +90,7 @@ module.exports = {
         title: 'Test',
         description: 'This cosmoscope was automatically generated with example data in order to test the functionality of the software.',
         keywords: ['test', 'sample'],
-        link_symbol: '🔗',
+        // link_symbol: '🔗',
         lang: 'en',
         views: {
             test1: fakeView(),
@@ -134,11 +137,11 @@ function fakeMardownQuote () {
 
 function fakeLink () {
     let linkPrefix = '';
-    if ((fakeIds.length % 12) === 0) {
-        linkPrefix = faker.helpers.randomize(Object.keys(fakeLinkTypes)) + ':'
+    if (Math.random() < 0.3) {
+        linkPrefix = faker.random.arrayElement(Object.keys(fakeLinkTypes)) + ':'
     }
 
-    return `[[${linkPrefix}${faker.helpers.randomize(fakeIds)}]]`
+    return `[[${linkPrefix}${faker.random.arrayElement(fakeIds)}]]`
 }
 
 function fakeImage () {
@@ -146,13 +149,13 @@ function fakeImage () {
 }
 
 function fakeView () {
-    const id = faker.helpers.randomize(fakeIds);
+    const id = faker.random.arrayElement(fakeIds);
 
     const viewJson = {
         recordId: id,
         filters: [
-            faker.helpers.randomize(Object.keys(fakeRecordTypes)),
-            faker.helpers.randomize(Object.keys(fakeRecordTypes))
+            faker.random.arrayElement(Object.keys(fakeRecordTypes)),
+            faker.random.arrayElement(Object.keys(fakeRecordTypes))
         ],
         focus: {
             fromRecordId: id,

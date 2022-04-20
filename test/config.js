@@ -1,6 +1,7 @@
 const assert = require('assert');
 
-const Config = require('../models/config');
+const Config = require('../models/config')
+    , { config: fakeOpts } = require('../utils/fake');
 
 describe('Config verif', () => {
     it('should be return error into report array for invalid paths', () => {
@@ -154,4 +155,15 @@ describe('Config verif', () => {
         });
     })
 
+    describe('entities types', () => {
+        it('should be keep all record types', () => {
+            const config = new Config(fakeOpts);
+            assert.ok(JSON.stringify(fakeOpts.record_types) === JSON.stringify(config.opts.record_types));
+        })
+
+        it('should be keep all link types', () => {
+            const config = new Config(fakeOpts);
+            assert.ok(JSON.stringify(fakeOpts.link_types) === JSON.stringify(config.opts.link_types));
+        })
+    })
 });
