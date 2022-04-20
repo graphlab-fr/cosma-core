@@ -79,7 +79,6 @@ module.exports = class Template {
 
     static markLinkContext(fileLinks, linkSymbol, fxToHighlight) {
         return fileLinks.map((link) => {
-            console.log(link.target);
             link.context = link.context.replaceAll(/\[\[((\w:[0-9]{14})|([0-9]{14}))\]\]/g, (match) => {
                 // extract link id, without '[[' & ']]' caracters
                 const idInMatch = match.slice(0, -2).slice(2);
