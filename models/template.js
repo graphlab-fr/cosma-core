@@ -72,12 +72,11 @@ module.exports = class Template {
     /**
      * Match and transform links from context
      * @param {Array} fileLinks Array of link objets
-     * @param {String} linkSymbol Symbol to remplace all context links
      * @param {Function} fxToHighlight Function return a boolean
      * @returns {String}
      */
 
-    static markLinkContext(fileLinks, linkSymbol, fxToHighlight) {
+    static markLinkContext(fileLinks, fxToHighlight) {
         return fileLinks.map((link) => {
             link.context = link.context.replaceAll(/\[\[((\w:[0-9]{14})|([0-9]{14}))\]\]/g, (match) => {
                 // extract link id, without '[[' & ']]' caracters
@@ -86,10 +85,10 @@ module.exports = class Template {
                 const matchAsNumber = Graph.normalizeLinks(idInMatch).target.id;
 
                 if (fxToHighlight(link, matchAsNumber) === true) {
-                    return `*&#91;&#91;${linkSymbol || idInMatch}&#93;&#93;*{.id-context data-target-id=${idInMatch}}`
+                    return `*&#91;&#91;${idInMatch}&#93;&#93;*{.id-context data-target-id=${idInMatch}}`
                 }
 
-                return linkSymbol || match;
+                return match;
 
             });
 
@@ -119,11 +118,9 @@ module.exports = class Template {
         })
 
         graph.files = graph.files.map((file) => {
-            const linkSymbol = (this.config.opts.link_symbol || undefined);
-
-            file.content = Template.convertLinks(file, file.content, linkSymbol);
-            file.links = Template.markLinkContext(file.links, linkSymbol, (link, idInContext) => idInContext === link.target.id);
-            file.backlinks = Template.markLinkContext(file.backlinks, linkSymbol, (link, idInContext) => idInContext === link.source.id);
+            file.content = Template.convertLinks(file, file.content);
+            file.links = Template.markLinkContext(file.links, (link, idInContext) => idInContext === link.target.id);
+            file.backlinks = Template.markLinkContext(file.backlinks, (link, idInContext) => idInContext === link.source.id);
 
             this.registerType(file.metas.type, file.metas.id);
             this.registerTags(file.metas.tags, file.metas.id);
