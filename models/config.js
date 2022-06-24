@@ -88,7 +88,7 @@ module.exports = class Config {
 
     static minValues = {
         focus_max: 0,
-        graph_text_size: 5,
+        graph_text_size: 1,
         attraction_force: 50,
         attraction_distance_max: 200,
         attraction_vertical: 0,
