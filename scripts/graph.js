@@ -122,7 +122,7 @@ elts.nodes = svg.append("g")
     });
 
 elts.circles = elts.nodes.append("circle")
-    .attr("r", (d) => d.size)
+    .attr("r", (d) => d.size * 0.7)
     .attr("class", (d) => "n_" + d.type)
     .call(d3.drag()
         .on("start", function(d) {
