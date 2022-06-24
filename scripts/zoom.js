@@ -6,8 +6,8 @@
 
 (function () {
 
-    const zoomInterval = 0.3 // interval between two (de)zoom
-        , zoomMax = 3
+    const zoomInterval = 1 // interval between two (de)zoom
+        , zoomMax = 5
         , zoomMin = 1;
     
     svg.call(d3.zoom().on('zoom', function () {
