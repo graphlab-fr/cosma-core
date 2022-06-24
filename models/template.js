@@ -118,7 +118,8 @@ module.exports = class Template {
         })
 
         graph.files = graph.files.map((file) => {
-            file.content = Template.convertLinks(file, file.content);
+            const linkSymbol = (this.config.opts.link_symbol || undefined);
+            file.content = Template.convertLinks(file, file.content, linkSymbol);
             file.links = Template.markLinkContext(file.links, (link, idInContext) => idInContext === link.target.id);
             file.backlinks = Template.markLinkContext(file.backlinks, (link, idInContext) => idInContext === link.source.id);
 
