@@ -8,6 +8,8 @@ const path = require('path')
     , fs = require('fs')
     , yml = require('js-yaml');
 
+const Link = require('./link');
+
 /**
  * Class to manage the user config
  */
@@ -105,14 +107,6 @@ module.exports = class Config {
         en: "English",
     };
 
-    /**
-     * List of valid values for the links stroke
-     * Apply to config form
-     * @static
-     */
-
-    static validLinkStrokes = new Set(['simple', 'double', 'dotted', 'dash']);
-
     static isInvalidPath (path) {
         if (!path) { return false; }
 
@@ -182,7 +176,7 @@ module.exports = class Config {
                 typeof linkTypes[key]['color'] !== 'string' ||
                 linkTypes[key]['stroke'] === undefined ||
                 typeof linkTypes[key]['stroke'] !== 'string' ||
-                Config.validLinkStrokes.has(linkTypes[key]['stroke']) === false
+                Link.validLinkStrokes.has(linkTypes[key]['stroke']) === false
             )
             {
                 return false;
@@ -242,6 +236,7 @@ module.exports = class Config {
         return Object.assign({}, Config.base, {
             files_origin: path.join(__dirname, '../sample', opts.lang),
             record_types: {
+                undefined: '#147899',
                 documentation: '#147899',
                 important: '#aa0000'
             },

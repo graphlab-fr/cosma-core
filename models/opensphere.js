@@ -21,18 +21,18 @@ const moment = require('moment');
 
 module.exports = class Opensphere {
     /**
-     * @param {Object[]} nodesData
-     * @returns {Node[]}
+     * @param {Object[]} recordsData
+     * @returns {Record[]}
      */
 
-    static formatArrayNodes(nodesData) {
-        return nodesData.map(({ title, id, image, ...rest }) => {
-            let contents = [], types = [], metas = [], tags = [];
+    static formatArrayRecords(recordsData) {
+        return recordsData.map(({ title, id, image, ...rest }) => {
+            let content = [], types = [], metas = [], tags = [];
             for (const [key, value] of Object.entries(rest)) {
                 const [field, label] = key.split(':', 2);
                 switch (field) {
                     case 'content':
-                        contents.push({ label, body: value });
+                        content.push({ label, body: value });
                         break;
                     case 'type':
                         types.push({ label, body: value });
@@ -47,10 +47,10 @@ module.exports = class Opensphere {
                 }
             }
 
-            const node = new Node(
+            const record = new Record(
                 title,
                 id,
-                contents,
+                content,
                 types,
                 metas,
                 tags,
@@ -59,7 +59,7 @@ module.exports = class Opensphere {
                 image
             )
 
-            if (node.isValid()) { return node; }
+            if (record.isValid()) { return record; }
             return undefined;
         })
     }
@@ -79,12 +79,12 @@ module.exports = class Opensphere {
     }
 
     /**
-     * @param {Node[]} nodes
+     * @param {Record[]} records
      * @returns {string[]}
      */
 
-    static getTypesFromNodes(nodes) {
-        let typesBody = nodes.map(({ types }) => {
+    static getTypesFromRecords(records) {
+        let typesBody = records.map(({ types }) => {
             return types.map(({ body }) => body);
         });
         typesBody = typesBody.flat();
@@ -94,22 +94,26 @@ module.exports = class Opensphere {
     }
 
     /**
-     * @param {Node[]} nodes
+     * @param {Record[]} records
      * @param {Link[]} links
      * @param {Object} opts
      */
 
-    constructor(nodes, links, opts) {
-        this.nodes = nodes;
-        this.links = links;
+    constructor(records, links, opts) {
+        this.records = records;
+        const nodes = 
+        this.data = {
+            links,
+            nodes
+        };
 
         this.config = new Config(opts);
-        const types = Opensphere.getTypesFromNodes(this.nodes);
+        const types = Opensphere.getTypesFromRecords(this.records);
         const typesFromConfig = new Set(Object.keys(this.config.opts.record_types));
         for (const type of types) {
             if (typesFromConfig.has(type)) {
                 continue; }
-            this.config.opts.record_types[type] = '#CCCCCC'
+            this.config.opts.record_types[type] = '#CCCCCC';
         }
         console.log(this.config.opts);
         // for (const [body, color] of Object.entries(this.config.opts.record_types)) {
@@ -120,11 +124,11 @@ module.exports = class Opensphere {
     }
 }
 
-class Node {
+class Record {
     /**
      * @param {string} title
      * @param {number} id
-     * @param {Item[]} contents
+     * @param {Item[]} content
      * @param {Item[]} types
      * @param {Item[]} metas
      * @param {Item[]} tags
@@ -133,10 +137,10 @@ class Node {
      * @param {string} image
      */
 
-    constructor(title, id, contents, types, metas, tags, timeBegin, timeEnd, image) {
+    constructor(title, id, content, types, metas, tags, timeBegin, timeEnd, image) {
         this.title = title;
         this.id = Number(id);
-        this.contents = contents;
+        this.content = content;
         this.types = types;
         this.metas = metas;
         this.tags = tags;
@@ -150,7 +154,7 @@ class Node {
     verif() {
         if (!this.title) { this.report.push('Invalid title'); }
         if (!this.id || isNaN(this.id)) { this.report.push('Invalid id'); }
-        if (isValidList(this.contents) === false) { this.report.push('Invalid contents'); }
+        if (isValidList(this.content) === false) { this.report.push('Invalid content'); }
         if (isValidList(this.types) === false) { this.report.push('Invalid types'); }
         if (isValidList(this.metas) === false) { this.report.push('Invalid metas'); }
         if (isValidList(this.tags) === false) { this.report.push('Invalid tags'); }

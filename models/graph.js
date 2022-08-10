@@ -12,6 +12,8 @@ const fs = require('fs')
     , Citr = require('@zettlr/citr');
 
 const Config = require('./config')
+    , Link = require('./link')
+    , Node = require('./node')
     , lang = require('./lang');
 
 /**
@@ -677,13 +679,13 @@ module.exports = class Graph {
 
     getNodes () {
         return this.files.map((file) => {
-            return {
-                id: file.metas.id,
-                label: file.metas.title,
-                type: file.metas.type,
-                size: Graph.getNodeRank(file.links.length, file.backlinks.length),
-                focus: file.focusLevels
-            }
+            return new Node(
+                file.metas.id,
+                file.metas.title,
+                file.metas.type,
+                Graph.getNodeRank(file.links.length, file.backlinks.length),
+                file.focusLevels
+            );
         })
     }
 
@@ -694,16 +696,16 @@ module.exports = class Graph {
 
     getLinks () {
         return this.filesLinks.map((link, id) => {
-            const style = this.getLinkStyle(link.type);
+            const { shape, color } = this.getLinkStyle(link.type);
 
-            return {
-                id: id,
-                type: link.type,
-                shape: style.shape,
-                color: style.color,
-                source: link.source.id,
-                target: link.target.id
-            }
+            return new Link(
+                id,
+                link.type,
+                shape,
+                color,
+                link.source.id,
+                link.target.id
+            );
         });
     }
 
