@@ -4,6 +4,22 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
+/**
+ * @typedef Direction
+ * @type {object}
+ * @property {number} id
+ * @property {string} title
+ * @property {string} type
+ */
+
+/**
+ * @typedef Reference
+ * @type {object}
+ * @property {string} context
+ * @property {Direction} source
+ * @property {Direction} target
+ */
+
 const path = require('path')
     , fs = require('fs')
     , yml = require('js-yaml')
@@ -43,7 +59,7 @@ module.exports = class Record {
                 Record.generateOutDailyId() + i
             );
 
-            const result = record.save(true);
+            const result = record.saveAsFile(true);
 
             if (result === false) {
                 report.push(i);
@@ -115,68 +131,95 @@ module.exports = class Record {
     }
 
     /**
+     * @param {Reference[]} referenceArray
+     * @returns {boolean}
+     */
+
+    static verifReferenceArray(referenceArray) {
+        if (Array.isArray(referenceArray) === false) {
+            return false;
+        }
+        for (const reference of referenceArray) {
+            if (typeof reference !== 'object') {
+                return false;
+            }
+            if (
+                typeof reference['context'] !== 'string' ||
+                typeof reference['source'] !== 'object' ||
+                typeof reference['target'] !== 'object'
+            ) {
+                return false;
+            }
+            if (
+                Record.verifDirectionArray(reference['source']) === false ||
+                Record.verifDirectionArray(reference['target']) === false
+            ) {
+                return false; 
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param {Direction} direction
+     * @returns {boolean}
+     */
+
+    static verifDirectionArray(direction) {
+        if (!direction['id'] || !direction['title'] || !direction['type']) {
+            return false;
+        }
+        if (isNaN(direction['id'])) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Generate a record.
-     * @param {string} title - Title of the record.
-     * @param {string} type - Type of the record, registred into the config.
-     * @param {string} tags - List of tags of the record.
-     * @param {string} content - Text content if the record.
-     * @param {string} fileName - Text content (Markdown) if the record.
      * @param {string} id - Unique identifier of the record.
+     * @param {string} title - Title of the record.
+     * @param {string | string[]} [type='undefined'] - Type of the record, registred into the config.
+     * @param {string | string[]} tags - List of tags of the record.
+     * @param {object} metas - Metas to add to Front Matter.
+     * @param {string} content - Text content if the record.
+     * @param {Reference[]} links - Link, to others records.
+     * @param {Reference[]} backlinks - Backlinks, from others records.
+     * @param {number} begin - Timestamp.
+     * @param {number} end - Timestamp.
+     * @param {string[]} images - Link to others records.
      * @example new Record('My record', 'concept', 'tag 1,tag 2', 'Lorem *ipsum*', 'my-record', 20210704100343);
      */
 
-    constructor (title, type = 'undefined', tags = '', content = '', fileName = title, id = Record.generateId()) {
-        /**
-         * @type string
-         */
+    constructor (id = Record.generateId(), title, type = 'undefined', tags, metas, content = '', links, backlinks, begin, end, images) {
         this.title = title;
-        /**
-         * @type number
-         * @example 20210704100343
-         */
-        this.id = id;
-        /**
-         * @type string
-         * @default 'undefined'
-         * @example 20210704100343
-         */
+        this.id = Number(id);
         this.type = type;
-        /**
-         * @type array
-         */
-        this.tags
+        this.tags;
 
-        if (tags !== '') { this.tags = tags.split(','); }
+        if (tags) {
+            if (Array.isArray(tags)) {
+                this.tags = tags.length === 0 ? undefined : tags;
+            } else {
+                this.tags = tags.split(',').filter((str) => str !== '');
+                this.tags = this.tags.length === 0 ? undefined : this.tags;
+            }
+        }
 
-        /**
-         * @type string
-         */
-        this.ymlFrontMatter = yml.dump(this);
-        this.ymlFrontMatter = '---\n' + this.ymlFrontMatter + '---\n\n';
-        /**
-         * @type string
-         */
-        this.content = this.ymlFrontMatter + content;
-        /**
-         * from Config().opts
-         * @type object
-         */
-        this.config = new Config().opts;
-        /**
-         * Markdown file name, with its extension
-         * @type string
-         * @exemple 'my idea.md'
-         */
-        this.fileName = slugify(fileName, {
-            replacement: ' ',
-            remove: /[&*+~.'"!:@]/g,
+        this.ymlFrontMatter = yml.dump({
+            ...this,
+            ...metas
         });
-        this.fileName = `${this.fileName}.md`;
-        /**
-         * Path to Markdown file destination
-         * @type string
-         */
-        this.path = path.join(this.config.files_origin, this.fileName);
+        this.ymlFrontMatter = '---\n' + this.ymlFrontMatter + '---\n\n';
+
+        this.content = content;
+        this.links = links;
+        this.backlinks = backlinks;
+        this.begin = begin;
+        this.end = end;
+        this.images = images;
+
+        this.config = new Config().opts;
         /**
          * Invalid fields
          * @type array
@@ -189,22 +232,32 @@ module.exports = class Record {
     /**
      * Save the record to the config 'files_origin' path option
      * @param {boolean} force - If can overwrite
-     * @return {mixed} - True if the record is saved, false if fatal error
+     * @param {string} fileName
+     * @return {boolean} - True if the record is saved, false if fatal error
      * or the errors array
      */
 
-    save (force = false) {
+    saveAsFile (force = false, fileName = this.title) {
+        this.content = this.ymlFrontMatter + this.content;
+
+        /** @exemple 'my-idea.md' */
+        this.fileName = slugify(fileName, {
+            replacement: ' ',
+            remove: /[&*+~.'"!:@]/g,
+        });
+        this.fileName = `${this.fileName}.md`;
+        this.path = path.join(this.config.files_origin, this.fileName);
+
+        if (this.isValid() === false) {
+            return false;
+        }
+
+        if (this.willOverwrite() === true && force === false) {
+            return 'overwriting';
+        }
+
         try {
-            if (this.isValid() === false) {
-                return false;
-            }
-
-            if (this.willOverwrite() === true && force === false) {
-                return 'overwriting';
-            }
-
             fs.writeFileSync(this.path, this.content);
-
             return true;
         } catch (error) {
             console.log(error);
@@ -220,8 +273,14 @@ module.exports = class Record {
         if (this.title === '') {
             this.report.push('title'); }
 
-        if (new RegExp(/^[0-9]{14}$/gs).test(this.id) === false) {
+        if (isNaN(this.id)) {
             this.report.push('id'); }
+
+        if (this.links !== undefined && Record.verifReferenceArray(this.links) === false) {
+            this.report.push('links'); }
+
+        if (this.backlinks !== undefined && Record.verifReferenceArray(this.backlinks) === false) {
+            this.report.push('backlinks'); }
     }
 
     /**

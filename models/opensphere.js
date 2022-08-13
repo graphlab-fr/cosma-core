@@ -11,11 +11,11 @@
  * @property {string} body Display as a body text
  */
 
-
-// const fs = require('fs')
-//     , path = require('path');
-
-const Config = require('./config');
+const Config = require('./config')
+    , Graph = require('./graph')
+    , Link = require('./link')
+    , Node = require('./node')
+    , Record = require('./record');
 
 const moment = require('moment');
 
@@ -25,43 +25,123 @@ module.exports = class Opensphere {
      * @returns {Record[]}
      */
 
-    static formatArrayRecords(recordsData) {
+    static formatArrayRecords(recordsData, links) {
+        const nodes = recordsData.map(({ id, title, ...rest }) => {
+            let types = [];
+            for (const [key, value] of Object.entries(rest)) {
+                const [field, label] = key.split(':', 2);
+                switch (field) {
+                    case 'type':
+                        types.push(value);
+                        break;
+                }
+            }
+            return new Node(
+                id,
+                title,
+                types[0]
+            );
+        });
+
         return recordsData.map(({ title, id, image, ...rest }) => {
-            let content = [], types = [], metas = [], tags = [];
+            let contents = [], types = [], metas = {}, tags = [];
             for (const [key, value] of Object.entries(rest)) {
                 const [field, label] = key.split(':', 2);
                 switch (field) {
                     case 'content':
-                        content.push({ label, body: value });
+                        contents.push([`<h3>${label}</h3>`, value]);
                         break;
                     case 'type':
-                        types.push({ label, body: value });
+                        types.push(value);
                         break;
                     case 'tag':
-                        tags.push({ label, body: value });
+                        tags.push(value);
                         break;
                     case 'meta':
                     default:
-                        metas.push({ label, body: value });
+                        metas[label] = value;
                         break;
                 }
             }
 
+            const content = contents
+                .map((content) => content.join('\n\n'))
+                .join('\n\n');
+
+            const {
+                linksReferences,
+                backlinksReferences
+            } = Opensphere.getReferencesFromLinks(Number(id), links, nodes);
+
             const record = new Record(
-                title,
                 id,
-                content,
+                title,
                 types,
-                metas,
                 tags,
+                metas,
+                content,
+                linksReferences,
+                backlinksReferences,
                 rest['time:begin'],
                 rest['time:end'],
-                image
-            )
+                []
+            );
 
             if (record.isValid()) { return record; }
             return undefined;
         })
+    }
+
+    /**
+     * @param {number} nodeId
+     * @param {Link[]} links
+     * @param {Node[]} nodes
+     * @returns {Reference[]}
+     */
+
+    static getReferencesFromLinks(nodeId, links, nodes) {
+        const linksFromNodeReferences = links
+            .filter(link => link.source === nodeId)
+            .map(({ title, source: sourceId, target: targetId }) => {
+                const { label: targetLabel, type: targetType } = nodes.find(n => n.id === targetId);
+                const { label: sourceLabel, type: sourceType } = nodes.find(n => n.id === sourceId);
+                return {
+                    context: title,
+                    source: {
+                        id: sourceId,
+                        title: sourceLabel,
+                        type: sourceType
+                    },
+                    target: {
+                        id: targetId,
+                        title: targetLabel,
+                        type: targetType
+                    }
+                }
+            });
+        const backlinksToNodeReferences = links
+            .filter(link => link.target === nodeId)
+            .map(({ title, source: sourceId, target: targetId }) => {
+                const { label: targetLabel, type: targetType } = nodes.find(n => n.id === targetId);
+                const { label: sourceLabel, type: sourceType } = nodes.find(n => n.id === sourceId);
+                return {
+                    context: title,
+                    source: {
+                        id: sourceId,
+                        title: sourceLabel,
+                        type: sourceType
+                    },
+                    target: {
+                        id: targetId,
+                        title: targetLabel,
+                        type: targetType
+                    }
+                }
+            });
+        return {
+            linksReferences: linksFromNodeReferences,
+            backlinksReferences: backlinksToNodeReferences
+        }
     }
 
     /**
@@ -70,8 +150,8 @@ module.exports = class Opensphere {
      */
 
     static formatArrayLinks(linksData) {
-        return linksData.map(({ title, source, target }) => {
-            const link = new Link(title, source, target)
+        return linksData.map(({ title, source, target }, i) => {
+            const link = new Link(i, title, undefined, undefined, undefined, source, target);
 
             if (link.isValid()) { return link; }
             return undefined;
@@ -84,8 +164,8 @@ module.exports = class Opensphere {
      */
 
     static getTypesFromRecords(records) {
-        let typesBody = records.map(({ types }) => {
-            return types.map(({ body }) => body);
+        let typesBody = records.map(({ type }) => {
+            return type;
         });
         typesBody = typesBody.flat();
         typesBody = new Set(typesBody);
@@ -101,7 +181,19 @@ module.exports = class Opensphere {
 
     constructor(records, links, opts) {
         this.records = records;
-        const nodes = 
+        let nodes = this.records.map(({ id, title, type }) => {
+            return new Node(
+                id,
+                title,
+                type[0],
+                3,
+                Graph.evalConnectionLevels(id, records)
+            );
+        });
+        // nodes = nodes.map(node => {
+        //     node.focus = Graph.evalConnectionLevels(node.id, nodes);
+        //     return node;
+        // })
         this.data = {
             links,
             nodes
@@ -113,101 +205,7 @@ module.exports = class Opensphere {
         for (const type of types) {
             if (typesFromConfig.has(type)) {
                 continue; }
-            this.config.opts.record_types[type] = '#CCCCCC';
+            this.config.opts.record_types[type] = this.config.opts.record_types['undefined'];
         }
-        console.log(this.config.opts);
-        // for (const [body, color] of Object.entries(this.config.opts.record_types)) {
-        //     if (condition) {
-                
-        //     }
-        // }
-    }
-}
-
-class Record {
-    /**
-     * @param {string} title
-     * @param {number} id
-     * @param {Item[]} content
-     * @param {Item[]} types
-     * @param {Item[]} metas
-     * @param {Item[]} tags
-     * @param {string} timeBegin
-     * @param {string} timeEnd
-     * @param {string} image
-     */
-
-    constructor(title, id, content, types, metas, tags, timeBegin, timeEnd, image) {
-        this.title = title;
-        this.id = Number(id);
-        this.content = content;
-        this.types = types;
-        this.metas = metas;
-        this.tags = tags;
-        this.timeBegin = !timeBegin ? undefined : moment(timeBegin).unix();
-        this.timeEnd = !timeEnd ? undefined : moment(timeEnd).unix();
-        this.image = image;
-
-        this.report = [];
-    }
-
-    verif() {
-        if (!this.title) { this.report.push('Invalid title'); }
-        if (!this.id || isNaN(this.id)) { this.report.push('Invalid id'); }
-        if (isValidList(this.content) === false) { this.report.push('Invalid content'); }
-        if (isValidList(this.types) === false) { this.report.push('Invalid types'); }
-        if (isValidList(this.metas) === false) { this.report.push('Invalid metas'); }
-        if (isValidList(this.tags) === false) { this.report.push('Invalid tags'); }
-        // this.timeBegin === NaN if moment(this.timeBegin).isValid() === false
-        if (isNaN(this.timeBegin)) { this.report.push('Invalid time begin'); }
-        if (isNaN(this.timeEnd)) { this.report.push('Invalid time end'); }
-    }
-
-    /**
-     * @param {Item[]} list
-     * @returns {boolean}
-     */
-
-    isValidList(list) {
-        if (Array.isArray(list) === false) {
-            return false;
-        }
-        for (const item of list) {
-            if (!item['label'] || !item['body']) {
-                return false;
-            }
-        }
-    }
-
-    /**
-     * @returns {boolean}
-     */
-
-    isValid() {
-        return this.report.length === 0;
-    }
-}
-
-class Link {
-    constructor(title, source, target) {
-        this.title = title;
-        this.source = Number(source);
-        this.target = Number(target);
-
-        this.report = [];
-    }
-
-    verif() {
-        if (!this.title) { this.report.push('Invalid title'); }
-        if (!this.source || isNaN(this.source)) { this.report.push('Invalid source'); }
-        if (!this.target || isNaN(this.target)) { this.report.push('Invalid target'); }
-    }
-
-    /**
-     * @returns {boolean}
-     */
-
-    isValid() {
-        return this.report.length === 0;
     }
 }

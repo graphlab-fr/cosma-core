@@ -560,15 +560,14 @@ module.exports = class Graph {
      * as link or backlink
      * The second connection level contains all nodes that are connected to the first one
      * and so forth
-     * @param {array} file - from this.findBacklinks()
-     * @returns {object} - Array of files objets
+     * @param {number} nodeId
+     * @param {Record[]} records
+     * @param {number} [maxLevel = 2]
+     * @returns {array[]} - Array of files objets
      */
 
-    evalConnectionLevels (file) {
-        file.focusLevels = [];
-
-        const nodeId = file.metas.id
-            , maxLevel = this.config.opts.focus_max;
+    static evalConnectionLevels (nodeId, records, maxLevel = 2) {
+        let focusLevels = [];
 
         let index = [] // store all levels
             , idsList = new Set(); // contains all handled node ids
@@ -581,7 +580,7 @@ module.exports = class Graph {
 
             for (const target of index[index.length - 1]) {
                 // searching connections for each nodes from the last indexed level
-                let result = getConnectedIds.apply(this, [target]);
+                let result = getConnectedIds(target, records);
 
                 if (result === false) {
                     // if the connected node have not connections, analyse the next one
@@ -606,7 +605,7 @@ module.exports = class Graph {
             idsList = new Set(index.flat());
         }
 
-        file.focusLevels = index.slice(1); // ignore level "zero"
+        focusLevels = index.slice(1); // ignore level "zero"
 
         /**
          * Get the id of the connected nodes
@@ -614,13 +613,13 @@ module.exports = class Graph {
          * @returns {array} - Ids of the connected nodes (by link or backlink)
          */
 
-        function getConnectedIds(nodeId) {
-            let sources = this.files
-                .find(file => file.metas.id === nodeId).links
+        function getConnectedIds(nodeId, records) {
+            let sources = records
+                .find(record => record.id === nodeId).links
                 .map(link => link.target.id);
 
-            let targets = this.files
-                .find(file => file.metas.id === nodeId).backlinks
+            let targets = records
+                .find(record => record.id === nodeId).backlinks
                 .map(backlink => backlink.source.id);
 
             targets = targets.concat(sources);
@@ -631,7 +630,7 @@ module.exports = class Graph {
             return targets;
         }
 
-        return file;
+        return focusLevels;
     }
 
     /**
@@ -700,6 +699,7 @@ module.exports = class Graph {
 
             return new Link(
                 id,
+                undefined,
                 link.type,
                 shape,
                 color,

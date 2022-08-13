@@ -38,15 +38,15 @@ module.exports = class Template {
     /**
      * Convert valid wikilinks text to Markdown hyperlinks
      * The content of the Markdown hyperlink is the link id or the linkSymbol if it is defined
-     * The link is valid if it can be found from one file
-     * For each link we get the type and the name from the targeted file
-     * @param {object} file - File object from Graph class.
+     * The link is valid if it can be found from one record
+     * For each link we get the type and the name from the targeted record
+     * @param {object} record - File object from Graph class.
      * @param {string} linkSymbol - String from config option 'link_symbol'.
      * @return {object} - File with an updated content
      * @static
      */
 
-    static convertLinks(file, content, linkSymbol) {
+    static convertLinks(record, content, linkSymbol) {
         return content.replace(/(\[\[\s*).*?(\]\])/g, function(extract) { // get '[[***]]' strings
             // extract link id, without '[[' & ']]' caracters
             let link = extract.slice(0, -2).slice(2);
@@ -55,9 +55,9 @@ module.exports = class Template {
     
             if (link === NaN) { return extract; } // link is not a number
 
-            const associatedMetas = file.links.find(i => i.target.id === link);
+            const associatedMetas = record.links.find(i => i.target.id === link);
     
-            // link is not registred into file metas
+            // link is not registred into record metas
             if (associatedMetas === undefined) { return extract; }
     
             link = associatedMetas;
@@ -71,13 +71,13 @@ module.exports = class Template {
 
     /**
      * Match and transform links from context
-     * @param {Array} fileLinks Array of link objets
+     * @param {Array} recordLinks Array of link objets
      * @param {Function} fxToHighlight Function return a boolean
      * @returns {String}
      */
 
-    static markLinkContext(fileLinks, fxToHighlight) {
-        return fileLinks.map((link) => {
+    static markLinkContext(recordLinks, fxToHighlight) {
+        return recordLinks.map((link) => {
             link.context = link.context.replaceAll(/\[\[((\w:[0-9]{14})|([0-9]{14}))\]\]/g, (match) => {
                 // extract link id, without '[[' & ']]' caracters
                 const idInMatch = match.slice(0, -2).slice(2);
@@ -117,38 +117,38 @@ module.exports = class Template {
             return mdIt.render(input);
         })
 
-        graph.files = graph.files.map((file) => {
+        graph.records = graph.records.map((record) => {
+            const { id, type, tags } = record;
+            this.registerType(type, id);
+            this.registerTags(tags, id);
+            return record;
             const linkSymbol = (this.config.opts.link_symbol || undefined);
-            file.content = Template.convertLinks(file, file.content, linkSymbol);
-            file.links = Template.markLinkContext(file.links, (link, idInContext) => idInContext === link.target.id);
-            file.backlinks = Template.markLinkContext(file.backlinks, (link, idInContext) => idInContext === link.source.id);
-
-            this.registerType(file.metas.type, file.metas.id);
-            this.registerTags(file.metas.tags, file.metas.id);
+            record.content = Template.convertLinks(record, record.content, linkSymbol);
+            record.links = Template.markLinkContext(record.links, (link, idInContext) => idInContext === link.target.id);
+            record.backlinks = Template.markLinkContext(record.backlinks, (link, idInContext) => idInContext === link.source.id);
             
-            return file;
+            return record;
         });
 
         this.custom_css = null;
-        if (graph.params.has('css_custom') === true && this.config.canCssCustom() === true) {
-            this.custom_css = fs.readFileSync(this.config.opts['css_custom'], 'utf-8'); }
+        // if (graph.params.has('css_custom') === true && this.config.canCssCustom() === true) {
+        //     this.custom_css = fs.readFileSync(this.config.opts['css_custom'], 'utf-8'); }
 
         this.html = templateEngine.render('template.njk', {
 
-            publishMode: (graph.params.has('publish') === true),
+            publishMode: false, // (graph.params.has('publish') === true),
 
-            records: graph.files.map(function (file) {
-
+            records: graph.records.map(function ({id, title, type, tags, content, links, backlinks}) {
                 return {
-                    id: file.metas.id,
-                    title: file.metas.title,
-                    type: file.metas.type,
-                    tags: file.metas.tags.join(', '),
-                    lastEditDate: moment(file.lastEditDate).format('LLLL'),
-                    content: file.content,
-                    links: file.links,
-                    backlinks: file.backlinks,
-                    bibliography: file.bibliography
+                    id,
+                    title,
+                    type,
+                    tags,
+                    lastEditDate: moment().format('LLLL'),
+                    content,
+                    links,
+                    backlinks,
+                    bibliography: undefined
                 }
             }).sort(function (a, b) { return a.title.localeCompare(b.title); }),
 
@@ -165,19 +165,19 @@ module.exports = class Template {
 
             customCss: this.custom_css,
 
-            // from config
-
             views: this.config.opts.views || [],
 
-            types: Object.keys(this.types).map(function(type) {
-                return { name: type, nodes: this.types[type] };
-            }, this),
+            types: Object.entries(this.types).map(([type, nodesId]) => {
+                return { name: type, nodes: nodesId };
+            }),
 
-            tags: Object.keys(this.tags).map(function(tag) {
-                return { name: tag, nodes: this.tags[tag] };
-            }, this).sort(function (a, b) { return a.name.localeCompare(b.name); }),
+            tags: Object.entries(this.tags)
+            .filter(([tag, _]) => tag !== '')
+            .map(([tag, nodesId]) => {
+                return { name: tag, nodes: nodesId };
+            }),
 
-            usedQuoteRef: graph.getUsedCitationReferences(),
+            usedQuoteRef: undefined, //graph.getUsedCitationReferences(),
 
             metadata: {
                 title: this.config.opts.title,
@@ -201,21 +201,23 @@ module.exports = class Template {
 
     }
     
-    registerType (fileType, fileId) {
-        // create associate object key for type if not exist
-        if (this.types[fileType] === undefined) {
-            this.types[fileType] = []; }
-        // push the file id into associate object key
-        this.types[fileType].push(fileId);
+    registerType (fileTypes, fileId) {
+        for (const fileType of fileTypes) {
+            // create associate object key for type if not exist
+            if (this.types[fileType] === undefined) {
+                this.types[fileType] = []; }
+            // push the file id into associate object key
+            this.types[fileType].push(fileId);
+        }
     }
     
-    registerTags (fileTagList, fileId) {
-        for (const tag of fileTagList) {
+    registerTags (recordTagList, recordId) {
+        for (const tag of recordTagList) {
             // create associate object key for tag if not exist
             if (this.tags[tag] === undefined) {
                 this.tags[tag] = []; }
-            // push the file id into associate object key
-            this.tags[tag].push(fileId);
+            // push the record id into associate object key
+            this.tags[tag].push(recordId);
         }
     }
 
