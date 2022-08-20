@@ -33,6 +33,9 @@ module.exports = class Graph {
         };
         this.config = new Config(opts);
 
+        
+        this.chronos = this.getChronosFromRecords();
+
         this.report = {
             // /** @exemple push object { fileName: '', invalidMeta: '' } */
             // ignored_files: [],
@@ -75,6 +78,19 @@ module.exports = class Graph {
             if (nodesId.has(source) === false || nodesId.has(target) === false) {
                 this.report.brokenLinks.push({ id, context });
             }
+        }
+    }
+
+    getChronosFromRecords() {
+        let dates = [];
+        for (const { begin, end } of this.records) {
+            dates.push(begin);
+            dates.push(end);
+        }
+        dates = dates.sort().filter(date => typeof date === 'number');
+        return {
+            begin: dates[0],
+            end: dates[dates.length - 1]
         }
     }
 }

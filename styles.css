@@ -619,6 +619,18 @@ marker {
 .graph-controls #reset-isolate { display: none; }
 .graph-controls #reset-highlight { display: none; }
 
+#chronos-range output[name="chronos_output"] {
+	color: gray;
+	position: relative;
+	text-align: center;
+}
+
+.chonos-list {
+	display: flex;
+    color: gray;
+    justify-content: space-between;
+}
+
 
 /** Credits
 ------------------------------------------------------------*/

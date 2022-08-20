@@ -245,8 +245,14 @@ module.exports = class Record {
         this.content = content;
         this.links = links;
         this.backlinks = backlinks;
-        this.begin = begin;
+        this.begin;
+        if (begin && moment(begin).isValid() === true) {
+            this.begin = moment(begin).unix();
+        }
         this.end = end;
+        if (end && moment(end).isValid() === true) {
+            this.end = moment(end).unix();
+        }
         this.images = images;
 
         this.links = this.links.map((link) => {

@@ -491,4 +491,17 @@ window.labelUnlightAll = function () {
     elts.labels.classed('highlight', false);
 }
 
+window.chronosAction = function (timestamp) {
+    hideNodes(data.nodes.map(({ id }) => id));
+
+    const ids = data.nodes.filter(({ begin, end }) => {
+        if (end === undefined) { end = chronos.end }
+        if (timestamp >= begin && timestamp <= end) {
+            return true;
+        }
+    }).map(({ id }) => id);
+
+    displayNodes(ids);
+}
+
 })();

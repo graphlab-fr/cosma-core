@@ -107,13 +107,15 @@ module.exports = class Node {
 
     static getNodesFromRecords(records) {
         return records.map((record) => {
-            const { id, title, type, links, backlinks } = record;
+            const { id, title, type, links, backlinks, begin, end } = record;
             return new Node(
                 id,
                 title,
                 type[0],
                 Node.getNodeRank(links.length, backlinks.length),
-                Node.evalConnectionLevels(id, records)
+                Node.evalConnectionLevels(id, records),
+                begin,
+                end
             );
         });
     }
@@ -124,14 +126,18 @@ module.exports = class Node {
      * @param {string} type
      * @param {number} size
      * @param {array} focus
+     * @param {number} begin
+     * @param {number} end
      */
 
-    constructor(id, label, type = 'undefined', size, focus) {
+    constructor(id, label, type = 'undefined', size, focus, begin, end) {
         this.id = Number(id);
         this.label = label;
         this.type = type;
         this.size = Number(size);
         this.focus = focus;
+        this.begin = begin;
+        this.end = end;
     }
 }
 

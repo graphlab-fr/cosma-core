@@ -135,7 +135,10 @@ module.exports = class Template {
 
         templateEngine.addFilter('markdown', (input) => {
             return mdIt.render(input);
-        })
+        });
+        templateEngine.addFilter('timestampToLocal', (input) => {
+            return moment.unix(input).format('L');
+        });
 
         graph.records = graph.records.map((record) => {
             const { id, type, tags } = record;
@@ -186,6 +189,8 @@ module.exports = class Template {
                 data: JSON.stringify(graph.data),
                 minValues: Config.minValues
             },
+
+            chronos: graph.chronos,
 
             translation: translation,
             lang: lang,
