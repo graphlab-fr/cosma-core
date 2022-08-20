@@ -18,7 +18,7 @@
     "Olivier Le Deuff"
   ],
   "scripts": {
-    "start": "node index.js && open cosmoscope.html",
+    "start": "node index.js",
     "test": "./node_modules/mocha/bin/mocha"
   },
   "license": "GPL-3.0-or-later",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@faker-js/faker": "^6.1.1",
     "mocha": "^9.2.0",
+    "node-fetch": "^2.6.7",
     "puppeteer": "^13.5.1"
   }
 }

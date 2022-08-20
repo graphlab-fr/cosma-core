@@ -564,8 +564,8 @@ marker {
 	fill:var(--l_undefined);
 }
 
-.l_undefined { fill: var(--border-light-color); stroke: var(--border-light-color); }
-.n_undefined { fill: var(--border-light-color); stroke: var(--border-light-color); }
+.l_undefined { fill: #e1e1e1; stroke: #e1e1e1; }
+.n_undefined { fill: #858585; stroke: #858585; }
 
 /* ---
 - Buttons

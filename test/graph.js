@@ -1,44 +1,42 @@
 const assert = require('assert');
 
-const Graph = require('../models/graph')
-    , { config: fakeOpts } = require('../utils/fake');
+const Graph = require('../models/graph'),
+    Record = require('../models/record');
+    // , { config: fakeOpts } = require('../utils/fake');
 
 describe('Graph verif', () => {
-    describe('entities', () => {
-        it('should be throw all records types except "undefined"', () => {
-            const graph = new Graph(['fake'], {
-                record_types: {
-                    'undefined': '#858585',
-                    'ever-known-type': '#000000'
-                }
-            });
-
-            const filesTypesRecord = new Set(graph.files.map(file => file.metas.type));
-            assert.ok(filesTypesRecord.size === 1 && filesTypesRecord.has('undefined'));
-        })
-
-        it('should be throw all links types except "undefined"', () => {
-            const graph = new Graph(['fake'], {
-                link_types: {
-                    'undefined': { 'stroke': 'simple', 'color': '#e1e1e1' },
-                    'ever-known-type': { 'stroke': 'dotted', 'color': '#000000' }
-                }
-            });
-
-            const filesTypesLink = new Set(
-                graph.files.map(file => file.links.map(link => link.type)).flat()
+    describe('params', () => {
+        it('should register only valid params', () => {
+            const graph = new Graph(
+                undefined,
+                undefined,
+                ['publish', 'empty', 'invalid param']
             );
-            assert.ok(filesTypesLink.size === 1 && filesTypesLink.has('undefined'));
+            assert.deepStrictEqual(
+                graph.params,
+                new Set(['publish', 'empty'])
+            );
         })
+    })
 
-        // it('should be keep all record types', () => {
-        //     const graph = new Graph(['fake'], fakeOpts);
-
-        //     const filesTypesRecord = new Set(graph.files.map(file => file.metas.type));
-        //     console.log(graph.config.getTypesRecords().size);
-        //     assert.ok(
-        //         filesTypesRecord.size === graph.config.getTypesRecords().size
-        //     );
-        // })
+    describe('records', () => {
+        it('should report duplicated records', () => {
+            const graph = new Graph(
+                [
+                    new Record(
+                        777,
+                        'Record 1'
+                    ),
+                    new Record(
+                        777,
+                        'Record 2'
+                    ),
+                ]
+            );
+            assert.deepStrictEqual(
+                graph.report.duplicates,
+                [{ id: 777, title: 'Record 2' }]
+            );
+        })
     })
 })

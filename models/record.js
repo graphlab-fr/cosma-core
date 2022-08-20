@@ -9,13 +9,13 @@
  * @type {object}
  * @property {number} id
  * @property {string} title
- * @property {string} type
  */
 
 /**
  * @typedef Reference
  * @type {object}
  * @property {string} context
+ * @property {string} type
  * @property {Direction} source
  * @property {Direction} target
  */
@@ -28,6 +28,9 @@ const path = require('path')
 
 const Config = require('./config')
     , Graph = require('./graph')
+    , Cosmoscope = require('./cosmoscope')
+    , Node = require('./node')
+    , Link = require('./link')
     , lang = require('./lang');
 
 module.exports = class Record {
@@ -119,7 +122,8 @@ module.exports = class Record {
      */
 
     static getIndexToMassSave () {
-        const todayMassSavedRecordIds = new Graph().files // get graph analyse
+        const { files_origin: filesPath } = Config.get();
+        const todayMassSavedRecordIds = Cosmoscope.getFromPathFiles(filesPath) // get graph analyse
             .map(file => file.metas.id)
             .filter(Record.isTodayOutDailyId) // ignore not today mass saved records id
             .sort();
@@ -176,7 +180,8 @@ module.exports = class Record {
     }
 
     /**
-     * Generate a record.
+     * Generate a record,
+     * a named dataset, with references to others, validated from a configuration
      * @param {string} id - Unique identifier of the record.
      * @param {string} title - Title of the record.
      * @param {string | string[]} [type='undefined'] - Type of the record, registred into the config.
@@ -188,29 +193,53 @@ module.exports = class Record {
      * @param {number} begin - Timestamp.
      * @param {number} end - Timestamp.
      * @param {string[]} images - Link to others records.
-     * @example new Record('My record', 'concept', 'tag 1,tag 2', 'Lorem *ipsum*', 'my-record', 20210704100343);
+     * @param {object} opts
      */
 
-    constructor (id = Record.generateId(), title, type = 'undefined', tags, metas, content = '', links, backlinks, begin, end, images) {
-        this.title = title;
+    constructor (
+        id = Record.generateId(),
+        title,
+        type = 'undefined',
+        tags,
+        metas,
+        content = '',
+        links = [],
+        backlinks = [],
+        begin,
+        end,
+        images,
+        opts
+    ) {
         this.id = Number(id);
+        this.title = title;
         this.type = type;
-        this.tags;
+        this.tags = [];
+        this.metas = metas;
 
         if (tags) {
             if (Array.isArray(tags)) {
-                this.tags = tags.length === 0 ? undefined : tags;
+                this.tags = tags.length === 0 ? [] : tags;
             } else {
                 this.tags = tags.split(',').filter((str) => str !== '');
-                this.tags = this.tags.length === 0 ? undefined : this.tags;
+                this.tags = this.tags.length === 0 ? [] : this.tags;
             }
         }
 
-        this.ymlFrontMatter = yml.dump({
-            ...this,
-            ...metas
-        });
+        this.ymlFrontMatter = this.getYamlFrontMatter();
         this.ymlFrontMatter = '---\n' + this.ymlFrontMatter + '---\n\n';
+
+        const config = new Config(opts);
+        const typesRecords = config.getTypesRecords();
+        const typesLinks = config.getTypesLinks();
+
+        if (typeof this.type === 'string') {
+            /** @type {string[]} */
+            this.type = [this.type]
+        }
+        this.type = this.type.map(type => {
+            if (typesRecords.has(type)) { return type; }
+            return 'undefined';
+        });
 
         this.content = content;
         this.links = links;
@@ -219,7 +248,15 @@ module.exports = class Record {
         this.end = end;
         this.images = images;
 
-        this.config = new Config().opts;
+        this.links = this.links.map((link) => {
+            if (typesLinks.has(link.type)) {
+                return link;
+            }
+            link.type = 'undefined';
+            return link;
+        });
+
+        this.config = config.opts;
         /**
          * Invalid fields
          * @type array
@@ -227,6 +264,16 @@ module.exports = class Record {
         this.report = [];
 
         this.verif();
+    }
+
+    getYamlFrontMatter() {
+        return yml.dump({
+            title: this.title,
+            id: this.id,
+            type: this.type,
+            tags: this.tags.length === 0 ? undefined : this.tags,
+            ...this.metas
+        });
     }
 
     /**

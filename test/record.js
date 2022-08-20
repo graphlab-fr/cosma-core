@@ -1,6 +1,7 @@
 const assert = require('assert');
 
-const Record = require('../models/record');
+const Record = require('../models/record'),
+    Link = require('../models/link');
 
 describe('Record verif', () => {
     describe('check', () => {
@@ -13,25 +14,94 @@ describe('Record verif', () => {
         })
     });
 
-    describe('references', () => {
-        it('should not be register an error if reference is valid', () => {
-            const referenceArray = [
+    describe('register', () => {
+        it('should register only valid record types', () => {
+            const record = new Record(
+                undefined,
+                'the title',
+                ['important', 'done', 'invalid type'],
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
                 {
-                    context: '',
-                    source: {
-                        id: 42,
-                        title: 'title of source node',
-                        type: 'undefined'
-                    },
-                    target: {
-                        id: 42,
-                        title: 'title of target node',
-                        type: 'undefined'
+                    record_types: {
+                        'undefined': '#ccc',
+                        'important': '#ccc',
+                        'done': '#ccc'
                     }
                 }
-            ];
-            assert.ok(Record.verifReferenceArray(referenceArray) === true);
-        })
+            );
+            assert.deepStrictEqual(
+                record.type,
+                ['important', 'done', 'undefined']
+            );
+        });
+
+        it('should register only valid link types', () => {
+            const record = new Record(
+                undefined,
+                'the title',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                [
+                    {
+                        context: 'lorem ipsum',
+                        type: 'g',
+                        source: { id: 1, title: 'Record 1' },
+                        target: { id: 2, title: 'Record 2' }
+                    },
+                    {
+                        context: 'lorem ipsum',
+                        type: 'invalid type',
+                        source: { id: 3, title: 'Record 3' },
+                        target: { id: 4, title: 'Record 4' }
+                    }
+                ],
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                {
+                    link_types: {
+                        'undefined': { stroke: 'double', color: '#ccc' },
+                        'g': { stroke: 'simple', color: '#ccc' }
+                    }
+                }
+            );
+            const links = Link.getLinksFromRecords([record]);
+            assert.deepEqual(
+                links,
+                [
+                    {
+                        id: 0,
+                        context: 'lorem ipsum',
+                        type: 'g',
+                        shape: { stroke: 'simple', dashInterval: null },
+                        color: '#ccc',
+                        source: 1,
+                        target: 2,
+                        report: []
+                    },
+                    {
+                        id: 1,
+                        context: 'lorem ipsum',
+                        type: 'undefined',
+                        shape: { stroke: 'double', dashInterval: null },
+                        color: '#ccc',
+                        source: 3,
+                        target: 4,
+                        report: []
+                    }
+                ]
+            );
+        });
     });
 
     describe('ymlFrontMatter', () => {

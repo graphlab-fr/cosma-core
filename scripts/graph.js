@@ -94,8 +94,8 @@ elts.links = svg.append("g")
     .enter().append("line")
     .attr("class", (d) => 'l_' + d.type)
     .attr("title", (d) => d.title)
-    .attr("data-source", (d) => d.source)
-    .attr("data-target", (d) => d.target)
+    .attr("data-source", (d) => d.source.id)
+    .attr("data-target", (d) => d.target.id)
     .attr("stroke-dasharray", function(d) {
         if (d.shape.stroke === 'dash' || d.shape.stroke === 'dotted') {
             return d.shape.dashInterval }

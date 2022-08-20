@@ -1,0 +1,28 @@
+record_types:
+  undefined: '#858585'
+  idea: '#1b9e77'
+  concept: '#d95f02'
+  note: '#7570b3'
+  person: '#e7298a'
+  place: '#66a61e'
+  event: '#e6ab02'
+  task: '#a6761d'
+  object: '#666666'
+link_types:
+  undefined:
+    stroke: simple
+    color: '#e1e1e1'
+  g:
+    stroke: dotted
+    color: '#e1e1e1'
+  s:
+    stroke: dash
+    color: '#e1e1e1'
+attraction_force: 500
+attraction_distance_max: 600
+title: 'Test'
+description: 'This cosmoscope was automatically generated with example data in order to test the functionality of the software.'
+keywords:
+  - 'test'
+  - 'sample'
+lang: 'en'

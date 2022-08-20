@@ -4,158 +4,83 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
-const path = require('path')
+const path = require('path');
+const { faker } = require('@faker-js/faker')
+    , nunjucks = require('nunjucks');
 
-const { faker } = require('@faker-js/faker');
+const Config = require('../models/config')
+    , Cosmoscope = require('../models/cosmoscope')
+    , Record = require('../models/record');
 
-const Record = require('../models/record')
-    , Config = require('../models/config');
+const bib = require('./fake-bib.json');
 
-const NB_NODES = 10
-    , fakeRecordTypes = {
-        'undefined': '#858585',
-        'idea': '#e41a1c',
-        'concept': '#377eb8',
-        'note': '#4daf4a',
-        'person': '#984ea3',
-        'place': '#ff7f00',
-        'event': '#ffff33',
-        'task': '#a65628',
-        'object': '#f781bf'
-    }
-    , fakeLinkTypes = {
-        'undefined': { 'stroke': 'simple', 'color': '#e1e1e1' },
-        'g': {
-            'stroke': 'dotted',
-            'color': '#e1e1e1'
-        },
-        's': {
-            'stroke': 'dash',
-            'color': '#e1e1e1'
-        }
-    }
+const nodesNb = 50;
+const tags = [];
+const ids = [];
+const files = [];
+const bibKeys = Object.values(bib).map(({ id }) => `${id}`);
 
-let fakeFiles = []
-    , fakeIds = (() => {
-        const ids = [];
-        for (let i = 0; i < NB_NODES; i++) ids.push(Record.generateOutDailyId() + i)
-        return ids;
-    })()
-    , fakeTags = [];
-
-for (let i = 0; i < 20; i++) {
-    fakeTags.push(faker.random.word());
+let config = Config.get(path.join(__dirname, 'fake-config.yml'));
+config = new Config(config);
+const { record_types: recordTypes } = config.opts;
+config.opts['css_custom'] = path.join(__dirname, 'fake.css');
+config.opts['bibliography'] = path.join(__dirname, 'fake-bib.json');
+config.opts['views'] = {
+    [faker.word.verb()]: fakeView(),
+    [faker.word.verb()]: fakeView(),
+    [faker.word.verb()]: fakeView()
 }
 
-
-for (let i = 0; i < NB_NODES; i++) {
-    let fakeId = fakeIds[i];
-
-    fakeFiles.push(
-        {
-            name: faker.system.commonFileName('md'),
-            filePath: faker.system.filePath(),
-            lastEditDate: faker.date.past(),
-            metas: {
-                title: faker.name.jobTitle(),
-                type: faker.helpers.arrayElement(Object.keys(fakeRecordTypes)),
-                id: fakeId,
-                tags: [
-                    faker.helpers.arrayElement(fakeTags),
-                    faker.helpers.arrayElement(fakeTags)
-                ]
-            },
-            content: [
-                faker.lorem.paragraphs(3, fakeLink()),
-                '# Main title',
-                '<div class="box info">Custom CSS box</div>',
-                '## Sub title',
-                [fakeMardownQuote(), fakeLink()].join(' '),
-                [faker.lorem.paragraphs(1), '{.red}'].join(' '),
-                '### Sub-sub title',
-                fakeMardownTab(3, 4),
-                faker.lorem.paragraphs(1),
-                fakeImage(),
-                faker.lorem.paragraphs(1)
-            ].join('\n\n')
-        }
-    )
+for (let i = 0; i < 5; i++) {
+    tags.push(faker.random.word());
 }
+for (let i = 0; i < nodesNb; i++) {
+    ids.push(Record.generateOutDailyId() + i);
+}
+
+for (const fileId of ids) {
+    const templateEngine = new nunjucks.Environment(
+        new nunjucks.FileSystemLoader(path.join(__dirname))
+    );
+    const content = templateEngine.render('fake-record.njk', {
+        ids,
+        imgSrc: faker.image.animals(),
+        bibKeys
+    });
+
+    files.push({
+        path: undefined,
+        name: faker.system.commonFileName('md'),
+        lastEditDate: faker.date.past(),
+        content,
+        metas: {
+            id: fileId,
+            title: faker.name.jobTitle(),
+            type: faker.helpers.arrayElement(Object.keys(recordTypes)),
+            tags: [
+                faker.helpers.arrayElement(tags),
+                faker.helpers.arrayElement(tags)
+            ]
+        }
+    })
+}
+
+const records = Cosmoscope.getRecordsFromFiles(files, config.opts);
 
 module.exports = {
-    files: fakeFiles,
-    config: Object.assign({}, Config.base, {
-        record_types: fakeRecordTypes,
-        link_types: fakeLinkTypes,
-        title: 'Test',
-        description: 'This cosmoscope was automatically generated with example data in order to test the functionality of the software.',
-        keywords: ['test', 'sample'],
-        // link_symbol: '🔗',
-        lang: 'en',
-        views: {
-            test1: fakeView(),
-            test2: fakeView(),
-            test3: fakeView()
-        },
-        css_custom: path.join(__dirname, 'fake.css')
-    }),
-};
-
-function fakeMardownTab (nbCols, nbRows) {
-    let rows = [];
-    let header = []
-        , headerSepratation = []
-
-    for (let i = 0; i < nbCols; i++) {
-        header.push(faker.word.adjective());
-        headerSepratation.push('-');
-    }
-
-    rows.push(
-        header.join('|'),
-        headerSepratation.join('|')
-    )
-
-    for (let i = 0; i < nbRows; i++) {
-        let row = [];
-
-        for (let j = 0; j < nbCols; j++) {
-            row.push(faker.lorem.sentence(3))
-        }
-
-        rows.push(
-            row.join('|')
-        )
-    }
-
-    return rows.join('\n');
+    config,
+    records,
+    bib
 }
 
-function fakeMardownQuote () {
-    return `> ${faker.lorem.paragraph(2)}`
-}
-
-function fakeLink () {
-    let linkPrefix = '';
-    if (Math.random() < 0.3) {
-        linkPrefix = faker.helpers.arrayElement(Object.keys(fakeLinkTypes)) + ':'
-    }
-
-    return `[[${linkPrefix}${faker.helpers.arrayElement(fakeIds)}]]`
-}
-
-function fakeImage () {
-    return `![${faker.lorem.sentence(1)}](${faker.image.animals()})`
-}
-
-function fakeView () {
-    const id = faker.helpers.arrayElement(fakeIds);
+function fakeView() {
+    const id = faker.helpers.arrayElement(ids);
 
     const viewJson = {
         recordId: id,
         filters: [
-            faker.helpers.arrayElement(Object.keys(fakeRecordTypes)),
-            faker.helpers.arrayElement(Object.keys(fakeRecordTypes))
+            faker.helpers.arrayElement(Object.keys(recordTypes)),
+            faker.helpers.arrayElement(Object.keys(recordTypes))
         ],
         focus: {
             fromRecordId: id,
