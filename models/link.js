@@ -155,11 +155,13 @@ module.exports = class Link {
                     type,
                     source: {
                         id: sourceId,
-                        title: sourceLabel
+                        title: sourceLabel,
+                        type: sourceType
                     },
                     target: {
                         id: targetId,
-                        title: targetLabel
+                        title: targetLabel,
+                        type: targetType
                     }
                 }
             })
@@ -177,11 +179,13 @@ module.exports = class Link {
                     type,
                     source: {
                         id: sourceId,
-                        title: sourceLabel
+                        title: sourceLabel,
+                        type: sourceType
                     },
                     target: {
                         id: targetId,
-                        title: targetLabel
+                        title: targetLabel,
+                        type: targetType
                     }
                 }
             })

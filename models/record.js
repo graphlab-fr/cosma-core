@@ -9,6 +9,7 @@
  * @type {object}
  * @property {number} id
  * @property {string} title
+ * @property {string} type
  */
 
 /**
