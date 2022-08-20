@@ -279,6 +279,13 @@
                     <span>{{ record.tags }}</span>
                 </div>
                 {% endif %}
+
+                {% for meta, value in record.metas %}
+                <div class="record-{{meta}}">
+                    <span>{{ meta }} :</span>
+                    <span>{{ value }}</span>
+                </div>
+                {% endfor %}
             </header>
 
             <main class="record-content">

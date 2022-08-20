@@ -49,6 +49,7 @@ module.exports = class Opensphere extends Graph {
             let contents = [], types = [], metas = {}, tags = [];
             for (const [key, value] of Object.entries(rest)) {
                 const [field, label] = key.split(':', 2);
+                if (field === 'time') { continue; }
                 switch (field) {
                     case 'content':
                         contents.push([`<h3>${label}</h3>`, value]);

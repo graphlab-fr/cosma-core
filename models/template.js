@@ -170,7 +170,17 @@ module.exports = class Template {
 
             publishMode: this.params.has('publish') === true,
 
-            records: graph.records.map(function ({id, title, type, tags, content, links, backlinks, bibliography}) {
+            records: graph.records.map(({
+                id,
+                title,
+                type,
+                tags,
+                content,
+                metas,
+                links,
+                backlinks,
+                bibliography
+            }) => {
                 return {
                     id,
                     title,
@@ -178,6 +188,7 @@ module.exports = class Template {
                     tags,
                     lastEditDate: moment().format('LLLL'),
                     content,
+                    metas,
                     links,
                     backlinks,
                     bibliography
