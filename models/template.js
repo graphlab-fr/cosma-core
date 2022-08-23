@@ -103,22 +103,23 @@ module.exports = class Template {
 
     /**
      * Update markdown-it image source, from a path to a base64 encoding
-     * @param {string} filesPath
+     * @param {string} imagesPath
      * @param {Function} state
      * @returns {String}
      * @exemple
      * ```
-     * mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(filesPath, state));
+     * mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(imagesPath, state));
      * ```
      */
 
-    static mdItImageToBase64(filesPath, state) {
+    static mdItImageToBase64(imagesPath, state) {
         for (let i = 0; i < state.tokens.length; i++) {
             const token = state.tokens[i];
             const { type, attrs } = token;
             if (type === 'image') {
                 const { src, ...rest } = Object.fromEntries(attrs);
-                const imgPath = path.join(filesPath, src);
+                const imgPath = path.join(imagesPath, src);
+                console.log(imgPath);
                 const imgExist = fs.existsSync(imgPath);
                 if (imgExist) {
                     const imgFileContent = fs.readFileSync(imgPath);
@@ -146,7 +147,7 @@ module.exports = class Template {
         );
         this.config = new Config(graph.config.opts);
         const {
-            files_origin: filesPath,
+            images_origin: imagesPath,
             lang,
             link_symbol: linkSymbol,
             views,
@@ -166,7 +167,7 @@ module.exports = class Template {
             new nunjucks.FileSystemLoader(path.join(__dirname, '../'))
         );
 
-        mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(filesPath, state));
+        mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(imagesPath, state));
 
         templateEngine.addFilter('markdown', (input) => {
             return mdIt.render(input);

@@ -23,6 +23,7 @@ module.exports = class Config {
 
     static base = {
         files_origin: '',
+        images_origin: '',
         export_target: '',
         history: true,
         focus_max: 2,
@@ -330,6 +331,7 @@ module.exports = class Config {
     verif () {
         const paths = [
             'files_origin',
+            'images_origin',
             'export_target',
             'csl',
             'bibliography',
