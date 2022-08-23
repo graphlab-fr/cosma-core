@@ -102,6 +102,38 @@ module.exports = class Template {
     }
 
     /**
+     * Update markdown-it image source, from a path to a base64 encoding
+     * @param {string} filesPath
+     * @param {Function} state
+     * @returns {String}
+     * @exemple
+     * ```
+     * mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(filesPath, state));
+     * ```
+     */
+
+    static mdItImageToBase64(filesPath, state) {
+        for (let i = 0; i < state.tokens.length; i++) {
+            const token = state.tokens[i];
+            const { type, attrs } = token;
+            if (type === 'image') {
+                const { src, ...rest } = Object.fromEntries(attrs);
+                const imgPath = path.join(filesPath, src);
+                const imgExist = fs.existsSync(imgPath);
+                if (imgExist) {
+                    const imgFileContent = fs.readFileSync(imgPath);
+                    const imgType = path.extname(imgPath).substring(1);
+                    const imgBase64 = Buffer.from(imgFileContent).toString('base64');
+                    state.tokens[i].attrs = Object.entries({
+                        src: [`data:image/${imgType};base64,`, imgBase64].join(''),
+                        ...rest
+                    })
+                }
+            }
+        }
+    }
+
+    /**
      * Get data from graph and make a web app
      * @param {Graph} graph - Graph class
      * @param {Bibliography} bibliography - Bibliography class
@@ -114,6 +146,7 @@ module.exports = class Template {
         );
         this.config = new Config(graph.config.opts);
         const {
+            files_origin: filesPath,
             lang,
             link_symbol: linkSymbol,
             views,
@@ -132,6 +165,8 @@ module.exports = class Template {
         const templateEngine = new nunjucks.Environment(
             new nunjucks.FileSystemLoader(path.join(__dirname, '../'))
         );
+
+        mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(filesPath, state));
 
         templateEngine.addFilter('markdown', (input) => {
             return mdIt.render(input);
