@@ -193,7 +193,7 @@ module.exports = class Record {
      * @param {Reference[]} backlinks - Backlinks, from others records.
      * @param {number} begin - Timestamp.
      * @param {number} end - Timestamp.
-     * @param {string[]} images - Link to others records.
+     * @param {string} image - Image path
      * @param {object} opts
      */
 
@@ -208,7 +208,7 @@ module.exports = class Record {
         backlinks = [],
         begin,
         end,
-        images,
+        image,
         opts
     ) {
         this.id = Number(id);
@@ -249,11 +249,14 @@ module.exports = class Record {
         if (begin && moment(begin).isValid() === true) {
             this.begin = moment(begin).unix();
         }
-        this.end = end;
+        this.end;
         if (end && moment(end).isValid() === true) {
             this.end = moment(end).unix();
         }
-        this.images = images;
+        this.image;
+        if (image) {
+            this.image = path.join(config.opts['images_origin'], image);
+        }
 
         this.links = this.links.map((link) => {
             if (typesLinks.has(link.type)) {

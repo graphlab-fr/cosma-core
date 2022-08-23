@@ -102,6 +102,22 @@ module.exports = class Template {
     }
 
     /**
+     * Convert a path to an image to the base64 encoding of the image source
+     * @param {string} imgPath
+     * @returns {string|boolean} False if error
+     */
+
+
+    static imagePathToBase64(imgPath) {
+        const imgExist = fs.existsSync(imgPath);
+        if (imgExist === false) { return false; }
+        const imgFileContent = fs.readFileSync(imgPath);
+        const imgType = path.extname(imgPath).substring(1);
+        const imgBase64 = Buffer.from(imgFileContent).toString('base64');
+        return [`data:image/${imgType};base64,`, imgBase64].join('');
+    }
+
+    /**
      * Update markdown-it image source, from a path to a base64 encoding
      * @param {string} imagesPath
      * @param {Function} state
@@ -119,14 +135,10 @@ module.exports = class Template {
             if (type === 'image') {
                 const { src, ...rest } = Object.fromEntries(attrs);
                 const imgPath = path.join(imagesPath, src);
-                console.log(imgPath);
-                const imgExist = fs.existsSync(imgPath);
-                if (imgExist) {
-                    const imgFileContent = fs.readFileSync(imgPath);
-                    const imgType = path.extname(imgPath).substring(1);
-                    const imgBase64 = Buffer.from(imgFileContent).toString('base64');
+                const imgBase64 = Template.imagePathToBase64(imgPath);
+                if (imgBase64) {
                     state.tokens[i].attrs = Object.entries({
-                        src: [`data:image/${imgType};base64,`, imgBase64].join(''),
+                        src: imgBase64,
                         ...rest
                     })
                 }
@@ -175,6 +187,7 @@ module.exports = class Template {
         templateEngine.addFilter('timestampToLocal', (input) => {
             return moment.unix(input).format('L');
         });
+        templateEngine.addFilter('imgPathToBase64', Template.imagePathToBase64);
 
         graph.records = graph.records.map((record) => {
             const { id, type, tags } = record;
@@ -215,7 +228,8 @@ module.exports = class Template {
                 metas,
                 links,
                 backlinks,
-                bibliography
+                bibliography,
+                image
             }) => {
                 return {
                     id,
@@ -227,7 +241,8 @@ module.exports = class Template {
                     metas,
                     links,
                     backlinks,
-                    bibliography
+                    bibliography,
+                    image
                 }
             }).sort(function (a, b) { return a.title.localeCompare(b.title); }),
 

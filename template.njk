@@ -258,6 +258,10 @@
             <header>
                 <h1 class="record-title">{{ record.title }}</h1>
 
+                {% if record.image %}
+                <img class="record-img" src="{{ record.image | imgPathToBase64 }}" />
+                {% endif %}
+
                 <div class="record-id">
                     <span>{{ translation.right_panel.record.metadata.id[lang] }} :</span>
                     <span>{{ record.id }}</span>

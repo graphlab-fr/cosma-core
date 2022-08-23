@@ -45,7 +45,7 @@ module.exports = class Opensphere extends Graph {
             );
         });
 
-        return recordsData.map(({ title, id, image, ...rest }) => {
+        return recordsData.map(({ title, id, ...rest }) => {
             let contents = [], types = [], metas = {}, tags = [];
             for (const [key, value] of Object.entries(rest)) {
                 const [field, label] = key.split(':', 2);
@@ -87,7 +87,7 @@ module.exports = class Opensphere extends Graph {
                 backlinksReferences,
                 rest['time:begin'],
                 rest['time:end'],
-                [],
+                rest['image'],
                 { record_types: recordTypes }
             );
 

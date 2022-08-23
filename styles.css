@@ -385,6 +385,17 @@ main.record-container:not(.active) {
 - Record content
 --- */
 
+.record img {
+	height: auto;
+	max-width: 100%;
+}
+
+.record header img {
+	height: auto;
+	max-width: 100%;
+	margin: 1rem 0;
+}
+
 /* From Typesafe.css, by Bradley Taunt */
 
 .record main {
@@ -410,11 +421,6 @@ main.record-container:not(.active) {
 }
 .record main ul ul, .record main ol ol { padding-left: 2rem; }
 .record main ul li, .record ol li { margin: 0.5rem 0 0 0; }
-
-.record main img {
-	height: auto;
-	max-width: 100%;
-}
 
 .record main pre {
 	overflow: auto;
