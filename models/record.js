@@ -254,7 +254,7 @@ module.exports = class Record {
             this.end = moment(end).unix();
         }
         this.image;
-        if (image) {
+        if (image && config.isValid() && config.opts['images_origin']) {
             this.image = path.join(config.opts['images_origin'], image);
         }
 

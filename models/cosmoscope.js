@@ -118,7 +118,7 @@ module.exports = class Cosmocope extends Graph {
                 backlinksReferences,
                 file.lastEditDate,
                 undefined,
-                [],
+                undefined,
                 opts
             );
         });

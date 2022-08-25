@@ -159,6 +159,8 @@ module.exports = class Bibliography {
             bibliographicRecord.quotes[key]['mark'] = citMark;
         }
 
+        this.citeproc.updateItems(Bibliography.getQuoteKeysFromQuoteObject(quotes));
+
         bibliographicRecord['bibliography'] = this.citeproc.makeBibliography()[1].join('\n');
 
         return bibliographicRecord;
