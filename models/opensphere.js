@@ -13,6 +13,7 @@
 
 const Config = require('./config')
     , Graph = require('./graph')
+    , Bibliography = require('./bibliography')
     , Link = require('./link')
     , Node = require('./node')
     , Record = require('./record');
@@ -46,7 +47,7 @@ module.exports = class Opensphere extends Graph {
         });
 
         return recordsData.map(({ title, id, ...rest }) => {
-            let contents = [], types = [], metas = {}, tags = [];
+            let contents = [], types = [], metas = {}, tags = [], quotes = [];
             for (const [key, value] of Object.entries(rest)) {
                 const [field, label] = key.split(':', 2);
                 if (field === 'time') { continue; }
@@ -59,6 +60,9 @@ module.exports = class Opensphere extends Graph {
                         break;
                     case 'tag':
                         tags.push(value);
+                        break;
+                    case 'quote':
+                        quotes = value.split(',');
                         break;
                     case 'meta':
                     default:
@@ -75,6 +79,7 @@ module.exports = class Opensphere extends Graph {
                 linksReferences,
                 backlinksReferences
             } = Link.getReferencesFromLinks(Number(id), links, nodes);
+            const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(quotes);
 
             const record = new Record(
                 id,
@@ -87,6 +92,7 @@ module.exports = class Opensphere extends Graph {
                 backlinksReferences,
                 rest['time:begin'],
                 rest['time:end'],
+                bibliographicRecords,
                 rest['image'],
                 { record_types: recordTypes }
             );

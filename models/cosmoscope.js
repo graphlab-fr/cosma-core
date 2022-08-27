@@ -42,7 +42,7 @@ const Graph = require('./graph')
     , Link = require('./link')
     , Record = require('./record')
     , Node = require('./node')
-    , lang = require('./lang');
+    , Bibliography = require('./bibliography');
 
 module.exports = class Cosmocope extends Graph {
     /**
@@ -106,6 +106,7 @@ module.exports = class Cosmocope extends Graph {
                 linksReferences,
                 backlinksReferences
             } = Link.getReferencesFromLinks(id, links, nodes);
+            const bibliographicRecords = Bibliography.getBibliographicRecordsFromText(file.content);
 
             return new Record(
                 id,
@@ -118,6 +119,7 @@ module.exports = class Cosmocope extends Graph {
                 backlinksReferences,
                 file.lastEditDate,
                 undefined,
+                bibliographicRecords,
                 undefined,
                 opts
             );

@@ -28,6 +28,7 @@ describe('Record verif', () => {
                 undefined,
                 undefined,
                 undefined,
+                undefined,
                 {
                     record_types: {
                         'undefined': '#ccc',
@@ -64,6 +65,7 @@ describe('Record verif', () => {
                         target: { id: 4, title: 'Record 4' }
                     }
                 ],
+                undefined,
                 undefined,
                 undefined,
                 undefined,

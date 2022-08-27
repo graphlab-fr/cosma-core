@@ -24,8 +24,9 @@ mdIt.use(mdItAttr, {
     allowedAttributes: []
 });
 
-const Link = require('./link');
-const Config = require('./config');
+const Link = require('./link')
+    , Config = require('./config')
+    , Bibliography = require('./bibliography');
 
 const translation = require('./lang').i;
 
@@ -149,11 +150,10 @@ module.exports = class Template {
     /**
      * Get data from graph and make a web app
      * @param {Graph} graph - Graph class
-     * @param {Bibliography} bibliography - Bibliography class
      * @param {string[]} params
      */
 
-    constructor (graph, bibliography, params = []) {
+    constructor (graph, params = []) {
         this.params = new Set(
             params.filter(param => Template.validParams.has(param))
         );
@@ -169,6 +169,18 @@ module.exports = class Template {
             keywords,
             focus_max: focusMax
         } = this.config.opts;
+
+        if (this.params.has('citeproc')) {
+            const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
+            const bibliography = new Bibliography(
+                bib,
+                cslStyle,
+                xmlLocal
+            );
+            for (const record of graph.records) {
+                record.replaceBibliographicText(bibliography);
+            }
+        }
 
         this.types = {};
         this.tags = {};
@@ -199,17 +211,6 @@ module.exports = class Template {
             
             return record;
         });
-
-        if (bibliography && bibliography.bibliographicRecords) {
-            graph.records = graph.records.map((record) => {
-                const { quotes, bibliography: footerBibliography } = bibliography.bibliographicRecords.find(({ idRecord }) => idRecord === record.id);
-                record['bibliography'] = footerBibliography;
-                for (const [markToReplace, { mark }] of Object.entries(quotes)) {
-                    record.content = record.content.replaceAll(markToReplace, mark);
-                }
-                return record;
-            });
-        }
 
         this.custom_css = null;
         if (this.params.has('css_custom') === true && this.config.canCssCustom() === true) {

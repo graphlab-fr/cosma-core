@@ -193,6 +193,7 @@ module.exports = class Record {
      * @param {Reference[]} backlinks - Backlinks, from others records.
      * @param {number} begin - Timestamp.
      * @param {number} end - Timestamp.
+     * @param {BibliographicRecord[]} bibliographicRecords
      * @param {string} image - Image path
      * @param {object} opts
      */
@@ -208,6 +209,7 @@ module.exports = class Record {
         backlinks = [],
         begin,
         end,
+        bibliographicRecords = [],
         image,
         opts
     ) {
@@ -216,6 +218,8 @@ module.exports = class Record {
         this.type = type;
         this.tags = [];
         this.metas = metas;
+        this.bibliographicRecords = bibliographicRecords;
+        this.bibliography = '';
 
         if (tags) {
             if (Array.isArray(tags)) {
@@ -284,6 +288,24 @@ module.exports = class Record {
             tags: this.tags.length === 0 ? undefined : this.tags,
             ...this.metas
         });
+    }
+
+    /**
+     * The keys like '[@Goody_1979, 12]' are remplace, as (Goody 1979 p. 12)
+     * and assign this.bibliography with HTML
+     * @param {Bibliography} bibliography
+     */
+
+    replaceBibliographicText(bibliography) {
+        const bibliographyHtml = [];
+        for (const bibliographicRecord of this.bibliographicRecords) {
+            const { record, cluster } = bibliography.get(bibliographicRecord);
+            bibliographyHtml.push(record);
+            const { text } = bibliographicRecord;
+            if (!text) { continue; }
+            this.content = this.content.replaceAll(text, cluster);
+        }
+        this.bibliography = bibliographyHtml.join('\n');
     }
 
     /**

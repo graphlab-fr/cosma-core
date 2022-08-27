@@ -1,7 +1,7 @@
 const assert = require('assert');
 
 const Config = require('../models/config')
-    , { config: fakeOpts } = require('../utils/fake');
+    , { config: fakeConfig } = require('../utils/fake');
 
 describe('Config verif', () => {
     it('should be return error into report array for invalid paths', () => {
@@ -169,18 +169,18 @@ describe('Config verif', () => {
 
     describe('entities types', () => {
         it('should be keep all record types', () => {
-            const config = new Config(fakeOpts);
+            const config = new Config(fakeConfig.opts);
 
             assert.deepStrictEqual(
-                fakeOpts.record_types,
+                fakeConfig.opts.record_types,
                 config.opts.record_types
             );
         });
 
         it('should be keep all link types', () => {
-            const config = new Config(fakeOpts);
+            const config = new Config(fakeConfig.opts);
             assert.deepStrictEqual(
-                fakeOpts.link_types,
+                fakeConfig.opts.link_types,
                 config.opts.link_types
             );
         });

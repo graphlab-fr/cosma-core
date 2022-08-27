@@ -10,11 +10,11 @@ describe('Graph verif', () => {
             const graph = new Graph(
                 undefined,
                 undefined,
-                ['publish', 'empty', 'invalid param']
+                ['sample', 'empty', 'invalid param']
             );
             assert.deepStrictEqual(
                 graph.params,
-                new Set(['publish', 'empty'])
+                new Set(['sample', 'empty'])
             );
         })
     })
