@@ -1,20 +1,35 @@
+const fs = require('fs')
+    , path = require('path');
+
 const assert = require('assert')
-    , path = require('path')
     , puppeteer = require('puppeteer');
 
+const { cosmocope } = require('../utils/generate');
+
 let browser, page;
+const tempFolderPath = path.join(__dirname, '../temp');
+const testComoscopePath = path.join(tempFolderPath, 'cosmoscope.html');
+
+before(async () => {
+    return new Promise(async (resolve) => {
+        if (fs.existsSync(tempFolderPath) === false) {
+            fs.mkdirSync(tempFolderPath);
+        }
+        await cosmocope(tempFolderPath);
+        resolve();
+    })
+});
 
 describe('App', async () => {
-
     beforeEach(async () => {
         return new Promise(async (resolve) => {
             browser = await puppeteer.launch({
-                headless: false,
+                headless: true,
                 devtools: true
             });
             page = await browser.newPage();
             await page.goto(
-                'file://' + path.join(__dirname, '../cosmoscope.html'),
+                'file://' + testComoscopePath,
                 { timeout: 0, waitUntil: 'domcontentloaded' }
             );
             resolve();
