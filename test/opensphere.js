@@ -26,7 +26,7 @@ describe.only('Opensphere', () => {
     const records = Opensphere.formatArrayRecords(recordsData, links);
 
     describe('Get links from data', () => {
-        it('should format data', () => {
+        it('should format title', () => {
             const { context: contextFromData } = links[2];
             const { title: titleFromModele } = linksData[2];
             titleFromModele.should.to.equal(contextFromData);
@@ -44,10 +44,10 @@ describe.only('Opensphere', () => {
         });
 
         it('should format metas', () => {
-            const metaFromData = recordsData[2]['meta:titre'];
+            const label = 'titre';
+            const metaFromData = recordsData[2][`meta:${label}`];
             const metaFromModele = records[2].metas;
-            console.log(metaFromModele);
-            metaFromModele.should.to.deep.equal({ title: metaFromData })
+            metaFromModele.should.to.deep.equal({ [label]: metaFromData })
         });
     });
 })
