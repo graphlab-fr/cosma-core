@@ -1,9 +1,19 @@
-const assert = require('assert');
+const fs = require('fs-extra')
+    , path = require('path');
+
+const assert = require('assert')
+    , chai = require('chai')
+    , chaiFs = require('chai-fs');
+
+chai.use(chaiFs);
+const should = chai.should();
 
 const Record = require('../models/record'),
     Link = require('../models/link');
 
-describe('Record verif', () => {
+const tempFolderPath = path.join(__dirname, '../temp');
+
+describe('Record', () => {
     describe('check', () => {
         it('should not be register errors if record get title', () => {
             const validRecord = new Record(
@@ -156,6 +166,113 @@ lastname: Brioudes
 
 `;
             assert.strictEqual(recordYmlFrontMatter, recordYmlFrontMatterExpected);
+        });
+    });
+
+    describe.only('File save', () => {
+        let record;
+
+        const content = 'Lorem ipsum dolor est'
+            , recordConfig = { files_origin: tempFolderPath }
+            , fileName = 'My record.md'
+            , filePath = path.join(tempFolderPath, fileName);
+
+        before(() => {
+            if (fs.existsSync(tempFolderPath) === false) {
+                fs.mkdirSync(tempFolderPath);
+            }
+        });
+
+        afterEach(() => {
+            fs.emptyDirSync(tempFolderPath);
+        });
+
+        it('should save the record as file on temp folder', () => {
+            record = new Record(
+                undefined,
+                'My record',
+                undefined,
+                undefined,
+                undefined,
+                content,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                recordConfig
+            );
+            const result = record.saveAsFile(true);
+
+            result.should.be.true;
+            filePath.should.be.a.file();
+        });
+
+        it('should save the record with a clean file name', () => {
+            record = new Record(
+                undefined,
+                'My [@récörd?!]',
+                undefined,
+                undefined,
+                undefined,
+                content,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                recordConfig
+            );
+            const result = record.saveAsFile(true);
+
+            result.should.be.true;
+            filePath.should.be.a.file();
+        });
+
+        it('should save warn file overwritting', () => {
+            record = new Record(
+                undefined,
+                'My record',
+                undefined,
+                undefined,
+                undefined,
+                content,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                recordConfig
+            );
+            const result1 = record.saveAsFile();
+            const result2 = record.saveAsFile();
+
+            result1.should.be.true;
+            result2.should.be.equal('overwriting');
+        });
+
+        it('should save record content', () => {
+            record = new Record(
+                undefined,
+                'My record',
+                undefined,
+                undefined,
+                undefined,
+                content,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                recordConfig
+            );
+            record.saveAsFile();
+            const fileContent = record.getYamlFrontMatter() + content;
+            filePath.should.be.a.file().with.content(fileContent);
         });
     });
 });
