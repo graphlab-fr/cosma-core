@@ -230,9 +230,6 @@ module.exports = class Record {
             }
         }
 
-        this.ymlFrontMatter = this.getYamlFrontMatter();
-        this.ymlFrontMatter = '---\n' + this.ymlFrontMatter + '---\n\n';
-
         const config = new Config(opts);
         const typesRecords = config.getTypesRecords();
         const typesLinks = config.getTypesLinks();
@@ -247,6 +244,7 @@ module.exports = class Record {
         });
 
         this.content = content;
+        this.ymlFrontMatter = this.getYamlFrontMatter();
         this.links = links;
         this.backlinks = backlinks;
         this.begin;
@@ -281,13 +279,15 @@ module.exports = class Record {
     }
 
     getYamlFrontMatter() {
-        return yml.dump({
+        const ymlContent = yml.dump({
             title: this.title,
             id: this.id,
             type: this.type,
             tags: this.tags.length === 0 ? undefined : this.tags,
             ...this.metas
         });
+        const frontMatterPlainText = ['---\n', ymlContent, '---\n\n'].join('');
+        return frontMatterPlainText;
     }
 
     /**
@@ -322,7 +322,7 @@ module.exports = class Record {
         /** @exemple 'my-idea.md' */
         this.fileName = slugify(fileName, {
             replacement: ' ',
-            remove: /[&*+~.'"!:@]/g,
+            remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/]/g,
         });
         this.fileName = `${this.fileName}.md`;
         this.path = path.join(this.config.files_origin, this.fileName);

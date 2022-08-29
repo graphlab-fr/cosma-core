@@ -132,7 +132,8 @@ describe('Record', () => {
 `---
 title: the title
 id: ${recordId}
-type: undefined
+type:
+  - undefined
 tags:
   - tag 1
   - tag 2
@@ -150,7 +151,20 @@ tags:
                     name: 'Guillaume',
                     lastname: 'Brioudes'
                 },
-                'the content'
+                'the content',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                {
+                    record_types: {
+                        'undefined': 'gray',
+                        'type 1': 'yellow',
+                        'type 2': 'green'
+                    }
+                }
             ).ymlFrontMatter;
 
             recordYmlFrontMatterExpected =
@@ -169,7 +183,7 @@ lastname: Brioudes
         });
     });
 
-    describe.only('File save', () => {
+    describe('File save', () => {
         let record;
 
         const content = 'Lorem ipsum dolor est'

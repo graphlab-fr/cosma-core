@@ -19,7 +19,7 @@ const csvLinks =
 4,3,2,Ils se connaissent depuis 1 an
 5,4,3,Ils ont dîner ensemble`;
 
-describe.only('Opensphere', () => {
+describe('Opensphere', () => {
     const linksData = parse(csvLinks, { columns: true, skip_empty_lines: true });
     const links = Opensphere.formatArrayLinks(linksData);
     const recordsData = parse(csvNodes, { columns: true, skip_empty_lines: true });
