@@ -21,17 +21,37 @@ before(async () => {
 });
 
 describe('App', async () => {
-    beforeEach(async () => {
+    before(() => {
         return new Promise(async (resolve) => {
             browser = await puppeteer.launch({
-                headless: true,
+                headless: false,
                 devtools: true
             });
+            resolve();
+        })
+    });
+
+    beforeEach(() => {
+        return new Promise(async (resolve) => {
             page = await browser.newPage();
             await page.goto(
                 'file://' + testComoscopePath,
                 { timeout: 0, waitUntil: 'domcontentloaded' }
             );
+            resolve();
+        });
+    });
+    
+    afterEach(() => {
+        return new Promise(async (resolve) => {
+            await page.close();
+            resolve();
+        });
+    });
+
+    after(() => {
+        return new Promise(async (resolve) => {
+            await browser.close();
             resolve();
         });
     });
@@ -45,7 +65,6 @@ describe('App', async () => {
                 const [_, scaleAfterClick] = graphCanvasStyle.match(/scale\((.*)\)/);
                 return scaleAfterClick;
             });
-            await browser.close();
             assert.ok(zoomInResult > 1);
         });
     });
