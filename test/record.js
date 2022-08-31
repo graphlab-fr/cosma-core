@@ -1,4 +1,4 @@
-const fs = require('fs-extra')
+const fs = require('fs')
     , path = require('path');
 
 const assert = require('assert')
@@ -201,7 +201,7 @@ lastname: Brioudes
         });
 
         afterEach(() => {
-            fs.emptyDirSync(tempFolderPath);
+            fs.unlinkSync(filePath);
         });
 
         it('should save the record as file on temp folder', () => {
