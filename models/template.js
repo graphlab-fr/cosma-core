@@ -58,9 +58,15 @@ module.exports = class Template {
             // extract link id, without '[[' & ']]' caracters
             let link = extract.slice(0, -2).slice(2);
 
-            link = Link.normalizeLinks(link).target.id;
+            link = Link.normalizeLinks(link);
 
-            if (link === NaN) { return extract; } // link is not a number
+            if (link === undefined) {
+                return extract;
+            }
+
+            link = link.target.id;
+
+            // if (link === NaN) { return extract; } // link is not a number
 
             const associatedMetas = record.links.find(i => i.target.id === link);
 

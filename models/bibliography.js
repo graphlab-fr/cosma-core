@@ -35,7 +35,12 @@ module.exports = class Bibliography {
     static getBibliographicRecordsFromText(recordContent) {
         const quotesAsText = Citr.util.extractCitations(recordContent);
         return quotesAsText.map((quoteText, index) => {
-            const citationItems = Citr.parseSingle(quoteText);
+            let citationItems;
+            try {
+                citationItems = Citr.parseSingle(quoteText);
+            } catch (error) {
+                citationItems = [];
+            }
             return {
                 quotesExtract: {
                     citationItems,

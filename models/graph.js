@@ -15,6 +15,13 @@ module.exports = class Graph {
         'empty'
     ]);
 
+    /**
+     * 
+     * @param {Record[]} records 
+     * @param {object} opts 
+     * @param {string[]} params 
+     */
+
     constructor(records = [], opts = {}, params = []) {
         this.params = new Set(
             params.filter(param => Graph.validParams.has(param))
