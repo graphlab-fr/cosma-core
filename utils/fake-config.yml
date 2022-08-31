@@ -1,13 +1,31 @@
 record_types:
-  undefined: '#858585'
-  idea: '#1b9e77'
-  concept: '#d95f02'
-  note: '#7570b3'
-  person: '#e7298a'
-  place: '#66a61e'
-  event: '#e6ab02'
-  task: '#a6761d'
-  object: '#666666'
+  undefined:
+    fill: 'daniel.jpg'
+    stroke: '#858585'
+  idea:
+    fill: '#1b9e77'
+    stroke: '#1b9e77'
+  concept:
+    fill: 'paul.jpg'
+    stroke: '#d95f02'
+  note:
+    fill: '#7570b3'
+    stroke: '#7570b3'
+  person:
+    fill: 'otlet.jpg'
+    stroke: '#e7298a'
+  place:
+    fill: '#66a61e'
+    stroke: '#66a61e'
+  event:
+    fill: 'suzanne.jpg'
+    stroke: '#e6ab02'
+  task:
+    fill: '#a6761d'
+    stroke: '#a6761d'
+  object:
+    fill: '#666666'
+    stroke: '#666666'
 link_types:
   undefined:
     stroke: simple

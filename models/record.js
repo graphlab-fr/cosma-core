@@ -194,7 +194,7 @@ module.exports = class Record {
      * @param {number} begin - Timestamp.
      * @param {number} end - Timestamp.
      * @param {BibliographicRecord[]} bibliographicRecords
-     * @param {string} image - Image path
+     * @param {string} thumbnail - Image path
      * @param {object} opts
      */
 
@@ -210,7 +210,7 @@ module.exports = class Record {
         begin,
         end,
         bibliographicRecords = [],
-        image,
+        thumbnail,
         opts
     ) {
         this.id = Number(id);
@@ -255,10 +255,7 @@ module.exports = class Record {
         if (end && moment(end).isValid() === true) {
             this.end = moment(end).unix();
         }
-        this.image;
-        if (image && config.isValid() && config.opts['images_origin']) {
-            this.image = path.join(config.opts['images_origin'], image);
-        }
+        this.thumbnail = thumbnail;
 
         this.links = this.links.map((link) => {
             if (typesLinks.has(link.type)) {
@@ -268,7 +265,7 @@ module.exports = class Record {
             return link;
         });
 
-        this.config = config.opts;
+        this.config = config;
         /**
          * Invalid fields
          * @type array
@@ -325,7 +322,7 @@ module.exports = class Record {
             remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/]/g,
         });
         this.fileName = `${this.fileName}.md`;
-        this.path = path.join(this.config.files_origin, this.fileName);
+        this.path = path.join(this.config.opts.files_origin, this.fileName);
 
         if (this.isValid() === false) {
             return false;

@@ -13,8 +13,9 @@ const Config = require('../models/config')
     , Record = require('../models/record');
 
 const bib = require('./fake-bib.json');
+const tempDirPath = path.join(__dirname, '../temp');
 
-const nodesNb = 50;
+const nodesNb = 10;
 const tags = [];
 const ids = [];
 const files = [];
@@ -23,6 +24,9 @@ const bibKeys = Object.values(bib).map(({ id }) => `${id}`);
 let config = Config.get(path.join(__dirname, 'fake-config.yml'));
 config = new Config(config);
 const { record_types: recordTypes } = config.opts;
+config.opts['images_origin'] = tempDirPath;
+config.opts['csl'] = path.join(tempDirPath, 'iso690.csl')
+config.opts['csl_locale'] = path.join(tempDirPath, 'locales-fr-FR.xml')
 config.opts['css_custom'] = path.join(__dirname, 'fake.css');
 config.opts['bibliography'] = path.join(__dirname, 'fake-bib.json');
 config.opts['views'] = {
@@ -30,6 +34,10 @@ config.opts['views'] = {
     [faker.word.verb()]: fakeView(),
     [faker.word.verb()]: fakeView()
 }
+const nodeThumbnails = Array.from(config.getTypesRecords())
+    .filter(type => config.getFormatOfTypeRecord(type) === 'image')
+    .map(type => recordTypes[type]['fill']);
+const images = ['exemple-image.jpeg'];
 
 for (let i = 0; i < 5; i++) {
     tags.push(faker.random.word());
@@ -44,9 +52,12 @@ for (const fileId of ids) {
     );
     const content = templateEngine.render('fake-record.njk', {
         ids,
-        imgSrc: faker.image.animals(),
+        imgSrc: images[0],
         bibKeys
     });
+
+    const thumbnail = `${fileId}.jpg`;
+    nodeThumbnails.push(thumbnail);
 
     files.push({
         path: undefined,
@@ -60,7 +71,8 @@ for (const fileId of ids) {
             tags: [
                 faker.helpers.arrayElement(tags),
                 faker.helpers.arrayElement(tags)
-            ]
+            ],
+            thumbnail: thumbnail
         }
     })
 }
@@ -70,7 +82,9 @@ const records = Cosmoscope.getRecordsFromFiles(files, config.opts);
 module.exports = {
     config,
     records,
-    bib
+    bib,
+    nodeThumbnails,
+    images
 }
 
 function fakeView() {

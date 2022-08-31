@@ -8,8 +8,9 @@ const assert = require('assert')
 chai.use(chaiFs);
 const should = chai.should();
 
-const Record = require('../models/record'),
-    Link = require('../models/link');
+const Record = require('../models/record')
+    , Link = require('../models/link')
+    , Config = require('../models/config');
 
 const tempFolderPath = path.join(__dirname, '../temp');
 
@@ -41,9 +42,9 @@ describe('Record', () => {
                 undefined,
                 {
                     record_types: {
-                        'undefined': '#ccc',
-                        'important': '#ccc',
-                        'done': '#ccc'
+                        'undefined': { fill: '#ccc', stroke: '#ccc' },
+                        'important': { fill: '#ccc', stroke: '#ccc' },
+                        'done': { fill: '#ccc', stroke: '#ccc' }
                     }
                 }
             );
@@ -97,6 +98,7 @@ describe('Record', () => {
                         type: 'g',
                         shape: { stroke: 'simple', dashInterval: null },
                         color: '#ccc',
+                        colorHighlight: Config.base.graph_highlight_color,
                         source: 1,
                         target: 2,
                         report: []
@@ -107,6 +109,7 @@ describe('Record', () => {
                         type: 'undefined',
                         shape: { stroke: 'double', dashInterval: null },
                         color: '#ccc',
+                        colorHighlight: Config.base.graph_highlight_color,
                         source: 3,
                         target: 4,
                         report: []
@@ -160,9 +163,9 @@ tags:
                 undefined,
                 {
                     record_types: {
-                        'undefined': 'gray',
-                        'type 1': 'yellow',
-                        'type 2': 'green'
+                        'undefined': { fill: 'gray', stroke: 'gray' },
+                        'type 1': { fill: 'yellow', stroke: 'yellow' },
+                        'type 2': { fill: 'green', stroke: 'green' }
                     }
                 }
             ).ymlFrontMatter;

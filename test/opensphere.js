@@ -3,7 +3,8 @@ const assert = require('assert')
 
 const { parse } = require("csv-parse/sync");
 
-const Opensphere = require('../models/opensphere');
+const Opensphere = require('../models/opensphere')
+    , Config = require('../models/config');
 
 const csvNodes =
 `title,id,type:nature,type:relation,meta:titre,tag:genre,time:begin,time:end,image,quote
@@ -20,10 +21,11 @@ const csvLinks =
 5,4,3,Ils ont dîner ensemble`;
 
 describe('Opensphere', () => {
+    const config = new Config();
     const linksData = parse(csvLinks, { columns: true, skip_empty_lines: true });
     const links = Opensphere.formatArrayLinks(linksData);
     const recordsData = parse(csvNodes, { columns: true, skip_empty_lines: true });
-    const records = Opensphere.formatArrayRecords(recordsData, links);
+    const records = Opensphere.formatArrayRecords(recordsData, links, config);
 
     describe('Get links from data', () => {
         it('should format title', () => {

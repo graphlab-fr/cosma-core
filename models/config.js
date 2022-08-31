@@ -27,7 +27,7 @@ module.exports = class Config {
         export_target: '',
         history: true,
         focus_max: 2,
-        record_types: { undefined: '#858585' },
+        record_types: { undefined: { fill: '#858585', stroke: '#858585' } },
         link_types: { undefined: { stroke: 'simple', color: '#e1e1e1' } },
         graph_background_color: '#ffffff',
         graph_highlight_color: '#ff6a6a',
@@ -157,8 +157,16 @@ module.exports = class Config {
             return false; }
 
         for (const key in recordTypes) {
-            if (typeof recordTypes[key] !== 'string') {
-                return false; }
+            if (
+                typeof recordTypes[key] !== 'object' ||
+                recordTypes[key]['fill'] === undefined ||
+                typeof recordTypes[key]['fill'] !== 'string' ||
+                recordTypes[key]['stroke'] === undefined ||
+                typeof recordTypes[key]['stroke'] !== 'string'
+            )
+            {
+                return false;
+            }
         }
 
         return true;
@@ -248,7 +256,7 @@ module.exports = class Config {
             description: lang.getFor(lang.i.demo.description),
             lang: opts.lang
         })
-    }
+    } 
 
     /**
      * Create a user config.
@@ -475,15 +483,38 @@ module.exports = class Config {
         return true;
     }
 
+    /**
+     * @returns {Set<string>}
+     */
+
     getTypesRecords () {
         return new Set(
             Object.keys(this.opts.record_types)
         );
     }
 
+    /**
+     * @returns {Set<string>}
+     */
+
     getTypesLinks () {
         return new Set(
             Object.keys(this.opts.link_types)
         );
+    }
+
+    /**
+     * @param {string} type
+     * @returns {'color'|'image'}
+     */
+
+    getFormatOfTypeRecord (type) {
+        const validExtnames = new Set(['.jpg', '.jpeg', '.png']);
+
+        const { fill } = this.opts['record_types'][type];
+        if (validExtnames.has(path.extname(fill))) {
+            return 'image';
+        }
+        return 'color';
     }
 }

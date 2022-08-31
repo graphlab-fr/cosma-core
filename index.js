@@ -1,12 +1,17 @@
 const fs = require('fs')
     , path = require('path');
 
-const { cosmocope } = require('./utils/generate');
+const { cosmocope, opensphere } = require('./utils/generate');
 
-const tempFolderPath = path.join(__dirname, 'temp');
-if (fs.existsSync(tempFolderPath) === false) {
-    fs.mkdirSync(tempFolderPath);
+const tempDirPath = path.join(__dirname, 'temp');
+if (fs.existsSync(tempDirPath) === false) {
+    fs.mkdirSync(tempDirPath);
 }
 
-cosmocope(tempFolderPath)
-    .then(({ nbRecords }) => console.log('\x1b[34m', 'Cosmoscope generated', '\x1b[0m', `(${nbRecords} records)`));
+cosmocope(tempDirPath)
+    .then(({ nbRecords }) => console.log('\x1b[34m', 'Cosmoscope generated', '\x1b[0m', `(${nbRecords} records)`))
+    .catch(err => console.error('\x1b[31m', 'Err.', '\x1b[0m', err));
+
+opensphere(tempDirPath)
+    .then(({ nbRecords }) => console.log('\x1b[34m', 'Opensphere generated', '\x1b[0m', `(${nbRecords} records)`))
+    .catch(err => console.error('\x1b[31m', 'Err.', '\x1b[0m', err));

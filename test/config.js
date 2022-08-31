@@ -3,7 +3,7 @@ const assert = require('assert');
 const Config = require('../models/config')
     , { config: fakeConfig } = require('../utils/fake');
 
-describe('Config verif', () => {
+describe('Config', () => {
     it('should be return error into report array for invalid paths', () => {
         const config = new Config({
             ...Config.base,
@@ -86,46 +86,118 @@ describe('Config verif', () => {
         );
     });
 
-    it('should be return error into report array for invalid link type : invalid stroke', () => {
-        const config = new Config({
-            ...Config.base,
-            link_types: {
-                undefined: { stroke: 'invalid_stroke', color: '#000000' }
-            }
+    describe('type record', () => {
+        it('should not return error for valid record type', () => {
+            const config = new Config({
+                ...Config.base,
+                record_types: {
+                    undefined: { fill: 'photo.jpg', stroke: 'green' }
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                []
+            );
         });
-
-        assert.deepStrictEqual(
-            config.report,
-            ['link_types']
-        );
+    
+        it('should be return error into report array for invalid record type : miss fill', () => {
+            const config = new Config({
+                ...Config.base,
+                record_types: {
+                    undefined: { stroke: 'green' }
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['record_types']
+            );
+        });
+    
+        it('should be return error into report array for invalid record type : miss stroke', () => {
+            const config = new Config({
+                ...Config.base,
+                record_types: {
+                    undefined: { fill: 'green' }
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['record_types']
+            );
+        });
     });
 
-    it('should be return error into report array for invalid link type : miss stroke', () => {
-        const config = new Config({
-            ...Config.base,
-            link_types: {
-                undefined: { color: '#000000' }
-            }
-        });
 
-        assert.deepStrictEqual(
-            config.report,
-            ['link_types']
-        );
+    describe('type link', () => {
+        it('should be return error into report array for invalid link type : invalid stroke', () => {
+            const config = new Config({
+                ...Config.base,
+                link_types: {
+                    undefined: { stroke: 'invalid_stroke', color: '#000000' }
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['link_types']
+            );
+        });
+    
+        it('should be return error into report array for invalid link type : miss stroke', () => {
+            const config = new Config({
+                ...Config.base,
+                link_types: {
+                    undefined: { color: '#000000' }
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['link_types']
+            );
+        });
+    
+        it('should be return error into report array for invalid link type : miss color', () => {
+            const config = new Config({
+                ...Config.base,
+                link_types: {
+                    undefined: { stroke: 'invalid_stroke' }
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['link_types']
+            );
+        });
     });
 
-    it('should be return error into report array for invalid link type : miss color', () => {
+
+    describe('type format', () => {
         const config = new Config({
             ...Config.base,
-            link_types: {
-                undefined: { stroke: 'invalid_stroke' }
+            record_types: {
+                undefined: { fill: 'photo.jpg', stroke: 'black' },
+                other: { fill: 'green', stroke: 'black' }
             }
         });
 
-        assert.deepStrictEqual(
-            config.report,
-            ['link_types']
-        );
+        it('should get image format from record fill', () => {
+            assert.strictEqual(
+                config.getFormatOfTypeRecord('undefined'),
+                'image'
+            );
+        });
+    
+        it('should get color format from record fill', () => {
+            assert.strictEqual(
+                config.getFormatOfTypeRecord('other'),
+                'color'
+            );
+        });
     });
 
     describe('views', () => {

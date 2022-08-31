@@ -92,7 +92,7 @@ elts.links = svg.append("g")
     .selectAll("line")
     .data(data.links)
     .enter().append("line")
-    .attr("class", (d) => 'l_' + d.type)
+    .attr("stroke", (d) => d.color)
     .attr("title", (d) => d.title)
     .attr("data-source", (d) => d.source.id)
     .attr("data-target", (d) => d.target.id)
@@ -123,7 +123,9 @@ elts.nodes = svg.append("g")
 
 elts.circles = elts.nodes.append("circle")
     .attr("r", (d) => d.size)
-    .attr("class", (d) => "n_" + d.type)
+    .attr("fill", (d) => d.fill)
+    .attr("stroke", (d) => d.colorStroke)
+    .attr("stroke-width", (d) => d.strokeWidth)
     .call(d3.drag()
         .on("start", function(d) {
             if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -171,18 +173,18 @@ elts.circles = elts.nodes.append("circle")
             return true;
         })
 
-        nodesHovered.classed('hover', true);
-        linksHovered.classed('hover', true);
-        nodesToModif.classed('translucent', true);
-        linksToModif.classed('translucent', true);
+        nodesHovered.selectAll("circle").attr('stroke', d => d.highlight);
+        linksHovered.attr('stroke', d => d.colorHighlight);
+        nodesToModif.attr('opacity', 0.5);
+        linksToModif.attr('stroke-opacity', 0.5);
     })
     .on('mouseout', function() {
         if (!graphProperties.graph_highlight_on_hover) { return; }
 
-        elts.nodes.classed('hover', false);
-        elts.nodes.classed('translucent', false);
-        elts.links.classed('hover', false);
-        elts.links.classed('translucent', false);
+        elts.nodes.selectAll("circle").attr('stroke', d => d.colorStroke);
+        elts.links.attr('stroke', d => d.color);
+        elts.nodes.attr('opacity', 1);
+        elts.links.attr('stroke-opacity', 1);
     });
 
 elts.labels = elts.nodes.append("text")
@@ -387,8 +389,8 @@ window.displayNodeNetwork = function (nodeIds) {
 window.highlightNodes = function (nodeIds) {
     const ntw = getNodeNetwork(nodeIds);
 
-    ntw.nodes.classed('highlight', true);
-    ntw.links.classed('highlight', true);
+    ntw.nodes.selectAll("circle").style('stroke', 'var(--highlight)');
+    ntw.links.style('stroke', 'var(--highlight)');
 
     view.highlightedNodes = view.highlightedNodes.concat(nodeIds);
 }
@@ -402,8 +404,8 @@ window.unlightNodes = function() {
 
     const ntw = getNodeNetwork(view.highlightedNodes);
 
-    ntw.nodes.classed('highlight', false);
-    ntw.links.classed('highlight', false);
+    ntw.nodes.selectAll("circle").style('stroke', null);
+    ntw.links.style('stroke', null);
 
     view.highlightedNodes = [];
 }
@@ -449,7 +451,7 @@ window.labelHighlight = function (nodeIds) {
         return node;
     });
 
-    labelsToHighlight.classed('highlight', true);
+    labelsToHighlight.style('fill', 'var(--highlight)');
 }
 
 /**
@@ -475,7 +477,7 @@ window.labelUnlight = function (nodeIds) {
         return node;
     });
 
-    labelsToHighlight.classed('highlight', false);
+    labelsToHighlight.style('fill', null);
 }
 
 /**
@@ -488,7 +490,7 @@ window.labelUnlightAll = function () {
         return node;
     });
 
-    elts.labels.classed('highlight', false);
+    elts.labels.style('fill', null);
 }
 
 window.chronosAction = function (timestamp) {

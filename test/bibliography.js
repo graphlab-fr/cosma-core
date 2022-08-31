@@ -1,8 +1,8 @@
 const assert = require('assert')
     , should = require('chai').should();
 
-const { fetchFileText } = require('../utils/misc')
-    , { bib } = require('../utils/fake');
+const { fetchBibliographyFiles } = require('../utils/generate')
+    , { config: configFake } = require('../utils/fake');
 
 const Bibliography = require('../models/bibliography');
 
@@ -10,18 +10,16 @@ let bibliography;
 
 before(() => {
     return new Promise((resolve) => {
-        Promise.all([
-            fetchFileText('https://www.zotero.org/styles/iso690-author-date-fr-no-abstract'),
-            fetchFileText('https://raw.githubusercontent.com/citation-style-language/locales/6b0cb4689127a69852f48608b6d1a879900f418b/locales-fr-FR.xml')
-        ])
-        .then(([cslStyleFileContent, xmlLocalFileContent]) => {
-            bibliography = new Bibliography(
-                bib,
-                cslStyleFileContent,
-                xmlLocalFileContent
-            );
-            resolve();
-        })
+        fetchBibliographyFiles()
+            .then(() => {
+                const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(configFake);
+                bibliography = new Bibliography(
+                    bib,
+                    cslStyle,
+                    xmlLocal
+                );
+                resolve();
+            })
     });
 });
 

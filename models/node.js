@@ -22,6 +22,31 @@ module.exports = class Node {
     }
 
     /**
+     * @param {Config} config 
+     * @param {string} nodeType
+     * @returns {object}
+     */
+
+    static getNodeStyle(config, nodeType) {
+        const format = config.getFormatOfTypeRecord(nodeType);
+        let fill;
+        switch (format) {
+            case 'image':
+                fill = `url(#${config.opts['record_types'][nodeType]['fill']})`
+                break;
+            case 'color':
+            default:
+                fill = config.opts['record_types'][nodeType]['fill']
+                break;
+        }
+        return {
+            fill,
+            colorStroke: config.opts['record_types'][nodeType]['stroke'],
+            highlight: config.opts['graph_highlight_color']
+        };
+    }
+
+    /**
      * For each file, get the connection levels
      * The first connection level contains all nodes that are directly linked to the file
      * as link or backlink
@@ -107,12 +132,17 @@ module.exports = class Node {
 
     static getNodesFromRecords(records) {
         return records.map((record) => {
-            const { id, title, type, links, backlinks, begin, end } = record;
+            const { id, title, type, links, backlinks, begin, end, thumbnail, config } = record;
+            const { fill, colorStroke, highlight } = Node.getNodeStyle(config, type[0]);
             return new Node(
                 id,
                 title,
                 type[0],
+                !!thumbnail ? `url(#${thumbnail})` : fill,
+                colorStroke,
+                highlight,
                 Node.getNodeRank(links.length, backlinks.length),
+                2,
                 Node.evalConnectionLevels(id, records),
                 begin,
                 end
@@ -124,17 +154,25 @@ module.exports = class Node {
      * @param {number} id
      * @param {string} label
      * @param {string} type
+     * @param {string} fill Color of the center
+     * @param {string} colorStroke Color of the border
+     * @param {string} colorHighlight Color on highlight
      * @param {number} size
+     * @param {number} strokeWidth
      * @param {array} focus
      * @param {number} begin
      * @param {number} end
      */
 
-    constructor(id, label, type = 'undefined', size, focus, begin, end) {
+    constructor(id, label, type = 'undefined', fill, colorStroke, highlight, size, strokeWidth, focus, begin, end) {
         this.id = Number(id);
         this.label = label;
         this.type = type;
+        this.fill = fill;
+        this.colorStroke = colorStroke;
+        this.highlight = highlight;
         this.size = Number(size);
+        this.strokeWidth = strokeWidth;
         this.focus = focus;
         this.begin = begin;
         this.end = end;

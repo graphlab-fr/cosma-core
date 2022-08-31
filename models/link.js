@@ -88,6 +88,7 @@ module.exports = class Link {
                     type,
                     undefined,
                     undefined,
+                    undefined,
                     fileId,
                     target.id
                 ));
@@ -205,14 +206,16 @@ module.exports = class Link {
         const linksFromRecord = [];
         let id = 0;
         for (const { links, config } of records) {
+            const { opts } = config;
             for (const { context, type, source, target } of links) {
-                const { shape, color } = Link.getLinkStyle(config, type);
+                const { shape, color } = Link.getLinkStyle(opts, type);
                 linksFromRecord.push(new Link(
                     id,
                     context,
                     type,
                     shape,
                     color,
+                    opts['graph_highlight_color'],
                     source.id,
                     target.id
                 ));
@@ -227,17 +230,19 @@ module.exports = class Link {
      * @param {string} context
      * @param {string} type
      * @param {Shape} [shape = Link.baseShape]
-     * @param {string | null} color
+     * @param {string} color
+     * @param {string} colorHighlight
      * @param {number} source
      * @param {number} target
      */
 
-    constructor(id, context, type, shape = Link.baseShape, color, source, target) {
+    constructor(id, context, type, shape = Link.baseShape, color, colorHighlight, source, target) {
         this.id = id;
         this.context = context;
         this.type = type;
         this.shape = shape;
         this.color = color;
+        this.colorHighlight = colorHighlight;
         this.source = Number(source);
         this.target = Number(target);
 

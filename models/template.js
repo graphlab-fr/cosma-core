@@ -28,6 +28,7 @@ const Link = require('./link')
     , Config = require('./config')
     , Bibliography = require('./bibliography');
 
+const { isAnImagePath } = require('../utils/misc');
 const translation = require('./lang').i;
 
 /**
@@ -53,23 +54,23 @@ module.exports = class Template {
      */
 
     static convertLinks(record, content, linkSymbol) {
-        return content.replace(/(\[\[\s*).*?(\]\])/g, function(extract) { // get '[[***]]' strings
+        return content.replace(/(\[\[\s*).*?(\]\])/g, function (extract) { // get '[[***]]' strings
             // extract link id, without '[[' & ']]' caracters
             let link = extract.slice(0, -2).slice(2);
-    
+
             link = Link.normalizeLinks(link).target.id;
-    
+
             if (link === NaN) { return extract; } // link is not a number
 
             const associatedMetas = record.links.find(i => i.target.id === link);
-    
+
             // link is not registred into record metas
             if (associatedMetas === undefined) { return extract; }
-    
+
             link = associatedMetas;
 
             if (linkSymbol) { extract = linkSymbol; }
-    
+
             // return '[[***]]' string into a Markdown link with openRecord function & class
             return `[${extract}](#${link.target.id}){title="${link.target.title}" onclick=openRecord(${link.target.id}) .record-link}`;
         });
@@ -110,12 +111,11 @@ module.exports = class Template {
 
 
     static imagePathToBase64(imgPath) {
-        const imgExist = fs.existsSync(imgPath);
-        if (imgExist === false) { return false; }
+        if (isAnImagePath(imgPath) === false) { return ''; }
         const imgFileContent = fs.readFileSync(imgPath);
         const imgType = path.extname(imgPath).substring(1);
         const imgBase64 = Buffer.from(imgFileContent).toString('base64');
-        return [`data:image/${imgType};base64,`, imgBase64].join('');
+        return `data:image/${imgType};base64,${imgBase64}`;
     }
 
     /**
@@ -153,13 +153,19 @@ module.exports = class Template {
      * @param {string[]} params
      */
 
-    constructor (graph, params = []) {
+    constructor(graph, params = []) {
         this.params = new Set(
             params.filter(param => Template.validParams.has(param))
         );
         this.config = new Config(graph.config.opts);
+
+        if (this.config.isValid() === false) {
+            throw "Can not template : config invalid";
+        }
+
         const {
             images_origin: imagesPath,
+            css_custom: cssCustomPath,
             lang,
             link_symbol: linkSymbol,
             views,
@@ -167,7 +173,8 @@ module.exports = class Template {
             author,
             description,
             keywords,
-            focus_max: focusMax
+            focus_max: focusMax,
+            record_types: recordTypes
         } = this.config.opts;
 
         if (this.params.has('citeproc')) {
@@ -184,6 +191,22 @@ module.exports = class Template {
 
         this.types = {};
         this.tags = {};
+        const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
+            .filter(type => this.config.getFormatOfTypeRecord(type) === 'image')
+            .map(type => {
+                return {
+                    name: recordTypes[type]['fill'],
+                    path: path.join(imagesPath, recordTypes[type]['fill'])
+                };
+            })
+        const thumbnailsFromRecords = graph.records
+            .filter(({ thumbnail }) => typeof thumbnail === 'string')
+            .map(({ thumbnail }) => {
+                return {
+                    name: thumbnail,
+                    path: path.join(imagesPath, thumbnail)
+                }
+            });
 
         moment.locale(lang);
 
@@ -208,13 +231,14 @@ module.exports = class Template {
             record.content = Template.convertLinks(record, record.content, linkSymbol || undefined);
             record.links = Template.markLinkContext(record.links, (link, idInContext) => idInContext === link.target.id);
             record.backlinks = Template.markLinkContext(record.backlinks, (link, idInContext) => idInContext === link.source.id);
-            
+
             return record;
         });
 
         this.custom_css = null;
         if (this.params.has('css_custom') === true && this.config.canCssCustom() === true) {
-            this.custom_css = fs.readFileSync(this.config.opts['css_custom'], 'utf-8'); }
+            this.custom_css = fs.readFileSync(cssCustomPath, 'utf-8');
+        }
 
         this.html = templateEngine.render('template.njk', {
 
@@ -230,7 +254,7 @@ module.exports = class Template {
                 links,
                 backlinks,
                 bibliography,
-                image
+                thumbnail
             }) => {
                 return {
                     id,
@@ -243,7 +267,7 @@ module.exports = class Template {
                     links,
                     backlinks,
                     bibliography,
-                    image
+                    thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined
                 }
             }).sort(function (a, b) { return a.title.localeCompare(b.title); }),
 
@@ -258,16 +282,12 @@ module.exports = class Template {
             translation: translation,
             lang: lang,
 
-            colors: this.colors(),
-
             customCss: this.custom_css,
 
             views: views || [],
-
             types: Object.entries(this.types).map(([type, nodesId]) => {
                 return { name: type, nodes: nodesId };
             }),
-
             tags: Object.entries(this.tags)
                 .filter(([tag, _]) => tag !== '')
                 .map(([tag, nodesId]) => {
@@ -283,9 +303,16 @@ module.exports = class Template {
                 keywords
             },
 
+            nodeThumbnails: [
+                ...thumbnailsFromTypesRecords,
+                ...thumbnailsFromRecords
+            ].filter(({ path }) => isAnImagePath(path)),
+
             focusIsActive: !(focusMax <= 0),
 
             guiContext: (Config.getContext() === 'electron' && graph.params.has('publish') === false),
+
+            faviconPath: path.join(__dirname, '../icons/cosmafavicon.png'),
 
             // stats
 
@@ -297,58 +324,29 @@ module.exports = class Template {
         });
 
     }
-    
-    registerType (fileTypes, fileId) {
+
+    registerType(fileTypes, fileId) {
         if (typeof fileTypes === 'string') {
             fileTypes = [fileTypes];
         }
         for (const fileType of fileTypes) {
             // create associate object key for type if not exist
             if (this.types[fileType] === undefined) {
-                this.types[fileType] = []; }
+                this.types[fileType] = [];
+            }
             // push the file id into associate object key
             this.types[fileType].push(fileId);
         }
     }
-    
-    registerTags (recordTagList, recordId) {
+
+    registerTags(recordTagList, recordId) {
         for (const tag of recordTagList) {
             // create associate object key for tag if not exist
             if (this.tags[tag] === undefined) {
-                this.tags[tag] = []; }
+                this.tags[tag] = [];
+            }
             // push the record id into associate object key
             this.tags[tag].push(recordId);
         }
     }
-
-    colors() {
-        const replacementColor = 'grey';
-        let types;
-    
-        const typesRecord = Object.keys(this.config.opts.record_types)
-            .map(function(key) { return {prefix: 'n_', name: key, color: this.config.opts.record_types[key] || replacementColor}; }, this);
-    
-        const typesLinks = Object.keys(this.config.opts.link_types)
-            .map(function(key) { return {prefix: 'l_', name: key, color: this.config.opts.link_types[key].color || replacementColor}; }, this);
-    
-        types = typesRecord.concat(typesLinks);
-    
-        // map the CSS syntax
-    
-        let colorsStyles = types
-            .map(type => `.${type.prefix}${type.name} {color:var(--${type.prefix}${type.name}); fill:var(--${type.prefix}${type.name}); stroke:var(--${type.prefix}${type.name});}`, this)
-    
-        // add specifics parametered colors from config
-        types.push({prefix: '', name: 'highlight', color: this.config.opts.graph_highlight_color});
-    
-        let globalsStyles = types.map(type => `--${type.prefix}${type.name}: ${type.color};`)
-    
-        globalsStyles = globalsStyles.join('\n'); // array to sting…
-        colorsStyles = colorsStyles.join('\n'); // …by line breaks
-    
-        globalsStyles = ':root {\n' + globalsStyles + '\n}';
-    
-        return '\n' + globalsStyles + '\n\n' + colorsStyles;
-    }
-
 }

@@ -1,29 +1,155 @@
 const fs = require('fs')
-    , path = require('path');
+    , path = require('path')
+    , { parse } = require("csv-parse/sync");
 
-const { config: fakeConfig, records, bib: fakeLibrary } = require('./fake');
+const { faker } = require('@faker-js/faker');
+
+const { config: fakeConfig, records, nodeThumbnails, images: recordImages } = require('./fake');
+const { downloadFile } = require('./misc');
+const tempDirPath = path.join(__dirname, '../temp');
 
 const Cosmocope = require('../models/cosmoscope')
+    , Opensphere = require('../models/opensphere')
     , Template = require('../models/template');
 
-module.exports = {
-    cosmocope: function(savePath, templateOptions = ['publish', 'css_custom']) {
-        return new Promise((resolve, reject) => {
-            const graph = new Cosmocope(records, fakeConfig.opts, ['fake'])
-                , { html } = new Template(graph, templateOptions);
+/**
+ * @param {array[]} files
+ * @returns {Promise}
+ */
 
-            savePath = path.join(savePath, 'cosmoscope.html')
-        
-            fs.writeFile(savePath, html, (err) => {
-                if (err) { reject(err) }
-                resolve({
-                    nbRecords: graph.records.length,
-                    savePath
+function fetchFiles(files) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            for (const [url, fileName] of files) {
+                const filePath = path.join(tempDirPath, fileName);
+                if (fs.existsSync(filePath)) { continue; }
+                await downloadFile(url, filePath);
+            }
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+/**
+ * @returns {Promise}
+ */
+
+function fetchBibliographyFiles() {
+    return fetchFiles([
+        ['https://www.zotero.org/styles/iso690-author-date-fr-no-abstract', 'iso690.csl'],
+        ['https://raw.githubusercontent.com/citation-style-language/locales/6b0cb4689127a69852f48608b6d1a879900f418b/locales-fr-FR.xml', 'locales-fr-FR.xml']
+    ]);
+}
+
+/**
+ * @returns {Promise}
+ */
+
+ function fetchSpreadsheets() {
+    return fetchFiles([
+        ['https://docs.google.com/spreadsheets/d/e/2PACX-1vRGoL9aa7d-VR5ZNT3uGignX1FgZI2GwjM7tUjJhe4ipWjsDutALN5jcuQ_QthHvnueQ1jG5vqoxKS-/pub?gid=0&single=true&output=csv', 'nodes.csv'],
+        ['https://docs.google.com/spreadsheets/d/e/2PACX-1vRGoL9aa7d-VR5ZNT3uGignX1FgZI2GwjM7tUjJhe4ipWjsDutALN5jcuQ_QthHvnueQ1jG5vqoxKS-/pub?gid=1233026049&single=true&output=csv', 'links.csv']
+    ]);
+}
+
+/**
+ * @param {string[]} imageNames
+ * @returns {Promise}
+ */
+
+function fetchFakeImages(imageNames) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            for (const imageName of imageNames) {
+                const imagePath = path.join(tempDirPath, imageName);
+                const url = faker.image.city();
+                if (fs.existsSync(imagePath)) { continue; }
+                await downloadFile(url, imagePath);
+            }
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+/**
+ * @param {string[]} thumbnailNames
+ * @returns {Promise}
+ */
+
+function fetchFakeThumbnails(thumbnailNames) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            for (const thumbnailName of thumbnailNames) {
+                const imagePath = path.join(tempDirPath, thumbnailName);
+                const url = faker.internet.avatar();
+                if (fs.existsSync(imagePath)) { continue; }
+                await downloadFile(url, imagePath);
+            }
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc']) {
+    return new Promise(async (resolve, reject) => {
+        Promise.all([fetchBibliographyFiles(), fetchFakeImages(recordImages), fetchFakeThumbnails(nodeThumbnails)])
+            .then(() => {
+                const graph = new Cosmocope(records, fakeConfig.opts, ['fake'])
+                    , { html } = new Template(graph, templateOptions);
+    
+                savePath = path.join(savePath, 'cosmoscope.html');
+            
+                fs.writeFile(savePath, html, (err) => {
+                    if (err) { reject(err) }
+                    resolve({
+                        nbRecords: graph.records.length,
+                        savePath
+                    });
                 });
-            });
-        })
-    },
-    opensphere: function(savePath, templateOptions = ['publish', 'css_custom']) {
-        
-    }
+            }).catch(reject)
+    })
+}
+
+function opensphere(savePath, templateOptions = ['publish', 'citeproc']) {
+    return new Promise(async (resolve, reject) => {
+        fetchSpreadsheets()
+            .then(() => {
+                const recordsFileContent = fs.readFileSync(path.join(tempDirPath, 'nodes.csv'), 'utf-8');
+                recordsData = parse(recordsFileContent, { columns: true, skip_empty_lines: true });
+                const linksFileContent = fs.readFileSync(path.join(tempDirPath, 'links.csv'), 'utf-8');
+                linksData = parse(linksFileContent, { columns: true, skip_empty_lines: true })
+                const nodeThumbnails = recordsData.map(({ image }) => image);
+                const links = Opensphere.formatArrayLinks(linksData);
+                const records = Opensphere.formatArrayRecords(recordsData, links, fakeConfig);
+                Promise.all([fetchBibliographyFiles(), fetchFakeThumbnails(nodeThumbnails)])
+                    .then(() => {
+                        const graph = new Opensphere(records, fakeConfig.opts, ['fake'])
+                            , { html } = new Template(graph, templateOptions);
+
+                        savePath = path.join(savePath, 'opensphere.html');
+
+                        fs.writeFile(savePath, html, (err) => {
+                            if (err) { reject(err) }
+                            resolve({
+                                nbRecords: graph.records.length,
+                                savePath
+                            });
+                        });
+                    })
+            }).catch(reject)
+    })
+}
+
+module.exports = {
+    cosmocope,
+    opensphere,
+    fetchBibliographyFiles,
+    fetchFakeImages,
+    fetchFakeThumbnails
 };

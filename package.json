@@ -24,6 +24,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
+    "axios": "^0.27.2",
     "citeproc": "^2.4.62",
     "glob": "^7.2.0",
     "js-yaml": "^4.1.0",

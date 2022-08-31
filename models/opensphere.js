@@ -21,12 +21,13 @@ const Config = require('./config')
 module.exports = class Opensphere extends Graph {
     /**
      * @param {Object[]} recordsData
+     * @param {Link[]} links
+     * @param {Config} config
      * @returns {Record[]}
      */
 
-    static formatArrayRecords(recordsData, links) {
-        const { record_types: recordTypes } = Config.get();
-        const allTypes = new Set();
+    static formatArrayRecords(recordsData, links, config) {
+        const { record_types: recordTypes } = config.opts;
 
         const nodes = recordsData.map(({ id, title, ...rest }) => {
             let type;
@@ -108,7 +109,16 @@ module.exports = class Opensphere extends Graph {
 
     static formatArrayLinks(linksData) {
         return linksData.map(({ title, source, target }, i) => {
-            const link = new Link(i, title, undefined, undefined, undefined, source, target);
+            const link = new Link(
+                i,
+                title,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                source,
+                target
+            );
 
             if (link.isValid()) { return link; }
             return undefined;
@@ -125,7 +135,7 @@ module.exports = class Opensphere extends Graph {
         super(records, opts);
 
         this.data.nodes = this.data.nodes.map((node) => {
-            node.size = 3;
+            node.size = 10;
             return node;
         });
     }

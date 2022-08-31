@@ -6,25 +6,19 @@ const assert = require('assert')
 
 const { cosmocope } = require('../utils/generate');
 
-let browser, page;
-const tempFolderPath = path.join(__dirname, '../temp');
-const testComoscopePath = path.join(tempFolderPath, 'cosmoscope.html');
-
-before(async () => {
-    return new Promise(async (resolve) => {
-        if (fs.existsSync(tempFolderPath) === false) {
-            fs.mkdirSync(tempFolderPath);
-        }
-        await cosmocope(tempFolderPath);
-        resolve();
-    })
-});
-
 describe('App', async () => {
+    let browser, page;
+    const tempFolderPath = path.join(__dirname, '../temp');
+    const testComoscopePath = path.join(tempFolderPath, 'cosmoscope.html');
+
     before(() => {
         return new Promise(async (resolve) => {
+            if (fs.existsSync(tempFolderPath) === false) {
+                fs.mkdirSync(tempFolderPath);
+            }
+            await cosmocope(tempFolderPath);
             browser = await puppeteer.launch({
-                headless: false,
+                headless: true,
                 devtools: true
             });
             resolve();

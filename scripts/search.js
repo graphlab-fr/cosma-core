@@ -40,7 +40,7 @@ searchInput.addEventListener('focus', () => {
             var resultElement = document.createElement('li');
             resultElement.classList.add('search-result-item');
             resultElement.innerHTML =
-            `<span class="record-type-point n_${result.item.type}">⬤</span>
+            `<span class="record-type-point" style="color:var(--n_${result.item.type})">⬤</span>
             <span>${result.item.label}</span>`;
             resultContainer.appendChild(resultElement);
 

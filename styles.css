@@ -546,22 +546,11 @@ main.record-container:not(.active) {
 
 /* nodes */
 circle, text { cursor: pointer; }
-g.highlight circle, g.focus circle, g.hover circle {
-	stroke: var(--highlight);
-}
-g.focus circle { stroke-width: 3 }
-g.translucent circle { opacity: 0.5; }
-/* links */
-line.highlight, line.hover { stroke: var(--highlight); }
-line.translucent { stroke-opacity: 0.2; }
+g.focus circle { stroke: var(--highlight) }
 /* labels */
 text {
 	font-family: var(--condensed);
 	fill: gray;
-}
-text.highlight { fill: var(--highlight); }
-g.highlight text, g.hover text {
-	fill: black;
 }
 /* arrows */
 marker {
@@ -569,9 +558,6 @@ marker {
 	stroke:var(--l_undefined);
 	fill:var(--l_undefined);
 }
-
-.l_undefined { fill: #e1e1e1; stroke: #e1e1e1; }
-.n_undefined { fill: #858585; stroke: #858585; }
 
 /* ---
 - Buttons

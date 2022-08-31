@@ -21,6 +21,7 @@
  * @property {string} title
  * @property {string | string[] | undefined} type
  * @property {string[] | undefined} tags
+ * @property {string} thumbnail
  */
 
 /**
@@ -34,9 +35,7 @@
 const fs = require('fs')
     , path = require('path')
     , glob = require("glob")
-    , ymlFM = require('yaml-front-matter')
-    , CSL = require('citeproc')
-    , Citr = require('@zettlr/citr');
+    , ymlFM = require('yaml-front-matter');
 
 const Graph = require('./graph')
     , Link = require('./link')
@@ -101,7 +100,7 @@ module.exports = class Cosmocope extends Graph {
         });
 
         const records = files.map((file) => {
-            const { id, title, type, tags } = file.metas;
+            const { id, title, type, tags, thumbnail } = file.metas;
             const {
                 linksReferences,
                 backlinksReferences
@@ -120,7 +119,7 @@ module.exports = class Cosmocope extends Graph {
                 file.lastEditDate,
                 undefined,
                 bibliographicRecords,
-                undefined,
+                thumbnail,
                 opts
             );
         });
