@@ -4,6 +4,13 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
+/**
+ * @typedef Chronos
+ * @type {object}
+ * @property {number | undefined} begin
+ * @property {number | undefined} end
+ */
+
 const Config = require('./config')
     , Link = require('./link')
     , Node = require('./node');
@@ -40,7 +47,7 @@ module.exports = class Graph {
         };
         this.config = new Config(opts);
 
-        
+        /** @type {Chronos} */
         this.chronos = this.getChronosFromRecords();
 
         this.report = {
@@ -88,13 +95,21 @@ module.exports = class Graph {
         }
     }
 
+    /**
+     * @returns {Chronos}
+     */
+
     getChronosFromRecords() {
         let dates = [];
         for (const { begin, end } of this.records) {
             dates.push(begin);
             dates.push(end);
         }
-        dates = dates.sort().filter(date => typeof date === 'number');
+        dates = dates.sort((a, b) => {
+            if (a < b) { return -1; }
+            if (a > b) { return 1; }
+            return 0;
+        }).filter(date => typeof date === 'number');
         return {
             begin: dates[0],
             end: dates[dates.length - 1]

@@ -541,7 +541,7 @@
 
                 <form
                     hidden
-                    id="chronos-range"
+                    id="chronos-form"
                 >
                     <output name="chronos_output">{{ chronos.begin | timestampToLocal }}</output>
                     <input
@@ -550,18 +550,16 @@
                         min="{{ chronos.begin }}"
                         max="{{ chronos.end }}"
                         value="{{ chronos.begin }}"
-                        oninput="chronosAction(chronos_range.value); chronos_output.value = new Date(chronos_range.value * 1000).toLocaleDateString('{{lang}}')"
+                        oninput="chronosAction(chronos_range.valueAsNumber); chronos_output.value = new Date(chronos_range.value * 1000).toLocaleDateString('{{lang}}')"
                         list="chronos-ticks"
                     >
                     <div class="chonos-list">
-                        {% for i in range(chronos.begin, chronos.end, (chronos.end - chronos.begin) / 2) %}
-                            <span>{{ i | timestampToLocal }}</span>
-                        {% endfor %}
+                        <span>{{ chronos.begin | timestampToLocal }}</span>
+                        <span>{{ chronos.end | timestampToLocal }}</span>
                     </div>
                     <datalist id="chronos-ticks">
-                    {% for i in range(chronos.begin, chronos.end, (chronos.end - chronos.begin) / 2) %}
-                        <option value="{{ i }}">{{ i | timestampToLocal }}</option>
-                    {% endfor %}
+                        <option value="{{ chronos.begin }}">{{ chronos.begin | timestampToLocal }}</option>
+                        <option value="{{ chronos.end }}">{{ chronos.end | timestampToLocal }}</option>
                     </datalist>
                 </form>
             </div>

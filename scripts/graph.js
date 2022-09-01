@@ -493,17 +493,30 @@ window.labelUnlightAll = function () {
     elts.labels.style('fill', null);
 }
 
+/**
+ * @param {number} timestamp
+ */
+
 window.chronosAction = function (timestamp) {
-    hideNodes(data.nodes.map(({ id }) => id));
+    if (chronos.begin === undefined || chronos.end === undefined) {
+        return;
+    }
 
-    const ids = data.nodes.filter(({ begin, end }) => {
-        if (end === undefined) { end = chronos.end }
-        if (timestamp >= begin && timestamp <= end) {
-            return true;
+    const toHide = [], toDisplay = [];
+
+    for (const node of data.nodes) {
+        if (node.end === undefined) { node.end = chronos.end }
+        if (node.begin === undefined) { node.begin = chronos.begin }
+
+        if (timestamp >= node.begin && timestamp <= node.end) {
+            toDisplay.push(node.id);
+        } else {
+            toHide.push(node.id);
         }
-    }).map(({ id }) => id);
+    }
 
-    displayNodes(ids);
+    hideNodes(toHide);
+    displayNodes(toDisplay);
 }
 
 })();
