@@ -48,7 +48,7 @@ module.exports = class Opensphere extends Graph {
         });
 
         return recordsData.map(({ title, id, ...rest }) => {
-            let contents = [], types = [], metas = {}, tags = [], quotes = [];
+            let contents = [], types = [], metas = {}, tags = [], references = [];
             for (const [key, value] of Object.entries(rest)) {
                 const [field, label] = key.split(':', 2);
                 if (field === 'time' || field === 'image') { continue; }
@@ -62,8 +62,8 @@ module.exports = class Opensphere extends Graph {
                     case 'tag':
                         tags.push(value);
                         break;
-                    case 'quote':
-                        quotes = value.split(',');
+                    case 'reference':
+                        references = value.split(',');
                         break;
                     case 'meta':
                     default:
@@ -80,7 +80,7 @@ module.exports = class Opensphere extends Graph {
                 linksReferences,
                 backlinksReferences
             } = Link.getReferencesFromLinks(Number(id), links, nodes);
-            const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(quotes);
+            const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
 
             const record = new Record(
                 id,

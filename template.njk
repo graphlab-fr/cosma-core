@@ -297,7 +297,7 @@
                 {% for meta, value in record.metas %}
                 <div class="record-{{meta}}">
                     <span>{{ meta }} :</span>
-                    <span>{{ value }}</span>
+                    <span>{{ value | urlize | safe }}</span>
                 </div>
                 {% endfor %}
             </header>
