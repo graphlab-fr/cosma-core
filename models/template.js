@@ -91,7 +91,7 @@ module.exports = class Template {
 
     static markLinkContext(recordLinks, fxToHighlight) {
         return recordLinks.map((link) => {
-            link.context = link.context.replaceAll(/\[\[((\w:[0-9]{14})|([0-9]{14}))\]\]/g, (match) => {
+            link.context = link.context.replace(/\[\[((\w:[0-9]{14})|([0-9]{14}))\]\]/g, (match) => {
                 // extract link id, without '[[' & ']]' caracters
                 const idInMatch = match.slice(0, -2).slice(2);
 

@@ -6,7 +6,7 @@ const assert = require('assert')
 
 const { cosmocope } = require('../utils/generate');
 
-describe('App', async () => {
+describe.skip('App', async () => {
     let browser, page;
     const tempFolderPath = path.join(__dirname, '../temp');
     const testComoscopePath = path.join(tempFolderPath, 'cosmoscope.html');

@@ -294,15 +294,17 @@ module.exports = class Record {
      */
 
     replaceBibliographicText(bibliography) {
-        const bibliographyHtml = [];
+        const bibliographyHtml = new Set();
         for (const bibliographicRecord of this.bibliographicRecords) {
             const { record, cluster } = bibliography.get(bibliographicRecord);
-            bibliographyHtml.push(record);
+            bibliographyHtml.add(record);
             const { text } = bibliographicRecord;
             if (!text) { continue; }
-            this.content = this.content.replaceAll(text, cluster);
+            let regex = '\\[' + text.substring(1, text.length - 1) + '\\]';
+            regex = new RegExp(regex, 'g');
+            this.content = this.content.replace(regex, cluster);
         }
-        this.bibliography = bibliographyHtml.join('\n');
+        this.bibliography = Array.from(bibliographyHtml).join('\n');
     }
 
     /**

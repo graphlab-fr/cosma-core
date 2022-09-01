@@ -23,10 +23,12 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. <span class="red">Mole
     </tbody>
 </table>
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto quisquam ducimus [@{{bibKeys | random }}, 5]. Lorem ipsum dolor sit amet, consectetur adipisicing elit. [[{{ids | random }}]].
+{% set doubleQuote = bibKeys | random %}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae architecto quisquam ducimus [@{{ doubleQuote }}, 2]. Lorem ipsum dolor sit amet [@{{ doubleQuote }}, 2], consectetur adipisicing elit. [[{{ids | random }}]].
 
 <div class="box info">Custom CSS box</div>
 
-> Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus eum nisi iusto ducimus eos ad debitis vitae aliquid excepturi architecto. [@{{bibKeys | random }}, 10 ; @{{bibKeys | random }}, 12]
+> Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus eum nisi iusto ducimus eos ad debitis vitae aliquid excepturi architecto. [@{{bibKeys | random }}, 46-52 ; @{{bibKeys | random }}, 12]
 
 ![]({{imgSrc}} "Image for fake generation")

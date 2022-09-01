@@ -7,7 +7,7 @@ const Opensphere = require('../models/opensphere')
     , Config = require('../models/config');
 
 const csvNodes =
-`title,id,type:nature,type:relation,meta:titre,tag:genre,time:begin,time:end,image,quote
+`title,id,type:nature,type:relation,meta:titre,tag:genre,time:begin,time:end,image,reference
 Paul Otlet,1,Personne,otlet,Fondateur du Mundaneum,Homme,1868,1944,OtletPaul.png,perret2016
 Suzanne Briet,2,Personne,non-catégorisé,« Madame documentation »,Femme,1894,1989,BrietSuzanne.png,ledeuff2016
 Melvil Dewey,3,Personne,non-catégorisé,Bibliothécaire auteur de la Classification décimale,Homme,1851,1931,DeweyMelvil.png,perret2016
