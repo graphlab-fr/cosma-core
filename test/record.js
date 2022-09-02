@@ -18,14 +18,72 @@ const Record = require('../models/record')
 const tempFolderPath = path.join(__dirname, '../temp');
 
 describe('Record', () => {
-    describe('check', () => {
-        it('should not be register errors if record get title', () => {
+    describe.only('check', () => {
+        it('should be invalid a record without title', () => {
             const validRecord = new Record(
                 undefined,
-                'the title'
+                undefined
             );
-            assert.ok(validRecord.isValid() === true);
-        })
+            assert.ok(validRecord.isValid() === false);
+        });
+
+        it('should split tags strings in array', () => {
+            assert.deepStrictEqual(
+                new Record(
+                    undefined,
+                    'the title',
+                    undefined,
+                    'tag 1,tag 2'
+                ),
+                new Record(
+                    undefined,
+                    'the title',
+                    undefined,
+                    ['tag 1', 'tag 2']
+                )
+            );
+            assert.deepStrictEqual(
+                new Record(
+                    undefined,
+                    'the title',
+                    undefined,
+                    ','
+                ),
+                new Record(
+                    undefined,
+                    'the title',
+                    undefined,
+                    []
+                )
+            );
+        });
+
+        it('should convert undefined type in array', () => {
+            let record = new Record(
+                undefined,
+                'the title',
+                undefined
+            );
+            assert.deepStrictEqual(
+                record.type,
+               ['undefined']
+            );
+        });
+
+        it('should convert type in array', () => {
+            assert.deepStrictEqual(
+                new Record(
+                    undefined,
+                    'the title',
+                    'type 1'
+                ),
+                new Record(
+                    undefined,
+                    'the title',
+                    ['type 1']
+                )
+            );
+        });
     });
 
     describe('register', () => {

@@ -401,7 +401,6 @@ module.exports = class Record {
                 this.tags = tags.length === 0 ? [] : tags;
             } else {
                 this.tags = tags.split(',').filter((str) => str !== '');
-                this.tags = this.tags.length === 0 ? [] : this.tags;
             }
         }
 
@@ -524,7 +523,7 @@ module.exports = class Record {
      */
 
     verif () {
-        if (this.title === '') {
+        if (!this.title) {
             this.report.push('title'); }
 
         if (isNaN(this.id)) {
