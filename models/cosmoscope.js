@@ -72,7 +72,7 @@ module.exports = class Cosmocope extends Graph {
 
             file.metas.type = file.metas.type || 'undefined';
             file.metas.tags =  file.metas['tags'] || file.metas['keywords'] || [];
-            file.metas.id = Number(file.metas.id);
+            file.metas.id = file.metas.id;
             file.metas.references = file.metas.references || [];
             return file;
         });
