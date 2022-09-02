@@ -509,7 +509,6 @@ module.exports = class Record {
         }
 
         this.content = this.ymlFrontMatter + this.content;
-        console.log(this.content);
 
         try {
             fs.writeFileSync(this.path, this.content);

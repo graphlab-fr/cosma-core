@@ -18,7 +18,7 @@ const Record = require('../models/record')
 const tempFolderPath = path.join(__dirname, '../temp');
 
 describe('Record', () => {
-    describe.only('check', () => {
+    describe('check', () => {
         it('should be invalid a record without title', () => {
             const validRecord = new Record(
                 undefined,
