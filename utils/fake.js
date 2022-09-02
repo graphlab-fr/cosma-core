@@ -72,7 +72,8 @@ for (const fileId of ids) {
                 faker.helpers.arrayElement(tags),
                 faker.helpers.arrayElement(tags)
             ],
-            thumbnail: thumbnail
+            thumbnail: thumbnail,
+            references: ['Masure_2014']
         }
     })
 }

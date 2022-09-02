@@ -124,7 +124,7 @@ function opensphere(savePath, templateOptions = ['publish', 'citeproc']) {
                 recordsData = parse(recordsFileContent, { columns: true, skip_empty_lines: true });
                 const linksFileContent = fs.readFileSync(path.join(tempDirPath, 'links.csv'), 'utf-8');
                 linksData = parse(linksFileContent, { columns: true, skip_empty_lines: true })
-                const nodeThumbnails = recordsData.map(({ image }) => image);
+                const nodeThumbnails = recordsData.map(({ thumbnail }) => thumbnail);
                 const links = Opensphere.formatArrayLinks(linksData);
                 const records = Opensphere.formatArrayRecords(recordsData, links, fakeConfig);
                 Promise.all([fetchBibliographyFiles(), fetchFakeThumbnails(nodeThumbnails)])

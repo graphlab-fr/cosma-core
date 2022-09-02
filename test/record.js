@@ -1,5 +1,6 @@
 const fs = require('fs')
-    , path = require('path');
+    , path = require('path')
+    , { parse } = require("csv-parse/sync");
 
 const assert = require('assert')
     , chai = require('chai')
@@ -9,8 +10,10 @@ chai.use(chaiFs);
 const should = chai.should();
 
 const Record = require('../models/record')
+    , Cosmocope = require('../models/cosmoscope')
     , Link = require('../models/link')
-    , Config = require('../models/config');
+    , Config = require('../models/config')
+    , Bibliography = require('../models/bibliography');
 
 const tempFolderPath = path.join(__dirname, '../temp');
 
@@ -129,6 +132,12 @@ describe('Record', () => {
                 ['tag 1', 'tag 2'],
                 undefined,
                 'the content',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                Bibliography.getBibliographicRecordsFromList(['author1', 'author2']),
+                'image.jpg'
             ).ymlFrontMatter;
 
             let recordYmlFrontMatterExpected =
@@ -140,6 +149,10 @@ type:
 tags:
   - tag 1
   - tag 2
+references:
+  - author1
+  - author2
+thumbnail: image.jpg
 ---
 
 `;
@@ -152,7 +165,10 @@ tags:
                 [],
                 {
                     name: 'Guillaume',
-                    lastname: 'Brioudes'
+                    lastname: 'Brioudes',
+                    foo: null,
+                    bar: undefined,
+                    isDead: false 
                 },
                 'the content',
                 undefined,
@@ -179,6 +195,7 @@ type:
   - type 2
 name: Guillaume
 lastname: Brioudes
+isDead: false
 ---
 
 `;
@@ -290,6 +307,188 @@ lastname: Brioudes
             record.saveAsFile();
             const fileContent = record.getYamlFrontMatter() + content;
             filePath.should.be.a.file().with.content(fileContent);
+        });
+    });
+
+    describe('Batch', () => {
+        const line = {
+            'title': 'Paul Otlet',
+            'type:étude': 'documentation',
+            'type:relation': 'ami',
+            'tag:genre': 'homme',
+            'content:biography': 'Lorem ipsum...',
+            'content:notes': 'Lorem ipsum...',
+            'meta:prenom': 'Paul',
+            'meta:nom': 'Otlet',
+            'time:begin': '1868',
+            'time:end': '1944',
+            'thumbnail': 'photo.jpg',
+            'references': 'otlet1934,otlet1934'
+        };
+
+        it('should format minimal line in deep for batch', () => {
+            assert.deepStrictEqual(
+                Record.getDeepFormatedDataFromCsvLine({
+                    'title': 'Paul Otlet',
+                    'type': 'documentation',
+                    'tag': 'homme',
+                    'content': 'Lorem ipsum...',
+                    'thumbnail': 'photo.jpg',
+                    'references': 'otlet1934'
+                }),
+                {
+                    'id': undefined,
+                    "title" : "Paul Otlet",
+                    "type" : {
+                        "undefined": "documentation"
+                    },
+                    "metas" : {},
+                    "tags": {
+                        "undefined": "homme"
+                    },
+                    "time": {
+                        "begin": undefined,
+                        "end" : undefined,
+                    },
+                    "content": {
+                        "undefined" : "Lorem ipsum..."
+                    },
+                    "thumbnail" : "photo.jpg",
+                    "references" : ["otlet1934"]
+                }
+            );
+        });
+
+        it('should format line in deep for batch', () => {
+            assert.deepStrictEqual(
+                Record.getDeepFormatedDataFromCsvLine(line),
+                {
+                    'id': undefined,
+                    "title" : "Paul Otlet",
+                    "type" : {
+                        "étude": "documentation",
+                        "relation" : "ami"
+                    },
+                    "metas" : {
+                        "prenom": "Paul",
+                        "nom" : "Otlet"
+                    },
+                    "tags": {
+                        "genre": "homme"
+                    },
+                    "time": {
+                        "begin": "1868",
+                        "end" : "1944",
+                    },
+                    "content": {
+                        "biography" : "Lorem ipsum...",
+                        "notes" : "Lorem ipsum..."
+                    },
+                    "thumbnail" : "photo.jpg",
+                    "references" : ["otlet1934", "otlet1934"]
+                }
+            );
+        });
+
+        it('should format line for batch', () => {
+            assert.deepStrictEqual(
+                Record.getFormatedDataFromCsvLine(line),
+                {
+                    'id': undefined,
+                    "title" : "Paul Otlet",
+                    "type" : ['documentation', 'ami'],
+                    "metas" : {
+                        "prenom": "Paul",
+                        "nom" : "Otlet"
+                    },
+                    "tags": ['homme'],
+                    "begin": '1868',
+                    "end": '1944',
+                    "content": `<h3>biography</h3>\n\nLorem ipsum...\n\n<h3>notes</h3>\n\nLorem ipsum...`,
+                    "thumbnail" : "photo.jpg",
+                    "references" : ["otlet1934", "otlet1934"]
+                }
+            );
+        });
+
+        it('should format line for batch with several syntaxes', () => {
+            const line = Record.getFormatedDataFromCsvLine({
+                "title": "Paul Otlet",
+                "type:domaine": 'type 1',
+                "type": 'type 2',
+                "tag": "tag 1",
+                "tag": "tag 2"
+            });
+
+            line.should.property('type').deep.equal(['type 1', 'type 2']);
+            line.should.property('tags').deep.equal(['tag 2']);
+        });
+
+        describe('make file', () => {
+            const fileName = 'Paul Otlet';
+            const filePath = path.join(tempFolderPath, Record.getSlugFileName(fileName));
+            afterEach(() => {
+                fs.unlinkSync(filePath);
+            });
+
+            it('should batch a file from formated (csv) data', () => {
+                const csv = parse(
+`title,content,type:nature,type:field,meta:prenom,meta:nom,tag:genre,time:begin,time:end,thumbnail,references
+Paul Otlet,Lorem...,Personne,Histoire,Paul,Otlet,homme,1868,1944,image.png,otlet1934`, { columns: true });
+                const data = csv.map(line => Record.getFormatedDataFromCsvLine(line));
+                const index = Cosmocope.getIndexToMassSave();
+                const result = Record.massSave(data, index, { files_origin: tempFolderPath });
+
+                result.should.be.true;
+                filePath.should.be.a.file();
+                
+                const files = Cosmocope.getFromPathFiles(tempFolderPath);
+                const record = Cosmocope.getRecordsFromFiles(files).find(({ title }) => title === fileName);
+                assert.deepEqual(
+                    record,
+                    {
+                        ...record,
+                        title: 'Paul Otlet',
+                        content: '\n\nLorem...',
+                        metas: {'prenom' : 'Paul', 'nom' : 'Otlet'},
+                        thumbnail: 'image.png'
+                    }
+                );
+                record.bibliographicRecords[0].ids.should.to.deep.equal(new Set(['otlet1934']));
+            });
+
+            it('should batch a file from data', () => {
+                const minimalData = [{
+                    "title" : "Paul Otlet"
+                }];
+                const index = Cosmocope.getIndexToMassSave();
+                const result = Record.massSave(minimalData, index, { files_origin: tempFolderPath });
+    
+                result.should.be.true;
+                filePath.should.be.a.file();
+            });
+    
+            it('should batch a file from data', () => {
+                const data = [{
+                    "title": "Paul Otlet",
+                    "type" : ["Personne", "Histoire"],
+                    "metas": {
+                        "prenom" : "Paul",
+                        "nom" : "Otlet"
+                    },
+                    "tags" : ["documentation"],
+                    "begin" : "1868",
+                    "end" : "1944",
+                    "content" : "Lorem...",
+                    "thumbnail" : "image.jpg",
+                    "references" : ["otlet1934"]
+                }];
+                const index = Cosmocope.getIndexToMassSave();
+                const result = Record.massSave(data, index, { files_origin: tempFolderPath });
+    
+                result.should.be.true;
+                filePath.should.be.a.file();
+            });
         });
     });
 });

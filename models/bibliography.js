@@ -57,7 +57,7 @@ module.exports = class Bibliography {
      * @returns {BibliographicRecord[]}
      */
 
-    static getBibliographicRecordsFromList(quotesId) {
+    static getBibliographicRecordsFromList(quotesId = []) {
         return quotesId.map((quoteId, index) => {
             return {
                 quotesExtract: {

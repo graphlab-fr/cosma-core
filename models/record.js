@@ -1,5 +1,5 @@
 /**
- * @file Generate records
+ * @file Format data for records, verif and save as file
  * @author Guillaume Brioudes
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
@@ -21,6 +21,35 @@
  * @property {Direction} target
  */
 
+/**
+ * @typedef DeepFormatedRecordData
+ * @type {object}
+ * @property {string|undefined} id
+ * @property {string} title
+ * @property {object} content
+ * @property {object} type
+ * @property {object} metas
+ * @property {object} tags
+ * @property {object} time
+ * @property {string[]} references
+ * @property {string} thumbnail
+ */
+
+/**
+ * @typedef FormatedRecordData
+ * @type {object}
+ * @property {string|undefined} id
+ * @property {string} title
+ * @property {string} content
+ * @property {string[]} type
+ * @property {object} metas
+ * @property {string[]} tags
+ * @property {string[]} references
+ * @property {string} begin
+ * @property {string} end
+ * @property {string} thumbnail
+ */
+
 const path = require('path')
     , fs = require('fs')
     , yml = require('js-yaml')
@@ -28,18 +57,159 @@ const path = require('path')
     , slugify = require('slugify');
 
 const Config = require('./config')
-    , Graph = require('./graph')
-    , Cosmoscope = require('./cosmoscope')
-    , Node = require('./node')
-    , Link = require('./link')
+    , Bibliography = require('./bibliography')
     , lang = require('./lang');
 
 module.exports = class Record {
+    /**
+     * Get data from a fromated CSV line
+     * @param {object} line
+     * @return {DeepFormatedRecordData}
+     * ```
+     * Record.getFormatedDataFromCsvLine({
+     *    'title': 'Paul Otlet',
+     *    'type:étude': 'documentation',
+     *    'type:relation': 'ami',
+     *    'tag:genre': 'homme',
+     *    'content:biography': 'Lorem ipsum...',
+     *    'content:notes': 'Lorem ipsum...',
+     *    'meta:prenom': 'Paul',
+     *    'meta:nom': 'Otlet',
+     *    'time:begin': '1868',
+     *    'time:end': '1944',
+     *    'thumbnail': 'photo.jpg',
+     *    'references': 'otlet1934'
+     *})
+     * ```
+     */
+
+    static getDeepFormatedDataFromCsvLine({ title, id, thumbnail, references = [], ...rest }) {
+        let content = {}, type = {}, metas = {}, tags = {};
+        for (const [key, value] of Object.entries(rest)) {
+            const [field, label] = key.split(':', 2);
+            if (field === 'time') { continue; }
+            switch (field) {
+                case 'content':
+                    content[label] = value;
+                    break;
+                case 'type':
+                    type[label] = value;
+                    break;
+                case 'tag':
+                    tags[label] = value;
+                    break;
+                case 'meta':
+                default:
+                    metas[label] = value;
+                    break;
+            }
+        }
+
+        if (typeof references === 'string') {
+            references = references.split(',');
+        }
+
+        return {
+            id,
+            title,
+            content,
+            type,
+            metas,
+            tags,
+            references,
+            time: {
+                begin: rest['time:begin'],
+                end: rest['time:end'],
+            },
+            thumbnail: thumbnail
+        };
+    }
 
     /**
-     * Save several records from a JSON object
-     * @param {object} data - Array of objects
-     * @return {mixed} - Invalid items key or true
+     * Get data from a fromated CSV line
+     * @param {object} line
+     * @return {FormatedRecordData}
+     * ```
+     * Record.getFormatedDataFromCsvLine({
+     *    'title': 'Paul Otlet',
+     *    'type:étude': 'documentation',
+     *    'type:relation': 'ami',
+     *    'tag:genre': 'homme',
+     *    'content:biography': 'Lorem ipsum...',
+     *    'content:notes': 'Lorem ipsum...',
+     *    'meta:prenom': 'Paul',
+     *    'meta:nom': 'Otlet',
+     *    'time:begin': '1868',
+     *    'time:end': '1944',
+     *    'thumbnail': 'photo.jpg',
+     *    'references': 'otlet1934'
+     *})
+     * ```
+     */
+
+    static getFormatedDataFromCsvLine({ title, id, thumbnail, references = [], ...rest }) {
+        if (!title) { throw "'title' is a required meta for a record"; }
+
+        let contents = [], type = [], metas = {}, tags = [];
+        for (const [key, value] of Object.entries(rest)) {
+            const [field, label] = key.split(':', 2);
+            if (field === 'time') { continue; }
+            switch (field) {
+                case 'content':
+                    if (label) {
+                        contents.push([`<h3>${label}</h3>`, value]);
+                    } else {
+                        contents.push(value);
+                    }
+                    break;
+                case 'type':
+                    type.push(value);
+                    break;
+                case 'tag':
+                    tags.push(value);
+                    break;
+                case 'reference':
+                    references = value.split(',');
+                    break;
+                case 'meta':
+                default:
+                    metas[label] = value;
+                    break;
+            }
+        }
+
+        if (typeof references === 'string') {
+            references = references.split(',');
+        }
+        const content = contents
+            .map((content) => {
+                if (Array.isArray(content)) {
+                    return content.join('\n\n')
+                }
+                return content;
+            })
+            .join('\n\n');
+
+        return {
+            id,
+            title,
+            content,
+            type,
+            metas,
+            tags,
+            references,
+            begin: rest['time:begin'],
+            end: rest['time:end'],
+            thumbnail: thumbnail
+        };
+    }
+
+    /**
+     * Force save as file several records
+     * @param {FormatedRecordData[]} data
+     * @param {number} index
+     * @param {Config.opts} configOpts
+     * @return {number[]|true} Invalid items key or true
      * @example
      * Record.massSave([
      *  { title: 'Idea 1', type: 'ideas', tags: 'tag 1,tag 2' ... }
@@ -47,36 +217,59 @@ module.exports = class Record {
      * ])
      */
 
-    static massSave (data) {
-        
-        let i = Record.getIndexToMassSave();
+    static massSave(data, index, configOpts) {
+        if (!index || typeof index !== 'number') {
+            throw 'The index for record mass save is invalid';
+        }
 
-        let report = [];
-
-        for (const item of data) {
+        const report = [];
+        for (const { title, type, tags, metas, content, begin, end, references = [], thumbnail } of data) {
             const record = new Record(
-                item.title,
-                item.type,
-                item.tags,
-                item.content,
-                item.filename,
-                Record.generateOutDailyId() + i
+                Record.generateOutDailyId() + index,
+                title,
+                type,
+                tags,
+                metas,
+                content,
+                undefined,
+                undefined,
+                begin,
+                end,
+                Bibliography.getBibliographicRecordsFromList(references),
+                thumbnail,
+                configOpts
             );
 
             const result = record.saveAsFile(true);
-
             if (result === false) {
-                report.push(i);
+                console.log(record);
+                report.push(index);
                 continue;
             }
 
-            i++;
+            index++;
         }
 
-        if (report.length !== 0) {
-            return report }
+        if (report.length !== 0) { return report }
 
         return true;
+    }
+
+    /**
+     * @param {string} fileName 
+     * @returns {string}
+     * @exemple
+     * ```
+     * Record.getSlugFileName('My [@récörd?!]') // => 'My record.md'
+     * ```
+     */
+
+    static getSlugFileName(fileName) {
+        const slugName = slugify(fileName, {
+            replacement: ' ',
+            remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/]/g,
+        });
+        return slugName + '.md';
     }
 
     /**
@@ -113,26 +306,6 @@ module.exports = class Record {
         } else {
             return false;
         }
-    }
-
-    /**
-     * Get the index from which to create new records in the mass
-     * The index depends on the identifier of the last record created in the mass
-     * The index is obtained via the Graph analysis
-     * @return {number}
-     */
-
-    static getIndexToMassSave () {
-        const { files_origin: filesPath } = Config.get();
-        const todayMassSavedRecordIds = Cosmoscope.getFromPathFiles(filesPath) // get graph analyse
-            .map(file => file.metas.id)
-            .filter(Record.isTodayOutDailyId) // ignore not today mass saved records id
-            .sort();
-
-        // 'todayMassSavedRecordIds' can be empty
-        let lastId = todayMassSavedRecordIds[todayMassSavedRecordIds.length - 1] || undefined;
-        // 20220115246695 - 20220115246060 = 635, the index for the next record is 635 + 1
-        return lastId - Record.generateOutDailyId() + 1 || 1;
     }
 
     /**
@@ -202,8 +375,8 @@ module.exports = class Record {
         id = Record.generateId(),
         title,
         type = 'undefined',
-        tags,
-        metas,
+        tags = [],
+        metas = {},
         content = '',
         links = [],
         backlinks = [],
@@ -216,13 +389,15 @@ module.exports = class Record {
         this.id = Number(id);
         this.title = title;
         this.type = type;
-        this.tags = [];
-        this.metas = metas;
+        this.tags = tags;
+        this.content = content;
         this.bibliographicRecords = bibliographicRecords;
         this.bibliography = '';
+        this.thumbnail = thumbnail;
 
         if (tags) {
             if (Array.isArray(tags)) {
+                tags = tags.filter(tag => !!tag);
                 this.tags = tags.length === 0 ? [] : tags;
             } else {
                 this.tags = tags.split(',').filter((str) => str !== '');
@@ -238,13 +413,18 @@ module.exports = class Record {
             /** @type {string[]} */
             this.type = [this.type]
         }
+        this.type = this.type.filter(type => !!type);
         this.type = this.type.map(type => {
             if (typesRecords.has(type)) { return type; }
             return 'undefined';
         });
+        this.type = Array.from(new Set(this.type));
+        metas = Object.entries(metas)
+            .filter(([key, value]) => value !== null);
+        this.metas = Object.fromEntries(metas);
 
-        this.content = content;
         this.ymlFrontMatter = this.getYamlFrontMatter();
+
         this.links = links;
         this.backlinks = backlinks;
         this.begin;
@@ -255,7 +435,6 @@ module.exports = class Record {
         if (end && moment(end).isValid() === true) {
             this.end = moment(end).unix();
         }
-        this.thumbnail = thumbnail;
 
         this.links = this.links.map((link) => {
             if (typesLinks.has(link.type)) {
@@ -276,11 +455,14 @@ module.exports = class Record {
     }
 
     getYamlFrontMatter() {
+        const bibliographicIds = this.bibliographicRecords.map(({ ids }) => Array.from(ids)).flat()
         const ymlContent = yml.dump({
             title: this.title,
             id: this.id,
             type: this.type,
             tags: this.tags.length === 0 ? undefined : this.tags,
+            references: bibliographicIds.length === 0 ? undefined : bibliographicIds,
+            thumbnail: this.thumbnail,
             ...this.metas
         });
         const frontMatterPlainText = ['---\n', ymlContent, '---\n\n'].join('');
@@ -317,13 +499,7 @@ module.exports = class Record {
 
     saveAsFile (force = false, fileName = this.title) {
         this.content = this.ymlFrontMatter + this.content;
-
-        /** @exemple 'my-idea.md' */
-        this.fileName = slugify(fileName, {
-            replacement: ' ',
-            remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/]/g,
-        });
-        this.fileName = `${this.fileName}.md`;
+        this.fileName = Record.getSlugFileName(fileName);
         this.path = path.join(this.config.opts.files_origin, this.fileName);
 
         if (this.isValid() === false) {

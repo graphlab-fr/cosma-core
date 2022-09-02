@@ -47,34 +47,19 @@ module.exports = class Opensphere extends Graph {
             );
         });
 
-        return recordsData.map(({ title, id, ...rest }) => {
-            let contents = [], types = [], metas = {}, tags = [], references = [];
-            for (const [key, value] of Object.entries(rest)) {
-                const [field, label] = key.split(':', 2);
-                if (field === 'time' || field === 'image') { continue; }
-                switch (field) {
-                    case 'content':
-                        contents.push([`<h3>${label}</h3>`, value]);
-                        break;
-                    case 'type':
-                        types.push(value);
-                        break;
-                    case 'tag':
-                        tags.push(value);
-                        break;
-                    case 'reference':
-                        references = value.split(',');
-                        break;
-                    case 'meta':
-                    default:
-                        metas[label] = value;
-                        break;
-                }
-            }
-
-            const content = contents
-                .map((content) => content.join('\n\n'))
-                .join('\n\n');
+        return recordsData.map((line) => {
+            const {
+                id,
+                title,
+                content,
+                type,
+                metas,
+                tags,
+                references,
+                begin,
+                end,
+                thumbnail
+            } = Record.getFormatedDataFromCsvLine(line);
 
             const {
                 linksReferences,
@@ -85,16 +70,16 @@ module.exports = class Opensphere extends Graph {
             const record = new Record(
                 id,
                 title,
-                types,
+                type,
                 tags,
                 metas,
                 content,
                 linksReferences,
                 backlinksReferences,
-                rest['time:begin'],
-                rest['time:end'],
+                begin,
+                end,
                 bibliographicRecords,
-                rest['image'],
+                thumbnail,
                 { record_types: recordTypes }
             );
 

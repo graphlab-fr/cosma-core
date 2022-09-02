@@ -45,7 +45,7 @@ module.exports = {
             return false;
         }
         const imageFileContent = fs.readFileSync(imagePath);
-        // read about this genious idea https://stackoverflow.com/a/67128272/13491646
+        // read about this genious idea https://stackoverflow.com/a/8475542/13491646
         let validHexaSchema, imageHexaSchema;
         switch (imageExtname) {
             case '.jpg':
