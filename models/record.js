@@ -497,17 +497,19 @@ module.exports = class Record {
      */
 
     saveAsFile (force = false, fileName = this.title) {
-        this.content = this.ymlFrontMatter + this.content;
-        this.fileName = Record.getSlugFileName(fileName);
-        this.path = path.join(this.config.opts.files_origin, this.fileName);
-
         if (this.isValid() === false) {
             return false;
         }
 
+        this.fileName = Record.getSlugFileName(fileName);
+        this.path = path.join(this.config.opts.files_origin, this.fileName);
+
         if (this.willOverwrite() === true && force === false) {
             return 'overwriting';
         }
+
+        this.content = this.ymlFrontMatter + this.content;
+        console.log(this.content);
 
         try {
             fs.writeFileSync(this.path, this.content);
