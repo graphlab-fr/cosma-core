@@ -491,8 +491,10 @@ isDead: false
 
             it('should batch a file from formated (csv) data', () => {
                 const csv = parse(
-`title,content,type:nature,type:field,meta:prenom,meta:nom,tag:genre,time:begin,time:end,thumbnail,references
-Paul Otlet,Lorem...,Personne,Histoire,Paul,Otlet,homme,1868,1944,image.png,otlet1934`, { columns: true });
+`title     ,content ,type:nature,type:field,meta:prenom,meta:nom,tag:genre,time:begin,time:end,thumbnail,references
+                     Paul Otlet,Lorem...,Personne   ,Histoire  ,Paul       ,Otlet   ,homme    ,1868      ,1944    ,image.png,otlet1934`,
+                    { columns: true, trim: true, rtrim: true, skip_empty_lines: true }
+                );
                 const data = csv.map(line => Record.getFormatedDataFromCsvLine(line));
                 const index = Cosmocope.getIndexToMassSave();
                 const result = Record.massSave(data, index, { files_origin: tempFolderPath });

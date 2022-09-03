@@ -58,6 +58,8 @@ const path = require('path')
 
 const Config = require('./config')
     , Bibliography = require('./bibliography')
+    , Node = require('./node')
+    , Link = require('./link')
     , lang = require('./lang');
 
 module.exports = class Record {
@@ -148,7 +150,7 @@ module.exports = class Record {
      */
 
     static getFormatedDataFromCsvLine({ title, id, thumbnail, references = [], ...rest }) {
-        if (!title) { throw "'title' is a required meta for a record"; }
+        if (!title || typeof title !== 'string') { throw "'title' is a required meta for a record"; }
 
         let contents = [], type = [], metas = {}, tags = [];
         for (const [key, value] of Object.entries(rest)) {
@@ -202,6 +204,74 @@ module.exports = class Record {
             end: rest['time:end'],
             thumbnail: thumbnail
         };
+    }
+
+    /**
+     * @param {FormatedRecordData[]} data
+     * @param {Link[]} links
+     * @param {Config} config
+     * @returns {Link[]}
+     */
+
+    static formatedDatasetToRecords(data, links, config) {
+        const { record_types: recordTypes } = config.opts;
+
+        const nodes = data.map(({ id, title, ...rest }) => {
+            let type;
+            for (const [key, value] of Object.entries(rest)) {
+                const [field, label] = key.split(':', 2);
+                switch (field) {
+                    case 'type':
+                        if (type === undefined) { type = value; }
+                        recordTypes[value] = recordTypes[value] || recordTypes['undefined'];
+                        break;
+                }
+            }
+            return new Node(
+                id,
+                title,
+                type
+            );
+        });
+
+        return data.map((line) => {
+            const {
+                id,
+                title,
+                content,
+                type,
+                metas,
+                tags,
+                references,
+                begin,
+                end,
+                thumbnail
+            } = Record.getFormatedDataFromCsvLine(line);
+
+            const {
+                linksReferences,
+                backlinksReferences
+            } = Link.getReferencesFromLinks(Number(id), links, nodes);
+            const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
+
+            const record = new Record(
+                id,
+                title,
+                type,
+                tags,
+                metas,
+                content,
+                linksReferences,
+                backlinksReferences,
+                begin,
+                end,
+                bibliographicRecords,
+                thumbnail,
+                { record_types: recordTypes }
+            );
+
+            return record;
+        })
     }
 
     /**

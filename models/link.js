@@ -11,6 +11,14 @@
  * @property {string | null} dashInterval Display as a body text
  */
 
+/**
+ * @typedef FormatedLinkData
+ * @type {object}
+ * @property {number} source
+ * @property {number} target
+ * @property {string} label
+ */
+
 module.exports = class Link {
     /**
      * List of valid values for the links stroke
@@ -226,6 +234,41 @@ module.exports = class Link {
     }
 
     /**
+     * Get data from a fromated CSV line
+     * @param {object} line
+     * @return {FormatedLinkData}
+     */
+
+    static getFormatedDataFromCsvLine({ source, target, label }) {
+        if (!source || isNaN(Number(source))) { throw "'source' is a required meta for a link"; }
+        if (!target || isNaN(Number(target))) { throw "'target' is a required meta for a link"; }
+        return { source, target, label };
+    }
+
+    /**
+     * @param {FormatedLinkData[]} data
+     * @returns {Link[]}
+     */
+
+    static formatedDatasetToLinks(data) {
+        return data.map(({ label, source, target }, i) => {
+            const link = new Link(
+                i,
+                label,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                source,
+                target
+            );
+
+            if (link.isValid()) { return link; }
+            return undefined;
+        })
+    }
+
+    /**
      * @param {number} id
      * @param {string} context
      * @param {string} type
@@ -236,7 +279,7 @@ module.exports = class Link {
      * @param {number} target
      */
 
-    constructor(id, context, type, shape = Link.baseShape, color, colorHighlight, source, target) {
+    constructor(id, context = '', type, shape = Link.baseShape, color, colorHighlight, source, target) {
         this.id = id;
         this.context = context;
         this.type = type;

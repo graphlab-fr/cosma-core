@@ -36,13 +36,14 @@
 const fs = require('fs')
     , path = require('path')
     , glob = require("glob")
+    , { parse } = require('csv-parse')
     , ymlFM = require('yaml-front-matter');
 
 const Graph = require('./graph')
     , Config = require('./config')
+    , Node = require('./node')
     , Link = require('./link')
     , Record = require('./record')
-    , Node = require('./node')
     , Bibliography = require('./bibliography');
 
 module.exports = class Cosmocope extends Graph {
@@ -76,6 +77,55 @@ module.exports = class Cosmocope extends Graph {
             file.metas.references = file.metas.references || [];
             return file;
         });
+    }
+
+    /**
+     * Get formated data for links and nodes
+     * @param {string} recordsFilePath 
+     * @param {string} linksFilePath 
+     * @returns {Promise<[FormatedRecordData[], FormatedLinkData[]]>}
+     */
+
+    static getFromPathCsv(recordsFilePath, linksFilePath) {
+        const recordsPromise = new Promise((resolve, reject) => {
+            fs.readFile(recordsFilePath, 'utf-8', (err, data) => {
+                if (err) { reject(err); return; }
+                const records = [];
+                parse(data, {
+                    columns: true,
+                    skip_empty_lines: true
+                })
+                .on('readable', function() {
+                    let line;
+                    while ((line = this.read()) !== null) {
+                        records.push(Record.getFormatedDataFromCsvLine(line));
+                    }
+                })
+                .on('error', reject)
+                .on('end', () => resolve(records));
+            })
+        });
+
+        const linksPromise = new Promise((resolve, reject) => {
+            fs.readFile(linksFilePath, 'utf-8', (err, data) => {
+                if (err) { reject(err); return; }
+                const links = [];
+                parse(data, {
+                    columns: true,
+                    skip_empty_lines: true
+                })
+                .on('readable', function() {
+                    let line;
+                    while ((line = this.read()) !== null) {
+                        links.push(Link.getFormatedDataFromCsvLine(line));
+                    }
+                })
+                .on('error', reject)
+                .on('end', () => resolve(links));
+            })
+        });
+
+        return Promise.all([recordsPromise, linksPromise]);
     }
 
     /**

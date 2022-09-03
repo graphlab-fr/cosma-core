@@ -1,15 +1,14 @@
 const fs = require('fs')
     , path = require('path')
-    , { parse } = require("csv-parse/sync");
-
-const { faker } = require('@faker-js/faker');
+    , { faker } = require('@faker-js/faker');
 
 const { config: fakeConfig, records, nodeThumbnails, images: recordImages } = require('./fake');
 const { downloadFile } = require('./misc');
 const tempDirPath = path.join(__dirname, '../temp');
 
-const Cosmocope = require('../models/cosmoscope')
-    , Opensphere = require('../models/opensphere')
+const Cosmoscope = require('../models/cosmoscope')
+    , Record = require('../models/record')
+    , Link = require('../models/link')
     , Template = require('../models/template');
 
 /**
@@ -100,7 +99,7 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
     return new Promise(async (resolve, reject) => {
         Promise.all([fetchBibliographyFiles(), fetchFakeImages(recordImages), fetchFakeThumbnails(nodeThumbnails)])
             .then(() => {
-                const graph = new Cosmocope(records, fakeConfig.opts, ['fake'])
+                const graph = new Cosmoscope(records, fakeConfig.opts, ['fake'])
                     , { html } = new Template(graph, templateOptions);
     
                 savePath = path.join(savePath, 'cosmoscope.html');
@@ -120,29 +119,28 @@ function opensphere(savePath, templateOptions = ['publish', 'citeproc']) {
     return new Promise(async (resolve, reject) => {
         fetchSpreadsheets()
             .then(() => {
-                const recordsFileContent = fs.readFileSync(path.join(tempDirPath, 'nodes.csv'), 'utf-8');
-                recordsData = parse(recordsFileContent, { columns: true, skip_empty_lines: true });
-                const linksFileContent = fs.readFileSync(path.join(tempDirPath, 'links.csv'), 'utf-8');
-                linksData = parse(linksFileContent, { columns: true, skip_empty_lines: true })
-                const nodeThumbnails = recordsData.map(({ thumbnail }) => thumbnail);
-                const links = Opensphere.formatArrayLinks(linksData);
-                const records = Opensphere.formatArrayRecords(recordsData, links, fakeConfig);
-                Promise.all([fetchBibliographyFiles(), fetchFakeThumbnails(nodeThumbnails)])
-                    .then(() => {
-                        const graph = new Opensphere(records, fakeConfig.opts, ['fake'])
-                            , { html } = new Template(graph, templateOptions);
+                Cosmoscope.getFromPathCsv(
+                    path.join(tempDirPath, 'nodes.csv'),
+                    path.join(tempDirPath, 'links.csv')
+                ).then(([records, links]) => {
+                    links = Link.formatedDatasetToLinks(links);
+                    records = Record.formatedDatasetToRecords(records, links, fakeConfig);
+                    Promise.all([fetchBibliographyFiles(), fetchFakeThumbnails(nodeThumbnails)])
+                        .then(() => {
+                            const graph = new Cosmoscope(records, fakeConfig.opts)
+                                , { html } = new Template(graph, templateOptions);
 
-                        savePath = path.join(savePath, 'opensphere.html');
-
-                        fs.writeFile(savePath, html, (err) => {
-                            if (err) { reject(err) }
-                            resolve({
-                                nbRecords: graph.records.length,
-                                savePath
+                            savePath = path.join(savePath, 'otletosphere.html');
+                            fs.writeFile(savePath, html, (err) => {
+                                if (err) { reject(err) }
+                                resolve({
+                                    nbRecords: graph.records.length,
+                                    savePath
+                                });
                             });
                         });
-                    })
-            }).catch(reject)
+                }).catch(reject)
+            })
     })
 }
 

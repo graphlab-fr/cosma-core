@@ -35,12 +35,6 @@ module.exports = class Graph {
         );
         this.records = records;
 
-        if (this.params.has('fake')) {
-            const { config: fakeConfig, records } = require('../utils/fake');
-            this.records = records,
-            opts = fakeConfig.opts;
-        }
-
         this.data = {
             nodes: Node.getNodesFromRecords(this.records),
             links: Link.getLinksFromRecords(this.records)
