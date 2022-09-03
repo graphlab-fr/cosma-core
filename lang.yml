@@ -287,6 +287,9 @@ windows:
       files_origin:
         fr: Répertoire des fiches
         en: Records directory
+      images_origin:
+        fr: Répertoire des images
+        en: Images directory
       history:
         fr: Enregistrer automatiquement les cosmoscopes dans l’historique
         en: Automatically save cosmoscopes in the history
@@ -546,6 +549,10 @@ dialog:
     title:
       fr: Répertoire des fiches
       en: Records directory
+  images_origin:
+    title:
+      fr: Répertoire des images
+      en: images directory
   bibliography:
     title:
       fr: Données bibliographiques (JSON)

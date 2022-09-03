@@ -25,8 +25,15 @@ module.exports = class Graph {
     /**
      * 
      * @param {Record[]} records 
-     * @param {object} opts 
-     * @param {string[]} params 
+     * @param {Config.opts} opts 
+     * @param {string[]} params
+     * @exemple
+     * ```
+     * const { files_origin: filesPath } = Config.get();
+     * const files = Cosmoscope.getFromPathFiles(filesPath);
+     * const records = Cosmoscope.getRecordsFromFiles(files, config.opts);   
+     * const graph = new Cosmocope(records, config.opts, ['sample']);
+     * ```
      */
 
     constructor(records = [], opts = {}, params = []) {

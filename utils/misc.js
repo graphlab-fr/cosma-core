@@ -1,7 +1,6 @@
 const fs = require('fs')
     , path = require('path');
 
-const fetch = require('node-fetch');
 const axios = require('axios');
 
 module.exports = {

@@ -157,6 +157,11 @@ module.exports = class Template {
      * Get data from graph and make a web app
      * @param {Graph} graph - Graph class
      * @param {string[]} params
+     * @exemple
+     * ```
+     * const graph = new Cosmocope(records, config.opts, optionsGraph);
+     * const { html } = new Template(graph, ['publish', 'citeproc']);
+     * ```
      */
 
     constructor(graph, params = []) {
