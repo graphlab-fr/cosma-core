@@ -157,6 +157,7 @@ module.exports = class Config {
             return false; }
 
         for (const key in recordTypes) {
+            if (!key) { return; }
             if (
                 typeof recordTypes[key] !== 'object' ||
                 recordTypes[key]['fill'] === undefined ||
@@ -179,6 +180,7 @@ module.exports = class Config {
             return false; }
 
         for (const key in linkTypes) {
+            if (!key) { return; }
             if (
                 typeof linkTypes[key] !== 'object' ||
                 linkTypes[key]['color'] === undefined ||

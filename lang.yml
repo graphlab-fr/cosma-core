@@ -507,8 +507,14 @@ windows:
         fr: Nom
         en: Name
       color_fill:
-        fr: Couleur de fond
-        en: Fill color
+        fr: Couleur/image de fond
+        en: Fill color/image
+      fill_select_color:
+        fr: Sélectionner une couleur de fond
+        en: Select a fill color
+      fill_select_image:
+        fr: Sélectionner une image de fond
+        en: Select a fill image
       color_stroke:
         fr: Couleur de bordure
         en: Stroke color

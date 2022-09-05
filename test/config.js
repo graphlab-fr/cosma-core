@@ -114,6 +114,21 @@ describe('Config', () => {
                 ['record_types']
             );
         });
+
+        it('should be return error into report array for empty record type', () => {
+            const config = new Config({
+                ...Config.base,
+                record_types: {
+                    undefined: { stroke: 'green', fill: 'green' },
+                    '': { stroke: 'green', fill: 'green' }
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['record_types']
+            );
+        });
     
         it('should be return error into report array for invalid record type : miss stroke', () => {
             const config = new Config({
@@ -167,6 +182,22 @@ describe('Config', () => {
                     undefined: { stroke: 'invalid_stroke' }
                 }
             });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['link_types']
+            );
+        });
+
+        it('should be return error into report array for empty link type', () => {
+            const config = new Config({
+                ...Config.base,
+                link_types: {
+                    undefined: { stroke: 'simple', color: '#e1e1e1' },
+                    '': { stroke: 'simple', color: '#e1e1e1' },
+                }
+            });
+            console.log(config.report);
     
             assert.deepStrictEqual(
                 config.report,
