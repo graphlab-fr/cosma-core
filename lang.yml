@@ -362,6 +362,12 @@ windows:
       color:
         fr: Couleur
         en: Color
+      color_fill:
+        fr: Couleur de fond
+        en: Fill color
+      color_stroke:
+        fr: Couleur de bordure
+        en: Stroke color
       look:
         fr: Apparence
         en: Look
@@ -500,9 +506,12 @@ windows:
       name:
         fr: Nom
         en: Name
-      color:
-        fr: Couleur
-        en: Color
+      color_fill:
+        fr: Couleur de fond
+        en: Fill color
+      color_stroke:
+        fr: Couleur de bordure
+        en: Stroke color
   view:
     title:
       add:
