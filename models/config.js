@@ -37,6 +37,7 @@ module.exports = class Config {
         graph_highlight_on_hover: true,
         graph_text_size: 10,
         graph_arrows: true,
+        node_size: { method: 'degree', min: 2, max: 10 },
         attraction_force: 200,
         attraction_distance_max: 250,
         attraction_vertical: 0,
@@ -121,6 +122,28 @@ module.exports = class Config {
         return false;
     }
 
+    static isValidNodeSize (nodeSize) {
+        if (typeof nodeSize !== 'object') { return false; }
+        if (nodeSize['method'] === undefined) { return false; }
+        if (new Set(['unique', 'degree']).has(nodeSize['method']) === false) {
+            return false;
+        }
+
+        switch (nodeSize['method']) {
+            case 'unique':
+                if (typeof nodeSize['value'] !== 'number') {
+                    return false;
+                }
+                break;
+            case 'degree':
+                if (typeof nodeSize['min'] !== 'number' || typeof nodeSize['max'] !== 'number') {
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
+
     static isInvalidNumber (optionName, number) {
         number = Number(number);
 
@@ -130,14 +153,14 @@ module.exports = class Config {
         return true;
     }
 
-    static isInvalidViews (views) {
-        for (const viewName in views) {
-            const viewKey = views[viewName];
-            const viewKeyDecode = Buffer.from(viewKey, 'base64').toString();
-            let viewKeyJson
+    static isValidViews (views) {
+        if (typeof views !== 'object') { return false; }
+        for (const key of Object.values(views)) {
+            const viewKeyDecode = Buffer.from(key, 'base64').toString();
+            let keyJson
 
             try {
-                viewKeyJson = JSON.parse(viewKeyDecode);
+                keyJson = JSON.parse(viewKeyDecode);
             } catch (err) {
                 return false;
             }
@@ -146,16 +169,16 @@ module.exports = class Config {
         return true;
     }
 
-    static isInvalidLangage (lang) {
+    static isValidLangage (lang) {
         if (Config.validLangages[lang] === undefined) {
             return false; }
 
         return true;
     }
 
-    static isInvalidRecordTypes (recordTypes) {
+    static isValidRecordTypes (recordTypes) {
         if (!recordTypes) { return false; }
-        
+        if (typeof recordTypes !== 'object') { return false; }
         if (recordTypes['undefined'] === undefined) {
             return false; }
 
@@ -176,14 +199,14 @@ module.exports = class Config {
         return true;
     }
 
-    static isInvalidLinkTypes (linkTypes) {
+    static isValidLinkTypes (linkTypes) {
         if (!linkTypes) { return false; }
-
+        if (typeof linkTypes !== 'object') { return false; }
         if (linkTypes['undefined'] === undefined) {
             return false; }
 
         for (const key in linkTypes) {
-            if (!key) { return; }
+            if (!key) { return false; }
             if (
                 typeof linkTypes[key] !== 'object' ||
                 linkTypes[key]['color'] === undefined ||
@@ -388,26 +411,31 @@ module.exports = class Config {
         });
 
         const record_types = (
-            Config.isInvalidRecordTypes(this.opts['record_types']) ?
+            Config.isValidRecordTypes(this.opts['record_types']) ?
             null : 'record_types'
         );
 
         const link_types = (
-            Config.isInvalidLinkTypes(this.opts['link_types']) ?
+            Config.isValidLinkTypes(this.opts['link_types']) ?
             null : 'link_types'
         );
 
         const lang = (
-            Config.isInvalidLangage(this.opts['lang']) ?
+            Config.isValidLangage(this.opts['lang']) ?
             null : 'lang'
         );
 
         const views = (
-            Config.isInvalidViews(this.opts['views']) ?
+            Config.isValidViews(this.opts['views']) ?
             null : 'views'
         );
 
-        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views]
+        const node_size = (
+            Config.isValidNodeSize(this.opts['node_size']) ?
+            null : 'node_size'
+        );
+
+        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views, node_size]
             .filter(invalidOption => invalidOption !== null);
     }
 

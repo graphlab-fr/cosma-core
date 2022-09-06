@@ -11,6 +11,8 @@
  * @property {number | undefined} end
  */
 
+const { extent } = require('d3-array');
+
 const Config = require('./config')
     , Link = require('./link')
     , Node = require('./node');
@@ -42,8 +44,13 @@ module.exports = class Graph {
         );
         this.records = records;
 
+        this.stats = {
+            linksExtent: extent(this.records, d => d.links.length),
+            backlinksExtent: extent(this.records, d => d.backlinks.length)
+        };
+
         this.data = {
-            nodes: Node.getNodesFromRecords(this.records),
+            nodes: Node.getNodesFromRecords(this.records, this.stats),
             links: Link.getLinksFromRecords(this.records)
         };
         this.config = new Config(opts);
@@ -103,17 +110,9 @@ module.exports = class Graph {
     getChronosFromRecords() {
         let dates = [];
         for (const { begin, end } of this.records) {
-            dates.push(begin);
-            dates.push(end);
+            dates.push(begin, end);
         }
-        dates = dates.sort((a, b) => {
-            if (a < b) { return -1; }
-            if (a > b) { return 1; }
-            return 0;
-        }).filter(date => typeof date === 'number');
-        return {
-            begin: dates[0],
-            end: dates[dates.length - 1]
-        }
+        const [begin, end] = extent(dates);
+        return { begin, end };
     }
 }

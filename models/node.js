@@ -4,21 +4,28 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
+const { scaleLinear } = require('d3-scale');
+
 module.exports = class Node {
     /**
      * @param {number} linksNb 
      * @param {number} backlinksNb 
+     * @param {[number, number]} linksExtent 
+     * @param {[number, number]} backlinksExtent
+     * @param {number} minRange 
+     * @param {number} maxRange 
      * @returns 
      */
 
-    static getNodeRank (linksNb, backlinksNb) {
-        let rank = 1 // original rank
-            , sizeDivisor = 2; // to reduce rank
+    static getNodeSizeByLinkRank (linksNb, backlinksNb, linksExtent, backlinksExtent, minRange, maxRange) {
+        const [minLinks, maxLinks] = linksExtent;
+        const [minBacklinks, maxBacklinks] = backlinksExtent;
 
-        rank += Math.floor(linksNb / sizeDivisor);
-        rank += Math.floor(backlinksNb / sizeDivisor);
+        var size = scaleLinear()
+            .domain([minLinks + minBacklinks, maxLinks + maxBacklinks])
+            .range([minRange, maxRange]);
 
-        return rank;
+        return size(linksNb + backlinksNb);
     }
 
     /**
@@ -127,13 +134,31 @@ module.exports = class Node {
 
     /**
      * @param {Record[]} records
+     * @param {Graph.stats} graphStats
      * @returns {Node[]}
      */
 
-    static getNodesFromRecords(records) {
+    static getNodesFromRecords(records, { linksExtent, backlinksExtent }) {
         return records.map((record) => {
             const { id, title, type, links, backlinks, begin, end, thumbnail, config } = record;
             const { fill, colorStroke, highlight } = Node.getNodeStyle(config, type[0]);
+            const { node_size: nodeSizeOpts } = config.opts;
+            let size;
+            switch (nodeSizeOpts['method']) {
+                case 'unique':
+                    size = nodeSizeOpts['value']
+                    break;
+                case 'degree':
+                    size = Node.getNodeSizeByLinkRank(
+                        links.length,
+                        backlinks.length,
+                        linksExtent,
+                        backlinksExtent,
+                        nodeSizeOpts['min'],
+                        nodeSizeOpts['max']
+                    );
+                    break;
+            }
             return new Node(
                 id,
                 title,
@@ -141,7 +166,7 @@ module.exports = class Node {
                 !!thumbnail ? `url(#${thumbnail})` : fill,
                 colorStroke,
                 highlight,
-                Node.getNodeRank(links.length, backlinks.length),
+                size,
                 2,
                 Node.evalConnectionLevels(id, records),
                 begin,

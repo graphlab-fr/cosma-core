@@ -304,4 +304,53 @@ describe('Config', () => {
             );
         });
     });
+
+    describe.only('node size', () => {
+        it('should not be return error into report array for valid node size : unique', () => {
+            const config = new Config({
+                ...Config.base,
+                node_size: {
+                    method: 'unique',
+                    value: 5
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                []
+            );
+        });
+
+        it('should not be return error into report array for valid node size : degree', () => {
+            const config = new Config({
+                ...Config.base,
+                node_size: {
+                    method: 'degree',
+                    min: 5,
+                    max: 10
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                []
+            );
+        });
+
+        it('should be return error into report array for invalid node size : miss value for unique method', () => {
+            const config = new Config({
+                ...Config.base,
+                node_size: {
+                    method: 'unique',
+                    min: 5,
+                    min: 10
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['node_size']
+            );
+        });
+    });
 });
