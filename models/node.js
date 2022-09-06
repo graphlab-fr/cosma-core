@@ -142,11 +142,11 @@ module.exports = class Node {
         return records.map((record) => {
             const { id, title, type, links, backlinks, begin, end, thumbnail, config } = record;
             const { fill, colorStroke, highlight } = Node.getNodeStyle(config, type[0]);
-            const { node_size: nodeSizeOpts } = config.opts;
+            const { node_size_method, node_size, node_size_min, node_size_max } = config.opts;
             let size;
-            switch (nodeSizeOpts['method']) {
+            switch (node_size_method) {
                 case 'unique':
-                    size = nodeSizeOpts['value']
+                    size = node_size
                     break;
                 case 'degree':
                     size = Node.getNodeSizeByLinkRank(
@@ -154,8 +154,8 @@ module.exports = class Node {
                         backlinks.length,
                         linksExtent,
                         backlinksExtent,
-                        nodeSizeOpts['min'],
-                        nodeSizeOpts['max']
+                        node_size_min,
+                        node_size_max
                     );
                     break;
             }

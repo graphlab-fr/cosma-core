@@ -37,7 +37,10 @@ module.exports = class Config {
         graph_highlight_on_hover: true,
         graph_text_size: 10,
         graph_arrows: true,
-        node_size: { method: 'degree', min: 2, max: 10 },
+        node_size_method: 'degree',
+        node_size: 10,
+        node_size_max: 20,
+        node_size_min: 2,
         attraction_force: 200,
         attraction_distance_max: 250,
         attraction_vertical: 0,
@@ -99,7 +102,10 @@ module.exports = class Config {
         attraction_force: 50,
         attraction_distance_max: 200,
         attraction_vertical: 0,
-        attraction_horizontal: 0
+        attraction_horizontal: 0,
+        node_size: 0,
+        node_size_max: 0,
+        node_size_min: 0
     };
 
     /**
@@ -394,7 +400,10 @@ module.exports = class Config {
             'attraction_force',
             'attraction_distance_max',
             'attraction_vertical',
-            'attraction_horizontal'
+            'attraction_horizontal',
+            'node_size',
+            'node_size_max',
+            'node_size_min'
         ].filter((option) => {
             return Config.isInvalidNumber(option, this.opts[option]);
         }).map((invalidNumber) => {
@@ -432,12 +441,12 @@ module.exports = class Config {
             null : 'views'
         );
 
-        const node_size = (
-            Config.isValidNodeSize(this.opts['node_size']) ?
-            null : 'node_size'
+        const node_size_method = (
+            new Set(['unique', 'degree']).has(this.opts.node_size_method) ?
+            null : 'node_size_method'
         );
 
-        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views, node_size]
+        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views, node_size_method]
             .filter(invalidOption => invalidOption !== null);
     }
 

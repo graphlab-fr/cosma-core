@@ -711,6 +711,18 @@ config:
     attraction_horizontal:
       fr: La force d'attraction verticale doit être supérieure ou égale à $1
       en: Horizontal attraction must be $1 or higher
+    node_size_method:
+      fr: Cette méthode de dimensionnement des nœuds est invalide
+      en: This method of sizing nodes is invalid
+    node_size:
+      fr: La taille des nœuds doit être supérieur ou égale à $1
+      en: Nodes size must be $1 or higher
+    node_size_min:
+      fr: La taille minimum des nœuds doit être supérieur ou égale à $1
+      en: Min nodes size must be $1 or higher
+    node_size_max:
+      fr: La taille maximum des nœuds doit être supérieur ou égale à $1
+      en: Max nodes size must be $1 or higher
     history:
       fr: La commande d'enregistrement de l'historique est invalide
       en: Invalid history recording command
