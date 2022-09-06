@@ -338,6 +338,27 @@ windows:
       attraction_horizontal:
         fr: Attraction horizontale
         en: Horizontal attraction
+      node_sizing:
+        fr: Dimensionnement des nœuds
+        en: Node sizing
+      node_size_method:
+        fr: Méthode de dimensionnement des nœuds
+        en: Node sizing method
+      node_size_method_unique:
+        fr: Taille unique
+        en: Unique size
+      node_size_method_degree:
+        fr: Taille proportionnelle
+        en: Proportional size
+      node_size:
+        fr: Taille des nœuds
+        en: Nodes size
+      node_size_min:
+        fr: Taille minimum des nœuds
+        en: Min nodes size
+      node_size_max:
+        fr: Taille maximum des nœuds
+        en: Max nodes size
       title:
         fr: Titre
         en: Title
