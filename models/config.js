@@ -131,12 +131,14 @@ module.exports = class Config {
 
         switch (nodeSize['method']) {
             case 'unique':
-                if (typeof nodeSize['value'] !== 'number') {
-                    return false;
-                }
+                if (typeof nodeSize['value'] !== 'number') { return false; }
+                if (nodeSize['value'] < 0) { return false; }
                 break;
             case 'degree':
                 if (typeof nodeSize['min'] !== 'number' || typeof nodeSize['max'] !== 'number') {
+                    return false;
+                }
+                if (nodeSize['min'] < 0 || nodeSize['max'] < 0) {
                     return false;
                 }
                 break;

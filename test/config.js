@@ -305,7 +305,7 @@ describe('Config', () => {
         });
     });
 
-    describe.only('node size', () => {
+    describe('node size', () => {
         it('should not be return error into report array for valid node size : unique', () => {
             const config = new Config({
                 ...Config.base,
@@ -344,6 +344,21 @@ describe('Config', () => {
                     method: 'unique',
                     min: 5,
                     min: 10
+                }
+            });
+    
+            assert.deepStrictEqual(
+                config.report,
+                ['node_size']
+            );
+        });
+
+        it('should be return error into report array for invalid node size : value less than 0', () => {
+            const config = new Config({
+                ...Config.base,
+                node_size: {
+                    method: 'unique',
+                    value: -5,
                 }
             });
     
