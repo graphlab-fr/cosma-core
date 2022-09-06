@@ -210,7 +210,7 @@ module.exports = class Record {
      * @param {FormatedRecordData[]} data
      * @param {Link[]} links
      * @param {Config} config
-     * @returns {Link[]}
+     * @returns {Record[]}
      */
 
     static formatedDatasetToRecords(data, links, config) {

@@ -22,7 +22,10 @@ module.exports = class Config {
      */
 
     static base = {
+        select_origin: 'directory',
         files_origin: '',
+        nodes_origin: '',
+        links_origin: '',
         images_origin: '',
         export_target: '',
         history: true,
@@ -339,8 +342,15 @@ module.exports = class Config {
      */
 
     verif () {
+        const select_origin = (
+            new Set(['directory', 'csv']).has(this.opts.select_origin) ?
+            null : 'select_origin'
+        );
+
         const paths = [
             'files_origin',
+            'nodes_origin',
+            'links_origin',
             'images_origin',
             'export_target',
             'csl',
@@ -397,7 +407,7 @@ module.exports = class Config {
             null : 'views'
         );
 
-        this.report = [...paths, ...numbers, ...bools, record_types, link_types, lang, views]
+        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views]
             .filter(invalidOption => invalidOption !== null);
     }
 

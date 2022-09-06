@@ -4,10 +4,25 @@ const Config = require('../models/config')
     , { config: fakeConfig } = require('../utils/fake');
 
 describe('Config', () => {
+    it('should be return error into report array for invalid origin selector', () => {
+        const config = new Config({
+            ...Config.base,
+            select_origin: 'invalid value'
+        });
+
+        assert.deepStrictEqual(
+            config.report,
+            ['select_origin']
+        );
+    });
+
     it('should be return error into report array for invalid paths', () => {
         const config = new Config({
             ...Config.base,
             files_origin: '../no/exist/folder',
+            nodes_origin: '../no/exist/folder',
+            links_origin: '../no/exist/folder',
+            images_origin: '../no/exist/folder',
             export_target: '../no/exist/folder',
             csl: '../no/exist/folder',
             bibliography: '../no/exist/folder',
@@ -15,17 +30,19 @@ describe('Config', () => {
             css_custom: '../no/exist/folder'
         });
 
-        assert.ok(
-            JSON.stringify(config.report) === JSON.stringify(
-                [
-                    'files_origin',
-                    'export_target',
-                    'csl',
-                    'bibliography',
-                    'csl_locale',
-                    'css_custom'
-                ]
-            )
+        assert.deepStrictEqual(
+            config.report,
+            [
+                'files_origin',
+                'nodes_origin',
+                'links_origin',
+                'images_origin',
+                'export_target',
+                'csl',
+                'bibliography',
+                'csl_locale',
+                'css_custom'
+            ]
         );
     });
 
@@ -197,7 +214,6 @@ describe('Config', () => {
                     '': { stroke: 'simple', color: '#e1e1e1' },
                 }
             });
-            console.log(config.report);
     
             assert.deepStrictEqual(
                 config.report,
@@ -287,5 +303,5 @@ describe('Config', () => {
                 config.opts.link_types
             );
         });
-    })
+    });
 });

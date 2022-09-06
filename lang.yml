@@ -284,9 +284,24 @@ windows:
         fr: Avancé
         en: Advanced
     fields:
+      select_origin:
+        fr: Source de données
+        en: Data origin
+      directory_origin:
+        fr: Fichiers Markdown
+        en: Markdown files
+      csv_origin:
+        fr: Feuille de calcul
+        en: Spreadsheet files
       files_origin:
         fr: Répertoire des fiches
         en: Records directory
+      nodes_origin:
+        fr: Feuille de calcul des nœuds
+        en: Spreadsheet file of nodes
+      links_origin:
+        fr: Feuille de calcul des liens
+        en: Spreadsheet file of links
       images_origin:
         fr: Répertoire des images
         en: Images directory
@@ -387,6 +402,9 @@ windows:
       delete_all:
         fr: Tout supprimer…
         en: Delete all…
+      select:
+        fr: Sélectionner
+        en: Select
     help:
       csl:
         fr: Télécharger des styles
@@ -564,6 +582,14 @@ dialog:
     title:
       fr: Répertoire des fiches
       en: Records directory
+  nodes_origin:
+    title:
+      fr: Feuille de calcul des nœuds
+      en: Spreadsheet for nodes
+  links_origin:
+    title:
+      fr: Feuille de calcul des liens
+      en: Spreadsheet for links
   images_origin:
     title:
       fr: Répertoire des images
@@ -637,9 +663,21 @@ config:
     invalid_path:
       fr: Le chemin vers la configruation est invalide
       en: The config file path is invalid
+    select_origin:
+      fr: Ce type de source de données n'est pas valide
+      en: This type of data origin is invalid
     files_origin:
       fr: Le chemin vers le répertoire de fiches sélectionné est invalide
       en: Invalid records directory path
+    nodes_origin:
+      fr: Le chemin vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
+    links_origin:
+      fr: Le chemin vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
+    images_origin:
+      fr: Le chemin vers l'image sélectionnée est invalide
+      en: Invalid image file path
     export_target:
       fr: Le chemin vers le répertoire d'export du cosmocope est invalide
       en: Invalid export directory path
@@ -697,6 +735,27 @@ config:
     link_types:
       fr: La liste des types de liens est invalide
       en: Invalid link types list
+    graph_background_color:
+      fr: Cette couleur de fond n'est pas valide
+      en: This background color is invalid
+    graph_highlight_color:
+      fr: Cette couleur de surbrillance n'est pas valide
+      en: This highlight color is invalid
+    title:
+      fr: Le titre d'export n'est pas valide
+      en: The export title is invalid
+    author:
+      fr: L'auteur de l'export n'est pas valide
+      en: The export author is invalid
+    description:
+      fr: La description de l'export n'est pas valide
+      en: The export description is invalid
+    keywords:
+      fr: Les mots-clés de l'export ne sont pas valides
+      en: Export keywords are invalid
+    link_symbol:
+      fr: Le symbole de remplacement des liens n'est pas valide
+      en: The link replacement symbol is invalid
     lang:
       fr: La langue n'est pas configurée
       en: Language not set
