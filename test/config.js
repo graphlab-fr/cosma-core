@@ -1,268 +1,43 @@
-const assert = require('assert');
+const assert = require('assert')
+    , should = require('chai').should();
+
+const fs = require('fs')
+    , path = require('path')
+    , yml = require('js-yaml');
 
 const Config = require('../models/config')
-    , { config: fakeConfig } = require('../utils/fake');
+    , { config: fakeConfig } = require('../utils/fake')
+    , { fetchBibliographyFiles, fetchSpreadsheets } = require('../utils/generate');;
 
 describe('Config', () => {
-    it('should be return error into report array for invalid origin selector', () => {
-        const config = new Config({
-            ...Config.base,
-            select_origin: 'invalid value'
-        });
+    const tempFolderPath = path.join(__dirname, '../temp');
 
-        assert.deepStrictEqual(
-            config.report,
-            ['select_origin']
-        );
-    });
-
-    it('should be return error into report array for invalid paths', () => {
-        const config = new Config({
-            ...Config.base,
-            files_origin: '../no/exist/folder',
-            nodes_origin: '../no/exist/folder',
-            links_origin: '../no/exist/folder',
-            images_origin: '../no/exist/folder',
-            export_target: '../no/exist/folder',
-            csl: '../no/exist/folder',
-            bibliography: '../no/exist/folder',
-            csl_locale: '../no/exist/folder',
-            css_custom: '../no/exist/folder'
-        });
-
-        assert.deepStrictEqual(
-            config.report,
-            [
-                'files_origin',
-                'nodes_origin',
-                'links_origin',
-                'images_origin',
-                'export_target',
-                'csl',
-                'bibliography',
-                'csl_locale',
-                'css_custom'
-            ]
-        );
-    });
-
-    it('should be return error into report array for invalid numbers', () => {
-        const config = new Config({
-            ...Config.base,
-            focus_max: Config.minValues - 1,
-            graph_text_size: Config.minValues - 1,
-            attraction_force: Config.minValues - 1,
-            attraction_distance_max: Config.minValues - 1,
-            attraction_vertical: Config.minValues - 1,
-            attraction_horizontal: Config.minValues - 1
-        });
-
-        assert.deepStrictEqual(
-            config.report,
-            [
-                'focus_max',
-                'graph_text_size',
-                'attraction_force',
-                'attraction_distance_max',
-                'attraction_vertical',
-                'attraction_horizontal'
-            ]
-        )
-    });
-
-    it('should be return error into report array for invalid booleans', () => {
-        const config = new Config({
-            ...Config.base,
-            history: 'not a boolean',
-            graph_highlight_on_hover: 'not a boolean',
-            graph_arrows: 'not a boolean',
-            devtools: 'not a boolean'
-        });
-
-        assert.deepStrictEqual(
-            config.report,
-            [
-                'history',
-                'graph_highlight_on_hover',
-                'graph_arrows',
-                'devtools'
-            ]
-        );
-    });
-
-    it('should be return error into report array for invalid types : missing undefined', () => {
-        const config = new Config({
-            ...Config.base,
-            record_types: { not_undefined: '#000000' },
-            link_types: { not_undefined: { stroke: 'simple', color: '#000000' } }
-        });
-
-        assert.deepStrictEqual(
-            config.report,
-            ['record_types', 'link_types']
-        );
-    });
-
-    describe('type record', () => {
-        it('should not return error for valid record type', () => {
-            const config = new Config({
-                ...Config.base,
-                record_types: {
-                    undefined: { fill: 'photo.jpg', stroke: 'green' }
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                []
-            );
-        });
-    
-        it('should be return error into report array for invalid record type : miss fill', () => {
-            const config = new Config({
-                ...Config.base,
-                record_types: {
-                    undefined: { stroke: 'green' }
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['record_types']
-            );
-        });
-
-        it('should be return error into report array for empty record type', () => {
-            const config = new Config({
-                ...Config.base,
-                record_types: {
-                    undefined: { stroke: 'green', fill: 'green' },
-                    '': { stroke: 'green', fill: 'green' }
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['record_types']
-            );
-        });
-    
-        it('should be return error into report array for invalid record type : miss stroke', () => {
-            const config = new Config({
-                ...Config.base,
-                record_types: {
-                    undefined: { fill: 'green' }
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['record_types']
-            );
+    describe('config report array', () => {
+        it('should be empty with base config', () => {
+            const config = new Config(Config.base);
+            config.report.should.be.empty
         });
     });
 
-
-    describe('type link', () => {
-        it('should be return error into report array for invalid link type : invalid stroke', () => {
-            const config = new Config({
-                ...Config.base,
-                link_types: {
-                    undefined: { stroke: 'invalid_stroke', color: '#000000' }
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['link_types']
-            );
+    describe('path validator', () => {
+        it('should return false if empty', () => Config.isValidPath('').should.be.false);
+        it('should return false if undefined or null', () => {
+            Config.isValidPath(undefined).should.be.false;
+            Config.isValidPath(null).should.be.false;
         });
-    
-        it('should be return error into report array for invalid link type : miss stroke', () => {
-            const config = new Config({
-                ...Config.base,
-                link_types: {
-                    undefined: { color: '#000000' }
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['link_types']
-            );
-        });
-    
-        it('should be return error into report array for invalid link type : miss color', () => {
-            const config = new Config({
-                ...Config.base,
-                link_types: {
-                    undefined: { stroke: 'invalid_stroke' }
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['link_types']
-            );
-        });
-
-        it('should be return error into report array for empty link type', () => {
-            const config = new Config({
-                ...Config.base,
-                link_types: {
-                    undefined: { stroke: 'simple', color: '#e1e1e1' },
-                    '': { stroke: 'simple', color: '#e1e1e1' },
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['link_types']
-            );
-        });
+        it('should return true if real path', () => Config.isValidPath(tempFolderPath).should.be.true);
     });
 
-
-    describe('type format', () => {
-        const config = new Config({
-            ...Config.base,
-            record_types: {
-                undefined: { fill: 'photo.jpg', stroke: 'black' },
-                other: { fill: 'green', stroke: 'black' }
-            }
-        });
-
-        it('should get image format from record fill', () => {
-            assert.strictEqual(
-                config.getFormatOfTypeRecord('undefined'),
-                'image'
-            );
-        });
-    
-        it('should get color format from record fill', () => {
-            assert.strictEqual(
-                config.getFormatOfTypeRecord('other'),
-                'color'
-            );
-        });
+    describe('number validator', () => {
+        const optionName = 'node_size';
+        it('should return false if string', () => Config.isValidNumber(optionName, '').should.be.false);
+        it('should return false if to lower number', () => Config.isValidNumber(optionName, Config.minValues[optionName] - 1).should.be.false);
+        it('should return true for a minimal number', () => Config.isValidNumber(optionName, Config.minValues[optionName]).should.be.true);
     });
 
-    describe('views', () => {
-        it('should be return error into report array for invalid views', () => {
-            const config = new Config({
-                ...Config.base,
-                views: {
-                    test: 'eyJyZWNvcmRJZCI6MjAyMjAxMfX0'
-                }
-            });
-    
-            assert.deepStrictEqual(
-                config.report,
-                ['views']
-            );
-        });
-
-        it('should be return no error for valid views', () => {
+    describe('view validator', () => {
+        it('should return false if not object', () => Config.isValidViews(100).should.be.false);
+        it('should return false if not object', () => {
             const viewJson = {
                 recordId: 20220114171220,
                 filters: ['idée'],
@@ -271,37 +46,151 @@ describe('Config', () => {
                     level: 1
                 }
             }
-
             const viewDecodeKey = JSON.stringify(viewJson);
             const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64')
+            Config.isValidViews({ test: viewEncodeKey }).should.be.true;
+        });
+    });
 
-            const config = new Config({
-                ...Config.base,
-                views: {
-                    test: viewEncodeKey
-                }
+    describe('type record checker', () => {
+        it('should return false because undefined is unset', () => {
+            Config.isValidRecordTypes({
+                'other': { 'fill': 'image.jpg', 'stroke': 'purple' }
+            }).should.be.false;
+        });
+        it('should return false because unset fill or stroke', () => {
+            Config.isValidRecordTypes({
+                ...Config.base['record_types'],
+                'other': { 'fill': 'image.jpg' }
+            }).should.be.false;
+            Config.isValidRecordTypes({
+                ...Config.base['record_types'],
+                'other': { 'stroke': 'image.jpg' }
+            }).should.be.false;
+        });
+        it('should return true because valid object', () => {
+            Config.isValidRecordTypes({
+                'undefined': { 'fill': 'orange', 'stroke': 'blue' },
+                'other': { 'fill': 'image.jpg', 'stroke': 'purple' }
+            }).should.be.true;
+        });
+    });
+
+    describe('type link checker', () => {
+        it('should return false because undefined is unset', () => {
+            Config.isValidLinkTypes({
+                'other': { 'color': 'purple', 'stroke': 'simple' }
+            }).should.be.false;
+        });
+        it('should return false because unset color or stroke', () => {
+            Config.isValidLinkTypes({
+                ...Config.base['link_types'],
+                'other': { 'color': 'orange' }
+            }).should.be.false;
+            Config.isValidLinkTypes({
+                ...Config.base['link_types'],
+                'other': { 'stroke': 'simple' }
+            }).should.be.false;
+        });
+        it('should return false because invalid stroke', () => {
+            Config.isValidLinkTypes({
+                ...Config.base['link_types'],
+                'other': { 'color': 'orange', 'stroke': 'INVALID' }
+            }).should.be.false;
+        });
+        it('should return true for valid object', () => {
+            Config.isValidLinkTypes({
+                'undefined': { 'color': 'orange', 'stroke': 'simple' },
+                'other': { 'color': 'gray', 'stroke': 'dotted' }
+            }).should.be.true;
+        });
+    });
+
+    describe('get fake config', () => {
+        const fakeConfigPath = path.join(__dirname, '../utils/fake-config.yml');
+        const configOptsGotten = Config.get(fakeConfigPath);
+        let fakeConfigOpts;
+        before(() => {
+            return new Promise((resolve) => {
+                fs.readFile(fakeConfigPath, 'utf8', (err, data) => {
+                    data = yml.load(data);
+                    fakeConfigOpts = data;
+                    resolve();
+                })
             });
-    
-            assert.ok(config.isValid());
-        });
-    })
-
-    describe('entities types', () => {
-        it('should be keep all record types', () => {
-            const config = new Config(fakeConfig.opts);
-
-            assert.deepStrictEqual(
-                fakeConfig.opts.record_types,
-                config.opts.record_types
-            );
         });
 
-        it('should be keep all link types', () => {
-            const config = new Config(fakeConfig.opts);
+        it('should be match with file content', () => {
             assert.deepStrictEqual(
-                fakeConfig.opts.link_types,
-                config.opts.link_types
+                fakeConfigOpts,
+                configOptsGotten
             );
+        });
+        it('should be a valid config', () => {
+            const config = new Config(configOptsGotten);
+            config.report.should.be.empty;
+            config.isValid().should.be.true;
+        });
+    });
+
+    describe('can citeproc', () => {
+        let bibliographyFiles;
+        before(() => {
+            return new Promise(async (resolve) => {
+                bibliographyFiles = await fetchBibliographyFiles();
+                bibliographyFiles = bibliographyFiles.map(([url, fileName]) => path.join(tempFolderPath, fileName))
+                resolve();
+            });
+        });
+
+        it('should be true with fake files', () => {
+            const [csl, csl_locale] = bibliographyFiles;
+            const config = new Config({
+                bibliography: path.join(__dirname, '../utils/fake-bib.json'),
+                csl,
+                csl_locale,
+            });
+            config.canCiteproc().should.be.true;
+        });
+    });
+
+    describe('can custom css', () => {
+        it('should be true with fake CSS file', () => {
+            const config = new Config({
+                css_custom: path.join(__dirname, '../utils/fake.css')
+            });
+            config.canCssCustom().should.be.true;
+        });
+    });
+
+    describe('can modelize', () => {
+        describe('from directory', () => {
+            it('should be true with fake path', () => {
+                const config = new Config({
+                    files_origin: tempFolderPath
+                });
+                config.canModelizeFromDirectory().should.be.true;
+            });
+        });
+
+        describe('from csv files', () => {
+            let csvFiles;
+            before(() => {
+                return new Promise(async (resolve) => {
+                    csvFiles = await fetchSpreadsheets();
+                    csvFiles = csvFiles.map(([url, fileName]) => path.join(tempFolderPath, fileName))
+                    resolve();
+                });
+            });
+
+            it('should be true with fake path', () => {
+                const [nodes_origin, links_origin] = csvFiles;
+                const config = new Config({
+                    nodes_origin,
+                    links_origin
+                });
+                config.canModelizeFromCsvFiles().should.be.true;
+            });
         });
     });
 });

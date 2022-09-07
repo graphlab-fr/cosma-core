@@ -118,12 +118,14 @@ module.exports = class Config {
         en: "English",
     };
 
-    static isInvalidPath (path) {
-        if (!path) { return false; }
+    /**
+     * @param {string} path 
+     * @returns {boolean}
+     */
 
-        if (fs.existsSync(path) === false) {
-            return true;
-        }
+    static isValidPath (path) {
+        if (typeof path !== 'string') { return false; }
+        if (fs.existsSync(path)) { return true; }
 
         return false;
     }
@@ -152,11 +154,17 @@ module.exports = class Config {
         return true;
     }
 
-    static isInvalidNumber (optionName, number) {
-        number = Number(number);
+    /**
+     * @param {string} optionName 
+     * @param {number} value 
+     * @returns {boolean}
+     */
 
-        if (isNaN(number) === false && number >= Config.minValues[optionName]) {
-            return false; }
+    static isValidNumber (optionName, value) {
+        if (typeof value !== 'number') { return false; }
+        if (value < Config.minValues[optionName]) {
+            return false;
+        }
 
         return true;
     }
@@ -389,7 +397,10 @@ module.exports = class Config {
             'csl_locale',
             'css_custom',
         ].filter((option) => {
-            return Config.isInvalidPath(this.opts[option]);
+            if (this.opts[option] === '') {
+                return false;
+            }
+            return Config.isValidPath(this.opts[option]) === false;
         }).map((invalidPath) => {
             return invalidPath;
         });
@@ -405,7 +416,7 @@ module.exports = class Config {
             'node_size_max',
             'node_size_min'
         ].filter((option) => {
-            return Config.isInvalidNumber(option, this.opts[option]);
+            return Config.isValidNumber(option, this.opts[option]) === false;
         }).map((invalidNumber) => {
             return invalidNumber;
         });
@@ -507,18 +518,23 @@ module.exports = class Config {
     /**
      * If the config allow citeproc process
      * @returns {boolean}
+     * @todo Check if files match with citeproc files schema
      */
 
     canCiteproc () {
-        if (
-            this.opts['csl'] === '' ||
-            this.opts['bibliography'] === '' ||
-            this.opts['csl_locale'] === ''
-        )
-        {
-            return false;
+        const options = [
+            { filePath: this.opts['csl'], extension: '.csl' },
+            { filePath: this.opts['bibliography'], extension: '.json' },
+            { filePath: this.opts['csl_locale'], extension: '.xml' }
+        ];
+        for (const { filePath, extension } of options) {
+            if (Config.isValidPath(filePath) === false) {
+                return false;
+            }
+            if (path.extname(filePath) !== extension) {
+                return false;
+            }
         }
-
         return true;
     }
 
@@ -528,9 +544,40 @@ module.exports = class Config {
      */
 
     canCssCustom () {
-        if (this.opts['css_custom'] === '') {
-            return false; }
+        if (Config.isValidPath(this.opts['css_custom']) === false) {
+            return false;
+        }
+        if (path.extname(this.opts['css_custom']) !== '.css') {
+            return false;
+        }
+        return true;
+    }
 
+    /**
+     * @returns {boolean}
+     */
+
+    canModelizeFromDirectory() {
+        return Config.isValidPath(this.opts['files_origin']);
+    }
+
+    /**
+     * @returns {boolean}
+     */
+
+     canModelizeFromCsvFiles() {
+        const options = [
+            { filePath: this.opts['nodes_origin'], extension: '.csv' },
+            { filePath: this.opts['links_origin'], extension: '.csv' }
+        ];
+        for (const { filePath, extension } of options) {
+            if (Config.isValidPath(filePath) === false) {
+                return false;
+            }
+            if (path.extname(filePath) !== extension) {
+                return false;
+            }
+        }
         return true;
     }
 

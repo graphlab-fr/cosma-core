@@ -44,7 +44,4 @@ keywords:
   - 'test'
   - 'sample'
 lang: 'en'
-node_size:
-  method: degree
-  min: 5
-  max: 20
+node_size: 10

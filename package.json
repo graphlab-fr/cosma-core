@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "start": "node index.js",
-    "test": "./node_modules/.bin/mocha --timeout 10000"
+    "test": "./node_modules/.bin/mocha --timeout 30000"
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {

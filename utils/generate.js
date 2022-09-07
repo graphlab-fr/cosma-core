@@ -4,12 +4,16 @@ const fs = require('fs')
 
 const { config: fakeConfig, records, nodeThumbnails, images: recordImages } = require('./fake');
 const { downloadFile } = require('./misc');
-const tempDirPath = path.join(__dirname, '../temp');
 
 const Cosmoscope = require('../models/cosmoscope')
     , Record = require('../models/record')
     , Link = require('../models/link')
     , Template = require('../models/template');
+
+const tempDirPath = path.join(__dirname, '../temp');
+if (fs.existsSync(tempDirPath) === false) {
+    fs.mkdirSync(tempDirPath);
+}
 
 /**
  * @param {array[]} files
@@ -24,7 +28,7 @@ function fetchFiles(files) {
                 if (fs.existsSync(filePath)) { continue; }
                 await downloadFile(url, filePath);
             }
-            resolve();
+            resolve(files);
         } catch (error) {
             reject(error);
         }
@@ -46,7 +50,7 @@ function fetchBibliographyFiles() {
  * @returns {Promise}
  */
 
- function fetchSpreadsheets() {
+function fetchSpreadsheets() {
     return fetchFiles([
         ['https://docs.google.com/spreadsheets/d/e/2PACX-1vRGoL9aa7d-VR5ZNT3uGignX1FgZI2GwjM7tUjJhe4ipWjsDutALN5jcuQ_QthHvnueQ1jG5vqoxKS-/pub?gid=0&single=true&output=csv', 'nodes.csv'],
         ['https://docs.google.com/spreadsheets/d/e/2PACX-1vRGoL9aa7d-VR5ZNT3uGignX1FgZI2GwjM7tUjJhe4ipWjsDutALN5jcuQ_QthHvnueQ1jG5vqoxKS-/pub?gid=1233026049&single=true&output=csv', 'links.csv']
@@ -149,5 +153,6 @@ module.exports = {
     opensphere,
     fetchBibliographyFiles,
     fetchFakeImages,
-    fetchFakeThumbnails
+    fetchFakeThumbnails,
+    fetchSpreadsheets
 };

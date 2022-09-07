@@ -4,9 +4,6 @@ const fs = require('fs')
 const { cosmocope, opensphere } = require('./utils/generate');
 
 const tempDirPath = path.join(__dirname, 'temp');
-if (fs.existsSync(tempDirPath) === false) {
-    fs.mkdirSync(tempDirPath);
-}
 
 cosmocope(tempDirPath)
     .then(({ nbRecords }) => console.log('\x1b[34m', 'Cosmoscope generated', '\x1b[0m', `(${nbRecords} records)`))
