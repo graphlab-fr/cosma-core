@@ -120,6 +120,9 @@ describe('Config', () => {
             });
         });
 
+        it('should be store on config memory', () => {
+            Config.memory.should.have.property(fakeConfigPath).and.to.be.deep.equal(configOptsGotten);
+        });
         it('should be match with file content', () => {
             assert.deepStrictEqual(
                 fakeConfigOpts,
@@ -128,6 +131,24 @@ describe('Config', () => {
         });
         it('should be a valid config', () => {
             const config = new Config(configOptsGotten);
+            config.report.should.be.empty;
+            config.isValid().should.be.true;
+        });
+    });
+
+    describe('fix config', () => {
+        it('should get the base option for an invalid option', () => {
+            const option = 'node_size_method';
+            const config = new Config({
+                [option]: 'invalid value'
+            });
+            config.opts.should.have.property(option).and.to.be.equal(Config.base[option]);
+        });
+    });
+
+    describe('get sample config', () => {
+        it('should be a valid config', () => {
+            const config = new Config(Config.getSampleConfig());
             config.report.should.be.empty;
             config.isValid().should.be.true;
         });

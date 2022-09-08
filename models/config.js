@@ -17,7 +17,7 @@ const Link = require('./link');
 module.exports = class Config {
 
     /**
-     * Default configuration
+     * Default configuration options : the source of truth of the config
      * @static
      */
 
@@ -58,6 +58,19 @@ module.exports = class Config {
         devtools: false,
         lang: 'fr'
     };
+
+    /**
+     * Contains all options gotten with Config.get() from config files.
+     * For each config file, memory get a property with the config file path and a value as the options contained.
+     * @static
+     * @exemple
+     * ```
+     * Config.get('/home/user/doc/config.yml')
+     * Config.memory // { '/home/user/doc/config.yml': { 'select_origin': '...', ... } }
+     * ```
+     */
+
+    static memory = {};
 
     /**
      * Get the context of the process
@@ -241,8 +254,9 @@ module.exports = class Config {
 
     /**
      * Get config options from the (config file) path
-     * @param {string} - Path to a config file
-     * @return {object} - Config option or base config (Config.base) if errors
+     * @param {string} configFilePath Path to a config file
+     * @return {object} Config option or base config (Config.base) if errors
+     * @throws {ErrorConfig} Will throw an error if config file can not be read or parse
      */
 
     static get (configFilePath) {
@@ -250,31 +264,36 @@ module.exports = class Config {
             configFilePath = Config.getFilePath();
         }
 
-        let fileContent
+        let opts;
 
-        try {
-            fileContent = fs.readFileSync(configFilePath, 'utf8');
-        } catch (error) {
-            console.error("The config file cannot be read.");
-            return Config.base;
-        }
-
-        try {
-            switch (path.extname(configFilePath)) {
-                case '.json':
-                    fileContent = JSON.parse(fileContent);
-                    break;
-
-                case '.yml':
-                    fileContent = yml.load(fileContent);
-                    break;
+        if (Config.memory[configFilePath] === undefined) {
+            let fileContent;
+            try {
+                fileContent = fs.readFileSync(configFilePath, 'utf8');
+            } catch (error) {
+                // throw "The config file cannot be read.\n\n" + error
+                throw new ErrorConfig("The config file cannot be read.")
             }
-
-            return fileContent;
-        } catch (error) {
-            console.error("The config file cannot be parsed.\n", error);
-            return Config.base;
+            
+            try {
+                switch (path.extname(configFilePath)) {
+                    case '.json':
+                        opts = JSON.parse(fileContent);
+                        break;
+    
+                    case '.yml':
+                        opts = yml.load(fileContent);
+                        break;
+                }
+            } catch (error) {
+                // throw "The config file cannot be parsed.\n\n" + error
+                throw new ErrorConfig("The config file cannot be parsed.")
+            }
+            Config.memory[configFilePath] = opts;
+        } else {
+            opts = Config.memory[configFilePath];
         }
+        return opts;
     }
 
     /**
@@ -289,9 +308,9 @@ module.exports = class Config {
         return Object.assign({}, Config.base, {
             files_origin: path.join(__dirname, '../sample', opts.lang),
             record_types: {
-                undefined: '#147899',
-                documentation: '#147899',
-                important: '#aa0000'
+                undefined: { fill: '#147899', stroke: '#147899' },
+                documentation: { fill: '#147899', stroke: '#147899' },
+                important: { fill: '#aa0000', stroke: '#aa0000' }
             },
             attraction_force: 600,
             attraction_distance_max: 800,
@@ -308,37 +327,31 @@ module.exports = class Config {
      * @param {string} path - Path to config file (JSON or YAML)
      */
 
-    constructor (opts = undefined) {
-        const filePath = Config.getFilePath();
-
+    constructor (opts = {}) {
+        /** List of invalid fields */
+        this.report = [];
         /**
          * All options & their value from the config
          * @type object
          */
         this.opts;
 
-        if (fs.existsSync(filePath) === false) {
+        let configFromFile;
+        try {
+            configFromFile = Config.get();
+        } catch (error) {
             this.opts = Config.base;
             this.save();
-        } else {
-            this.opts = Object.assign({}, Config.base, Config.get());
         }
 
-        if (!this.opts) {
-            this.opts = Config.base;
-            return;
+        this.opts = Object.assign({}, Config.base, configFromFile);
+        if (this.isValid() === false) {
+            // if options from config file are deprecated or invalid, we fix and replace them
+            this.fix();
+            this.save();
         }
 
         this.opts = Object.assign(this.opts, opts);
-
-        /**
-         * List of invalid fields
-         * @type array
-         */
-        this.report = [];
-
-        this.verif();
-
         if (this.isValid() === false) {
             this.fix();
         }
@@ -351,29 +364,25 @@ module.exports = class Config {
      */
 
     save () {
+        if (this.isValid() === false) { return false; }
+
+        const configFilePath = Config.getFilePath();
         try {
-            if (this.isValid() === false) {
-                return; }
-
-            const filePath = Config.getFilePath();
-
-            switch (path.extname(filePath)) {
+            switch (path.extname(configFilePath)) {
                 case '.json':
-                    fs.writeFileSync(filePath, JSON.stringify(this.opts));
+                    fs.writeFileSync(configFilePath, JSON.stringify(this.opts));
                     break;
 
                 case '.yml':
-                    fs.writeFileSync(filePath, yml.dump(this.opts));
+                    fs.writeFileSync(configFilePath, yml.dump(this.opts));
                     break;
             }
-
-            console.log('\x1b[32m', 'Save config file', '\x1b[0m');
-
-            return true;
         } catch (error) {
-            console.log(error);
-            return false;
+            throw new ErrorConfig("The config file cannot be save.")
         }
+
+        Config.memory[configFilePath] = this.opts;
+        return true;
     }
 
     /**
@@ -469,6 +478,8 @@ module.exports = class Config {
      */
 
     isValid () {
+        this.verif();
+
         for (const key in this.report) {
             if (this.report[key] === true) {
                 continue; }
@@ -614,5 +625,12 @@ module.exports = class Config {
             return 'image';
         }
         return 'color';
+    }
+}
+
+class ErrorConfig extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'Error Config';
     }
 }
