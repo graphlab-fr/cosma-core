@@ -16,7 +16,7 @@ describe('Lang', () => {
 
     before(() => {
         return new Promise((resolve) => {
-            fs.readFile(path.join(__dirname, '../lang.yml'), 'utf8', (err, data) => {
+            fs.readFile(path.join(__dirname, '../i18n.yml'), 'utf8', (err, data) => {
                 data = yml.load(data);
                 langIndex = data;
                 resolve();

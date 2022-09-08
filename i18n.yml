@@ -660,6 +660,16 @@ dialog:
     error:
       fr: Erreur de l'impression PDF
       en: PDF printing error
+  error_modelize:
+    title:
+      fr: Erreur de génération
+      en: Modelize error
+    message_source_directory:
+      fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré le répertoires de fiches dans la configuration.
+      en: You cannot generate a cosmoscope.\nYou have not configured the file directory in the configuration.
+    message_source_csv:
+      fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré les feuilles de calcul dans la configuration.
+      en: You cannot generate a cosmoscope. You have not configured the spreadsheets in the configuration.
 
 record:
   errors:

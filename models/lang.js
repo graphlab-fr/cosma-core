@@ -10,7 +10,7 @@ const path = require('path')
 
 const config = require('./config').get();
 
-const file = fs.readFileSync(path.join(__dirname, '../lang.yml'));
+const file = fs.readFileSync(path.join(__dirname, '../i18n.yml'));
 const content = yml.load(file);
 
 module.exports = {
