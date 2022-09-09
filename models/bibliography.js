@@ -173,6 +173,10 @@ module.exports = class Bibliography {
             }
         }
 
+        for (const id of ids) {
+            this.library[id]['used'] = true;
+        }
+
         this.citeproc.updateItems(ids);
         let record = this.citeproc.makeBibliography()[1].join('\n');
 

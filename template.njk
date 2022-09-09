@@ -233,7 +233,7 @@
         </details>
 
         <footer class="menu-footer">
-            {% if usedQuoteRef %}
+            {% if references %}
             <button onclick="openRecord('citation-references', false)"
                 class="bibliography-open" title="Données bibliographiques">
                 {{ translation.left_panel.footer.btn_data[lang] }}
@@ -310,7 +310,7 @@
                     <hr/>
                     <h1>{{ translation.right_panel.record.bibliography[lang] }}</h1>
 
-                    {{ record.bibliography | safe }}
+                    {{ record.bibliography | urlize | safe }}
 
                 </section>
                 {% endif %}
@@ -477,7 +477,7 @@
             </main>
         </article>
 
-        {% if usedQuoteRef %}
+        {% if references %}
         <article id="citation-references" class="record">
             <main>
                 <h1>{{ translation.right_panel.bibliography_data.title[lang] }}</h1>
@@ -486,7 +486,7 @@
     
                 <button>{{ translation.right_panel.bibliography_data.btn_download[lang] }}</button>
     
-                <code>{{ usedQuoteRef | dump | escape }}</code>
+                <code>{{ references | dump | escape }}</code>
             </main>
         </article>
         {% endif %}
@@ -593,7 +593,7 @@
         {% include "scripts/counter.js" %}
         {% include "scripts/chronos.js" %}
 
-        {% if usedQuoteRef %}
+        {% if references %}
             {% include "scripts/bibliography.js" %}
         {% endif %}
     </script>

@@ -187,6 +187,7 @@ module.exports = class Template {
             focus_max: focusMax,
             record_types: recordTypes
         } = this.config.opts;
+        let references;
 
         if (this.params.has('citeproc')) {
             const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
@@ -198,6 +199,7 @@ module.exports = class Template {
             for (const record of graph.records) {
                 record.replaceBibliographicText(bibliography);
             }
+            references = Object.values(bibliography.library).filter(({ used }) => !!used);
         }
 
         this.types = {};
@@ -305,7 +307,7 @@ module.exports = class Template {
                     return { name: tag, nodes: nodesId };
                 }),
 
-            usedQuoteRef: undefined, //graph.getUsedCitationReferences(),
+            references,
 
             metadata: {
                 title,
