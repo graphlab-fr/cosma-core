@@ -89,22 +89,20 @@ module.exports = class Template {
      * @returns {String}
      */
 
-    static markLinkContext(recordLinks, fxToHighlight) {
+    static markLinkContext(recordLinks, linkSymbol) {
         return recordLinks.map((link) => {
-            link.context = link.context.replace(/\[\[((\w:[0-9]{14})|([0-9]{14}))\]\]/g, (match) => {
+            link.context = link.context.replace(/(\[\[\s*).*?(\]\])/g, (match) => {
                 // extract link id, without '[[' & ']]' caracters
                 const idInMatch = match.slice(0, -2).slice(2);
 
                 const matchAsNumber = Link.normalizeLinks(idInMatch).target.id;
-
-                if (fxToHighlight(link, matchAsNumber) === true) {
-                    return `*&#91;&#91;${idInMatch}&#93;&#93;*{.id-context data-target-id=${idInMatch}}`
+                const mark = linkSymbol || `&#91;&#91;${idInMatch}&#93;&#93;`;
+                if (matchAsNumber === link.target.id) {
+                    return `*${mark}*{.id-context data-target-id=${matchAsNumber}}`
                 }
 
                 return match;
-
             });
-
             return link;
         });
     }
@@ -242,8 +240,8 @@ module.exports = class Template {
             this.registerType(type, id);
             this.registerTags(tags, id);
             record.content = Template.convertLinks(record, record.content, linkSymbol || undefined);
-            record.links = Template.markLinkContext(record.links, (link, idInContext) => idInContext === link.target.id);
-            record.backlinks = Template.markLinkContext(record.backlinks, (link, idInContext) => idInContext === link.source.id);
+            record.links = Template.markLinkContext(record.links, linkSymbol);
+            record.backlinks = Template.markLinkContext(record.backlinks, linkSymbol);
 
             return record;
         });
