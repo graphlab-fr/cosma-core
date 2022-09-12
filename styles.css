@@ -569,7 +569,7 @@ marker {
 	align-items: flex-start;
 	flex-direction: column;
 	left: 30px;
-	bottom: 15px;
+	bottom: 85px;
 	flex-wrap: wrap;
 	width: 20rem;
 }
@@ -581,6 +581,16 @@ marker {
 	width: 100%;
 	height: 100%;
 	border-radius: 5px;
+}
+
+.graph-chronos {
+	position: absolute;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	left: 30px;
+	bottom: 15px;
+	width: 20rem;
 }
 
 .graph-controls button { margin: 2px, 0; }
@@ -611,16 +621,56 @@ marker {
 .graph-controls #reset-isolate { display: none; }
 .graph-controls #reset-highlight { display: none; }
 
+.graph-chronos {
+    width: calc(100% - 60px);
+}
+
+#chronos-form {
+	width: 100%;
+	backdrop-filter: blur(7px);
+}
+
+#chronos-form:not(.active) { visibility: hidden; }
+
+#chronos-form input[type="range"] {
+	width: 100%;
+}
+
 #chronos-range output[name="chronos_output"] {
 	color: gray;
 	position: relative;
 	text-align: center;
 }
 
-.chonos-list {
+#chonos-list {
 	display: flex;
     color: gray;
     justify-content: space-between;
+}
+
+/* thanks to https://stackoverflow.com/a/62983699/13491646 */
+
+input[type=range] + datalist {
+    display: block;
+    margin-top: -4px;
+}
+
+input[type=range] + datalist option {
+    display: inline-block;
+    width: calc((100% - 12px) / (var(--list-length) - 1));
+    text-align: center;
+	font-size: 11px;
+    color: gray;
+}
+
+input[type=range] + datalist option:first-child {
+    width: calc((100% - 12px) / ((var(--list-length) - 1) * 2) + 6px);
+    text-align: left;
+}
+
+input[type=range] + datalist option:last-child {
+    width: calc((100% - 12px) / ((var(--list-length) - 1) * 2) + 6px);
+    text-align: right;
 }
 
 

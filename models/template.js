@@ -231,7 +231,7 @@ module.exports = class Template {
             return mdIt.render(input);
         });
         templateEngine.addFilter('timestampToLocal', (input) => {
-            return moment.unix(input).format('L');
+            return new Date(input * 1000).toLocaleDateString(lang);
         });
         templateEngine.addFilter('imgPathToBase64', Template.imagePathToBase64);
 
