@@ -112,6 +112,7 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
                     if (err) { reject(err) }
                     resolve({
                         nbRecords: graph.records.length,
+                        graph,
                         savePath
                     });
                 });

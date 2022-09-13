@@ -4,19 +4,22 @@ const fs = require('fs')
 const assert = require('assert')
     , puppeteer = require('puppeteer');
 
+const Graph = require('../models/graph');
+
 const { cosmocope } = require('../utils/generate');
 
-describe.skip('App', async () => {
-    let browser, page;
+describe('App', async () => {
+    let /** @type {puppeteer.Browser} */ browser
+        , /** @type {puppeteer.Page} */ page
+        , /** @type {Graph} */ graphModelInExport;
+
     const tempFolderPath = path.join(__dirname, '../temp');
     const testComoscopePath = path.join(tempFolderPath, 'cosmoscope.html');
 
-    before(() => {
+    before('launch Puppeteer', () => {
         return new Promise(async (resolve) => {
-            if (fs.existsSync(tempFolderPath) === false) {
-                fs.mkdirSync(tempFolderPath);
-            }
-            await cosmocope(tempFolderPath);
+            const { graph } = await cosmocope(tempFolderPath);
+            graphModelInExport = graph;
             browser = await puppeteer.launch({
                 headless: true,
                 devtools: true
@@ -25,7 +28,7 @@ describe.skip('App', async () => {
         })
     });
 
-    beforeEach(() => {
+    beforeEach('open Puppeteer page', () => {
         return new Promise(async (resolve) => {
             page = await browser.newPage();
             await page.goto(
@@ -36,14 +39,14 @@ describe.skip('App', async () => {
         });
     });
     
-    afterEach(() => {
+    afterEach('close Puppeteer page', () => {
         return new Promise(async (resolve) => {
             await page.close();
             resolve();
         });
     });
 
-    after(() => {
+    after('close Puppeteer', () => {
         return new Promise(async (resolve) => {
             await browser.close();
             resolve();
@@ -60,6 +63,40 @@ describe.skip('App', async () => {
                 return scaleAfterClick;
             });
             assert.ok(zoomInResult > 1);
+        });
+    });
+
+    describe('search', async () => {
+        const { records } = graphModelInExport;
+        it('should a records list with title and type on input', async () => {
+            const isOk = await page.evaluate((record) => {
+                const input = document.getElementById('search');
+                const outputList = document.getElementById('search-result-list');
+                input.value = record.title;
+                const focusEvent = new Event('focus');
+                input.dispatchEvent(focusEvent);
+                const inputEvent = new Event('input');
+                input.dispatchEvent(inputEvent);
+                const { childNodes: outputLines } = outputList;
+                if (outputLines.length <= 0) {
+                    return false;
+                }
+                const firstOutputLine = outputLines[0];
+                if (firstOutputLine.classList.contains('outline') === false) {
+                    return false;
+                }
+                const firstOutputLineSpans = firstOutputLine.querySelectorAll('span');
+                const [typeSpan, titleSpan] = firstOutputLineSpans;
+                if (titleSpan.textContent !== record.title) {
+                    return false;
+                }
+                if (typeSpan.getAttribute('style').indexOf(record.type) !== 14) {
+                    // exemple in 'color:var(--n_task)', types as 'task' are at 14th character
+                    return false;
+                }
+                return true;
+            }, records[0]);
+            assert.ok(isOk);
         });
     });
 })

@@ -14,6 +14,7 @@
 const { extent } = require('d3-array');
 
 const Config = require('./config')
+    , Record = require('./record')
     , Link = require('./link')
     , Node = require('./node');
 
