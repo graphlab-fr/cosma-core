@@ -291,41 +291,47 @@ module.exports = class Record {
      */
 
     static massSave(data, index, configOpts) {
-        if (!index || typeof index !== 'number') {
-            throw 'The index for record mass save is invalid';
-        }
+        return new Promise((resolve, reject) => {
+            try {
+                if (!index || typeof index !== 'number') {
+                    throw new Error('The index for record mass save is invalid');
+                }
 
-        const report = [];
-        for (const { title, type, tags, metas, content, begin, end, references = [], thumbnail } of data) {
-            const record = new Record(
-                Record.generateOutDailyId() + index,
-                title,
-                type,
-                tags,
-                metas,
-                content,
-                undefined,
-                undefined,
-                begin,
-                end,
-                Bibliography.getBibliographicRecordsFromList(references),
-                thumbnail,
-                configOpts
-            );
+                const records = data.map(({
+                    title,
+                    type,
+                    tags,
+                    metas,
+                    content,
+                    begin,
+                    end,
+                    references = [],
+                    thumbnail
+                }) => {
+                    return new Record(
+                        Record.generateOutDailyId() + index,
+                        title,
+                        type,
+                        tags,
+                        metas,
+                        content,
+                        undefined,
+                        undefined,
+                        begin,
+                        end,
+                        Bibliography.getBibliographicRecordsFromList(references),
+                        thumbnail,
+                        configOpts
+                    );
+                });
 
-            const result = record.saveAsFile(true);
-            if (result === false) {
-                console.log(record);
-                report.push(index);
-                continue;
+                Promise.all(records.map(record => record.saveAsFile(true)))
+                    .then(() => resolve())
+                    .catch(() => reject('Some records throw error'));
+            } catch (err) {
+                reject(err);
             }
-
-            index++;
-        }
-
-        if (report.length !== 0) { return report }
-
-        return true;
+        });
     }
 
     /**
@@ -565,31 +571,34 @@ module.exports = class Record {
      * Save the record to the config 'files_origin' path option
      * @param {boolean} force - If can overwrite
      * @param {string} fileName
-     * @return {boolean} - True if the record is saved, false if fatal error
-     * or the errors array
+     * @return {Promise}
      */
 
     saveAsFile (force = false, fileName = this.title) {
-        if (this.isValid() === false) {
-            return false;
-        }
+        return new Promise((resolve, reject) => {
+            try {
+                if (this.isValid() === false) {
+                    throw new ErrorRecord(this.writeReport(), 'report');
+                }
 
-        this.fileName = Record.getSlugFileName(fileName);
-        this.path = path.join(this.config.opts.files_origin, this.fileName);
+                this.fileName = Record.getSlugFileName(fileName);
+                this.path = path.join(this.config.opts.files_origin, this.fileName);
 
-        if (this.willOverwrite() === true && force === false) {
-            return 'overwriting';
-        }
+                if (this.willOverwrite() === true && force === false) {
+                    throw new ErrorRecord(lang.getFor(lang.i.record.errors['overwriting']), 'overwriting');
+                }
 
-        this.content = this.ymlFrontMatter + this.content;
-
-        try {
-            fs.writeFileSync(this.path, this.content);
-            return true;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
+            const contentToSave = this.ymlFrontMatter + this.content;
+            fs.writeFile(this.path, contentToSave, (err) => {
+                if (err) {
+                    throw new ErrorRecord(err, 'fs error');
+                }
+                resolve();
+            })
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 
     /**
@@ -603,11 +612,11 @@ module.exports = class Record {
         if (isNaN(this.id)) {
             this.report.push('id'); }
 
-        if (this.links !== undefined && Record.verifReferenceArray(this.links) === false) {
-            this.report.push('links'); }
+        // if (this.links !== undefined && Record.verifReferenceArray(this.links) === false) {
+        //     this.report.push('links'); }
 
-        if (this.backlinks !== undefined && Record.verifReferenceArray(this.backlinks) === false) {
-            this.report.push('backlinks'); }
+        // if (this.backlinks !== undefined && Record.verifReferenceArray(this.backlinks) === false) {
+        //     this.report.push('backlinks'); }
     }
 
     /**
@@ -650,3 +659,16 @@ module.exports = class Record {
     }
 
 };
+
+
+class ErrorRecord extends Error {
+    /**
+     * @param {string} message
+     * @param {'report'|'overwritting'|'fs error'} type
+     */
+    constructor(message, type) {
+        super(message);
+        this.name = 'Error Record';
+        this.type = type;
+    }
+}

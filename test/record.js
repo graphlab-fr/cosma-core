@@ -279,7 +279,7 @@ isDead: false
             fs.unlinkSync(filePath);
         });
 
-        it('should save the record as file on temp folder', () => {
+        it('should save the record as file on temp folder', async () => {
             record = new Record(
                 undefined,
                 'My record',
@@ -295,13 +295,11 @@ isDead: false
                 undefined,
                 recordConfig
             );
-            const result = record.saveAsFile(true);
-
-            result.should.be.true;
+            await record.saveAsFile(true);
             filePath.should.be.a.file();
         });
 
-        it('should save the record with a clean file name', () => {
+        it('should save the record with a clean file name', async () => {
             record = new Record(
                 undefined,
                 'My [@récörd?!]',
@@ -317,13 +315,11 @@ isDead: false
                 undefined,
                 recordConfig
             );
-            const result = record.saveAsFile(true);
-
-            result.should.be.true;
+            await record.saveAsFile(true);
             filePath.should.be.a.file();
         });
 
-        it('should save warn file overwritting', () => {
+        it('should save warn file overwritting', async () => {
             record = new Record(
                 undefined,
                 'My record',
@@ -339,14 +335,13 @@ isDead: false
                 undefined,
                 recordConfig
             );
-            const result1 = record.saveAsFile();
-            const result2 = record.saveAsFile();
-
-            result1.should.be.true;
-            result2.should.be.equal('overwriting');
+            await record.saveAsFile();
+            record.saveAsFile().catch(({ type }) => {
+                type.should.be.equal('overwriting');
+            });
         });
 
-        it('should save record content', () => {
+        it('should save record content', async () => {
             record = new Record(
                 undefined,
                 'My record',
@@ -362,7 +357,7 @@ isDead: false
                 undefined,
                 recordConfig
             );
-            record.saveAsFile();
+            await record.saveAsFile();
             const fileContent = record.getYamlFrontMatter() + content;
             filePath.should.be.a.file().with.content(fileContent);
         });
@@ -489,7 +484,7 @@ isDead: false
                 fs.unlinkSync(filePath);
             });
 
-            it('should batch a file from formated (csv) data', () => {
+            it('should batch a file from formated (csv) data', async () => {
                 const csv = parse(
 `title     ,content ,type:nature,type:field,meta:prenom,meta:nom,tag:genre,time:begin,time:end,thumbnail,references
                      Paul Otlet,Lorem...,Personne   ,Histoire  ,Paul       ,Otlet   ,homme    ,1868      ,1944    ,image.png,otlet1934`,
@@ -497,9 +492,8 @@ isDead: false
                 );
                 const data = csv.map(line => Record.getFormatedDataFromCsvLine(line));
                 const index = Cosmocope.getIndexToMassSave();
-                const result = Record.massSave(data, index, { files_origin: tempFolderPath });
+                await Record.massSave(data, index, { files_origin: tempFolderPath })
 
-                result.should.be.true;
                 filePath.should.be.a.file();
                 
                 const files = Cosmocope.getFromPathFiles(tempFolderPath);
@@ -517,18 +511,17 @@ isDead: false
                 record.bibliographicRecords[0].ids.should.to.deep.equal(new Set(['otlet1934']));
             });
 
-            it('should batch a file from data', () => {
+            it('should batch a file from data', async () => {
                 const minimalData = [{
                     "title" : "Paul Otlet"
                 }];
                 const index = Cosmocope.getIndexToMassSave();
-                const result = Record.massSave(minimalData, index, { files_origin: tempFolderPath });
+                await Record.massSave(minimalData, index, { files_origin: tempFolderPath });
     
-                result.should.be.true;
                 filePath.should.be.a.file();
             });
     
-            it('should batch a file from data', () => {
+            it('should batch a file from data', async () => {
                 const data = [{
                     "title": "Paul Otlet",
                     "type" : ["Personne", "Histoire"],
@@ -544,9 +537,8 @@ isDead: false
                     "references" : ["otlet1934"]
                 }];
                 const index = Cosmocope.getIndexToMassSave();
-                const result = Record.massSave(data, index, { files_origin: tempFolderPath });
+                await Record.massSave(data, index, { files_origin: tempFolderPath });
     
-                result.should.be.true;
                 filePath.should.be.a.file();
             });
         });

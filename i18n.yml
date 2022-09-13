@@ -682,6 +682,9 @@ record:
     id:
       fr: Identifiant invalid
       en: Invalid id
+    overwriting:
+      fr: Un fichier existe déjà avec ce nom
+      en: This file name is already taken
 
 config:
   errors:

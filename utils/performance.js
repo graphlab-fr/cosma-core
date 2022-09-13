@@ -14,19 +14,19 @@ module.exports = async function() {
                 path.join(tempDirPath, 'nodes.csv'),
                 path.join(tempDirPath, 'links.csv')
             ).then(async ([records, links]) => {
-                const result = Record.massSave(records, 1, { files_origin: tempDirPath });
-                if (result === true) {
-                    console.time('Read async')
-                    const filesAsync = await Cosmoscope.getFromPathFilesAsync(tempDirPath);
-                    console.timeEnd('Read async')
-                    console.time('Read sync')
-                    const filesSync = Cosmoscope.getFromPathFiles(tempDirPath);
-                    console.timeEnd('Read sync')
-    
-                    if (filesAsync.length !== filesSync.length) {
-                        console.error('Err. lengths are not equal');
-                    }
-                }
+                Record.massSave(records, 1, { files_origin: tempDirPath })
+                    .then(async () => {
+                        console.time('Read async')
+                        const filesAsync = await Cosmoscope.getFromPathFilesAsync(tempDirPath);
+                        console.timeEnd('Read async')
+                        console.time('Read sync')
+                        const filesSync = Cosmoscope.getFromPathFiles(tempDirPath);
+                        console.timeEnd('Read sync')
+        
+                        if (filesAsync.length !== filesSync.length) {
+                            console.error('Err. lengths are not equal');
+                        }
+                    })
             }).catch(console.error)
         })
 }
