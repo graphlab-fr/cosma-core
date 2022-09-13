@@ -48,7 +48,44 @@ const Graph = require('./graph')
 
 module.exports = class Cosmocope extends Graph {
     /**
-     * @param {string} pathToFiles
+     * @param {fs.PathLike} pathToFiles
+     * @returns {File[]}
+     */
+
+    static getFromPathFilesAsync(pathToFiles) {
+        const files = [];
+        return new Promise((resolve, reject) => {
+            glob('**/*.md', { cwd: pathToFiles, realpath: true }, (err, filesPath) => {
+                if (err) { reject(err); }
+                Promise.all(filesPath.map((filePath) => {
+                    return new Promise((resolveFile, rejectFile) => {
+                        return fs.readFile(filePath, 'utf-8', (err, fileContain) => {
+                            if (err) { rejectFile(err); }
+                            const { __content: content, ...metas} = ymlFM.loadFront(fileContain);
+                            /** @type {File} */
+                            const file = {
+                                path: filePath,
+                                name: path.basename(filePath),
+                                lastEditDate: fs.statSync(filePath).mtime,
+                                content,
+                                metas
+                            };
+                            file.metas.type = file.metas.type || 'undefined';
+                            file.metas.tags =  file.metas['tags'] || file.metas['keywords'] || [];
+                            file.metas.id = file.metas.id;
+                            file.metas.references = file.metas.references || [];
+                            files.push(file);
+                            resolveFile();
+                        })
+                    })
+                })).then(() => resolve(files))
+                .catch((err) => reject)
+            });
+        })
+    }
+
+    /**
+     * @param {fs.PathLike} pathToFiles
      * @returns {File[]}
      */
 
@@ -81,8 +118,8 @@ module.exports = class Cosmocope extends Graph {
 
     /**
      * Get formated data for links and nodes
-     * @param {string} recordsFilePath 
-     * @param {string} linksFilePath 
+     * @param {fs.PathLike} recordsFilePath 
+     * @param {fs.PathLike} linksFilePath 
      * @returns {Promise<[FormatedRecordData[], FormatedLinkData[]]>}
      */
 
