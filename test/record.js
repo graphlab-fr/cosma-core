@@ -20,11 +20,19 @@ const tempFolderPath = path.join(__dirname, '../temp');
 describe('Record', () => {
     describe('check', () => {
         it('should be invalid a record without title', () => {
-            const validRecord = new Record(
+            const record = new Record(
                 undefined,
                 undefined
             );
-            assert.ok(validRecord.isValid() === false);
+            assert.ok(record.isValid() === false);
+        });
+
+        it('should not be save without title', () => {
+            const record = new Record(
+                undefined,
+                undefined
+            );
+            record.saveAsFile().catch(({ type }) => type === 'report');
         });
 
         it('should split tags strings in array', () => {
@@ -373,6 +381,7 @@ isDead: false
             'content:notes': 'Lorem ipsum...',
             'meta:prenom': 'Paul',
             'meta:nom': 'Otlet',
+            'meta:useless': '',
             'time:begin': '1868',
             'time:end': '1944',
             'thumbnail': 'photo.jpg',

@@ -102,7 +102,7 @@ module.exports = class Record {
                     break;
                 case 'meta':
                 default:
-                    metas[label] = value;
+                    if (!!label && !!value) { metas[label] = value; }
                     break;
             }
         }
@@ -178,7 +178,7 @@ module.exports = class Record {
                     break;
                 case 'meta':
                 default:
-                    metas[label] = value;
+                    if (!!label && !!value) { metas[label] = value; }
                     break;
             }
         }
