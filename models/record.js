@@ -152,10 +152,9 @@ module.exports = class Record {
     static getFormatedDataFromCsvLine({ title, id, thumbnail, references = [], ...rest }) {
         if (!title || typeof title !== 'string') { throw "'title' is a required meta for a record"; }
 
-        let contents = [], type = [], metas = {}, tags = [];
+        let contents = [], type = [], metas = {}, tags = [], begin, end;
         for (const [key, value] of Object.entries(rest)) {
             const [field, label] = key.split(':', 2);
-            if (field === 'time') { continue; }
             switch (field) {
                 case 'content':
                     if (label) {
@@ -169,6 +168,10 @@ module.exports = class Record {
                     break;
                 case 'tag':
                     tags.push(value);
+                    break;
+                case 'time':
+                    if (label === 'begin') { begin = value }
+                    if (label === 'end') { end = value }
                     break;
                 case 'reference':
                     references = value.split(',');
@@ -200,8 +203,8 @@ module.exports = class Record {
             metas,
             tags,
             references,
-            begin: rest['time:begin'],
-            end: rest['time:end'],
+            begin,
+            end,
             thumbnail: thumbnail
         };
     }
@@ -246,7 +249,7 @@ module.exports = class Record {
                 begin,
                 end,
                 thumbnail
-            } = Record.getFormatedDataFromCsvLine(line);
+            } = line;
 
             const {
                 linksReferences,
