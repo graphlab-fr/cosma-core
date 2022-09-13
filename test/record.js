@@ -234,7 +234,8 @@ thumbnail: image.jpg
                     lastname: 'Brioudes',
                     foo: null,
                     bar: undefined,
-                    isDead: false 
+                    isDead: false,
+                    ignored: 'not in result'
                 },
                 'the content',
                 undefined,
@@ -248,7 +249,8 @@ thumbnail: image.jpg
                         'undefined': { fill: 'gray', stroke: 'gray' },
                         'type 1': { fill: 'yellow', stroke: 'yellow' },
                         'type 2': { fill: 'green', stroke: 'green' }
-                    }
+                    },
+                    record_metas: ['name', 'lastname', 'isDead']
                 }
             ).ymlFrontMatter;
 
@@ -494,19 +496,20 @@ isDead: false
             });
 
             it('should batch a file from formated (csv) data', async () => {
+                const opts = { files_origin: tempFolderPath, record_metas: ['prenom', 'nom'] };
                 const csv = parse(
-`title     ,content ,type:nature,type:field,meta:prenom,meta:nom,tag:genre,time:begin,time:end,thumbnail,references
-                     Paul Otlet,Lorem...,Personne   ,Histoire  ,Paul       ,Otlet   ,homme    ,1868      ,1944    ,image.png,otlet1934`,
+`title     ,content ,type:nature,type:field,meta:prenom,meta:nom,meta:ignored,tag:genre,time:begin,time:end,thumbnail,references
+                     Paul Otlet,Lorem...,Personne   ,Histoire  ,Paul       ,Otlet   ,toto        ,homme    ,1868      ,1944    ,image.png,otlet1934`,
                     { columns: true, trim: true, rtrim: true, skip_empty_lines: true }
                 );
                 const data = csv.map(line => Record.getFormatedDataFromCsvLine(line));
                 const index = Cosmocope.getIndexToMassSave();
-                await Record.massSave(data, index, { files_origin: tempFolderPath })
+                await Record.massSave(data, index, opts)
 
                 filePath.should.be.a.file();
                 
                 const files = Cosmocope.getFromPathFiles(tempFolderPath);
-                const record = Cosmocope.getRecordsFromFiles(files).find(({ title }) => title === fileName);
+                const record = Cosmocope.getRecordsFromFiles(files, opts).find(({ title }) => title === fileName);
                 assert.deepEqual(
                     record,
                     {

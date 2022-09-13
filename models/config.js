@@ -46,6 +46,7 @@ module.exports = class Config {
         attraction_vertical: 0,
         attraction_horizontal: 0,
         views: {},
+        record_metas: [],
         title: '',
         author: '',
         description: '',
@@ -610,6 +611,14 @@ module.exports = class Config {
         return new Set(
             Object.keys(this.opts.link_types)
         );
+    }
+
+    /**
+     * @returns {Set<string>}
+     */
+
+    getRecordMetas () {
+        return new Set(this.opts.record_metas);
     }
 
     /**

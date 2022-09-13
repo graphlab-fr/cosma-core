@@ -727,6 +727,9 @@ config:
     css_custom:
       fr: Le chemin vers la CSS personnalisée est invalide
       en: Invalid custom CSS file path
+    record_metas:
+      fr: La liste des métadonnées des fiches est invalide
+      en: The list of metadata of the records is invalid
     focus_max:
       fr: Le niveau maximum de focus est invalide
       en: Invalid maximum focus level

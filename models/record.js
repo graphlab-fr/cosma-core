@@ -270,7 +270,7 @@ module.exports = class Record {
                 end,
                 bibliographicRecords,
                 thumbnail,
-                { record_types: recordTypes }
+                config.opts
             );
 
             return record;
@@ -486,6 +486,7 @@ module.exports = class Record {
         const config = new Config(opts);
         const typesRecords = config.getTypesRecords();
         const typesLinks = config.getTypesLinks();
+        const recordMetas = config.getRecordMetas();
 
         if (typeof this.type === 'string') {
             /** @type {string[]} */
@@ -498,6 +499,7 @@ module.exports = class Record {
         });
         this.type = Array.from(new Set(this.type));
         metas = Object.entries(metas)
+            .filter(([key, value]) => recordMetas.has(key))
             .filter(([key, value]) => value !== null);
         this.metas = Object.fromEntries(metas);
 
