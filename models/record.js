@@ -565,6 +565,12 @@ module.exports = class Record {
             let regex = '\\[' + text.substring(1, text.length - 1) + '\\]';
             regex = new RegExp(regex, 'g');
             this.content = this.content.replace(regex, cluster);
+            this.links.map((link) => {
+                link.context = link.context.map(paraph => paraph.replace(regex, cluster))
+            })
+            this.backlinks.map((link) => {
+                link.context = link.context.map(paraph => paraph.replace(regex, cluster))
+            })
         }
         this.bibliography = Array.from(bibliographyHtml).join('\n');
     }

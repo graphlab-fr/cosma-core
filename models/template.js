@@ -91,7 +91,7 @@ module.exports = class Template {
                     return `*${mark}*{.id-context data-target-id=${matchAsNumber}}`
                 }
 
-                return match;
+                return mark;
             });
             return link;
         });
