@@ -98,10 +98,17 @@ module.exports = class Config {
 
         if (context === 'electron') {
             const { app } = require('electron');
-            return path.join(app.getPath('userData'), 'config.json');
+            const configFileInElectronUserDataDir = path.join(app.getPath('userData'), 'config.json');
+            return configFileInElectronUserDataDir;
         }
         
-        return path.join(__dirname, '../../', 'config.yml');
+        const configFileInExecutionDir = path.join(process.env.PWD, 'config.yml');
+        if (fs.existsSync(configFileInExecutionDir)) {
+            return configFileInExecutionDir;
+        }
+        
+        const configFileInInstallationDir = path.join(__dirname, '../../', 'config.yml');
+        return configFileInInstallationDir;
     }
 
     /**
