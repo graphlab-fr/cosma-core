@@ -86,16 +86,17 @@ module.exports = class Cosmocope extends Graph {
 
     /**
      * @param {fs.PathLike} pathToFiles
+     * @param {Config.opts} opts
      * @returns {File[]}
      */
 
-    static getFromPathFiles(pathToFiles) {
+    static getFromPathFiles(pathToFiles, opts = {}) {
         const filesPath = glob.sync('**/*.md', {
             cwd: pathToFiles
         }).map(file => path.join(pathToFiles, file))
         
         /** @type {File[]} */
-        return filesPath.map((filePath) => {
+        let files =  filesPath.map((filePath) => {
             const fileContain = fs.readFileSync(filePath, 'utf8');
             const { __content: content, ...metas} = ymlFM.loadFront(fileContain);
 
@@ -108,12 +109,26 @@ module.exports = class Cosmocope extends Graph {
                 metas
             };
 
-            file.metas.type = file.metas.type || 'undefined';
+            if (Array.isArray(file.metas.type) === false) {
+                file.metas.type = [file.metas.type || 'undefined'];
+            }
             file.metas.tags =  file.metas['tags'] || file.metas['keywords'] || [];
             file.metas.id = file.metas.id;
             file.metas.references = file.metas.references || [];
             return file;
         });
+
+        if (opts['record_filters'] && opts['record_filters'].length > 0) {
+            files = files.filter((file) => {
+                for (const { meta, value } of opts['record_filters']) {
+                    if (Array.isArray(file.metas[meta]) && file.metas[meta].includes(value)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+        }
+        return files;
     }
 
     /**
@@ -182,10 +197,7 @@ module.exports = class Cosmocope extends Graph {
             let { id, title, type } = file.metas;
             return new Node(
                 id,
-                title,
-                type,
-                undefined,
-                []
+                title
             );
         });
 

@@ -730,6 +730,9 @@ config:
     record_metas:
       fr: La liste des métadonnées des fiches est invalide
       en: The list of metadata of the records is invalid
+    record_filters:
+      fr: La liste des filtres de fiches est invalide
+      en: The list of filters of the records is invalid
     focus_max:
       fr: Le niveau maximum de focus est invalide
       en: Invalid maximum focus level

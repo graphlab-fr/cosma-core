@@ -49,3 +49,7 @@ record_metas:
   - prenom
   - nom
 # link_symbol: ↠
+# record_filters:
+#   -
+#     meta: type
+#     value: concept

@@ -52,6 +52,26 @@ describe('Config', () => {
         });
     });
 
+    describe('record filters validator', () => {
+        it('should return false if invalid meta', () => {
+            Config.isValidRecordFilters([
+                {
+                    meta: 'invalid',
+                    value: 'foo'
+                }
+            ]).should.be.false;
+        });
+        it('should return false if invalid value', () => {
+            Config.isValidRecordFilters([
+                {
+                    meta: 'type',
+                    value: '' || undefined || null
+                }
+            ]).should.be.false;
+        });
+        it('should return true if empty', () => Config.isValidRecordFilters([]).should.be.true);
+    });
+
     describe('type record checker', () => {
         it('should return false because undefined is unset', () => {
             Config.isValidRecordTypes({

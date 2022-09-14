@@ -32,6 +32,7 @@ module.exports = class Config {
         focus_max: 2,
         record_types: { undefined: { fill: '#858585', stroke: '#858585' } },
         link_types: { undefined: { stroke: 'simple', color: '#e1e1e1' } },
+        record_filters: [],
         graph_background_color: '#ffffff',
         graph_highlight_color: '#ff6a6a',
         graph_highlight_on_hover: true,
@@ -260,6 +261,21 @@ module.exports = class Config {
         return true;
     }
 
+    static isValidRecordFilters (recordFilters) {
+        if (Array.isArray(recordFilters) === false) {
+            return false;
+        }
+        const validMetas = new Set(['type', 'tags']);
+
+        for (const { meta, value } of recordFilters) {
+            if (!meta || !value) { return false; }
+            if (validMetas.has(meta) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Get config options from the (config file) path
      * @param {string} configFilePath Path to a config file
@@ -474,7 +490,12 @@ module.exports = class Config {
             null : 'node_size_method'
         );
 
-        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views, node_size_method]
+        const record_filters = (
+            Config.isValidRecordFilters(this.opts['record_filters']) ?
+            null : 'record_filters'
+        );
+
+        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views, node_size_method, record_filters]
             .filter(invalidOption => invalidOption !== null);
     }
 
