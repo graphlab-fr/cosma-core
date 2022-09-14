@@ -54,31 +54,17 @@ module.exports = class Template {
      */
 
     static convertLinks(record, content, linkSymbol) {
-        return content.replace(/(\[\[\s*).*?(\]\])/g, function (extract) { // get '[[***]]' strings
-            // extract link id, without '[[' & ']]' caracters
-            let link = extract.slice(0, -2).slice(2);
-
-            link = Link.normalizeLinks(link);
-
-            if (link === undefined) {
-                return extract;
-            }
-
-            link = link.target.id;
-
-            // if (link === NaN) { return extract; } // link is not a number
-
-            const associatedMetas = record.links.find(i => i.target.id === link);
+        return content.replace(Link.regexWikilink, function (match, _, type, targetId, __, text) {
+            const associatedMetas = record.links.find(i => i.target.id == targetId);
 
             // link is not registred into record metas
-            if (associatedMetas === undefined) { return extract; }
+            if (associatedMetas === undefined) { return match; }
+            
+            const link = associatedMetas;
 
-            link = associatedMetas;
+            const linkContent = text || linkSymbol || match;
 
-            if (linkSymbol) { extract = linkSymbol; }
-
-            // return '[[***]]' string into a Markdown link with openRecord function & class
-            return `[${extract}](#${link.target.id}){title="${link.target.title}" onclick=openRecord(${link.target.id}) .record-link}`;
+            return `[${linkContent}](#${link.target.id}){title="${link.target.title}" onclick=openRecord(${link.target.id}) .record-link}`;
         });
     }
 
@@ -91,13 +77,17 @@ module.exports = class Template {
 
     static markLinkContext(recordLinks, linkSymbol) {
         return recordLinks.map((link) => {
-            link.context = link.context.replace(/(\[\[\s*).*?(\]\])/g, (match) => {
-                // extract link id, without '[[' & ']]' caracters
-                const idInMatch = match.slice(0, -2).slice(2);
-
-                const matchAsNumber = Link.normalizeLinks(idInMatch).target.id;
-                const mark = linkSymbol || `&#91;&#91;${idInMatch}&#93;&#93;`;
-                if (matchAsNumber === link.target.id) {
+            if (link.context.length > 1) {
+                link.context = link.context.join('\n\n');
+            } else if (link.context.length === 1) {
+                link.context = link.context[0];
+            } else {
+                link.context = '';
+            }
+            link.context = link.context.replace(Link.regexWikilink, (match, _, type, targetId, __, text) => {
+                const matchAsNumber = targetId;
+                const mark = text || linkSymbol || `&#91;&#91;${targetId}&#93;&#93;`;
+                if (matchAsNumber == link.target.id) {
                     return `*${mark}*{.id-context data-target-id=${matchAsNumber}}`
                 }
 

@@ -48,3 +48,4 @@ node_size: 10
 record_metas:
   - prenom
   - nom
+# link_symbol: ↠

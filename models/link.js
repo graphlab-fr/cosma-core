@@ -12,6 +12,14 @@
  */
 
 /**
+ * @typedef LinkNormalized
+ * @type {object}
+ * @property {string} type
+ * @property {object} target
+ * @property {number} target.id
+ */
+
+/**
  * @typedef FormatedLinkData
  * @type {object}
  * @property {number} source
@@ -33,33 +41,10 @@ module.exports = class Link {
 
     static baseShape = { stroke: 'simple', dashInterval: null };
 
+    static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
 
-    /**
-     * @param {string} link
-     * @returns {LinkNormalized | undefined}
-     * @exemple
-     * ```
-     * normalizeLinks('20220813164349');
-     * normalizeLinks('g:20220813164349');
-     * ```
-     */
-
-    static normalizeLinks (link) {
-        link = link.split(':', 2);
-
-        if (link.length === 2) {
-            const [type, id] = link;
-            link = { type, target: {id: Number(id) } };
-        } else {
-            const [id] = link;
-            link = { type: 'undefined', target: {id: Number(id) } };
-        }
-        if (isNaN(link.target.id)) {
-            return undefined;
-        }
-
-        return link;
-    }
+    /** @exemple `"[[a:20210424214230|link text]]"` */
+    static regexWikilink = new RegExp(/\[\[((?<type>[\w ]+):)?(?<id>[\w ]+)(\|(?<text>[\w ]+))?\]\]/, 'g');
 
     /**
      * @param {File.metas.id} fileId
@@ -72,37 +57,36 @@ module.exports = class Link {
      */
 
     static getWikiLinksFromFileContent(fileId, fileContent) {
-        /** @type {Link[]} */
-        const links = [];
-        const paraphs = fileContent.match(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/g);
+        const links = {};
 
-        if (paraphs === null) { return []; }
+        let match;
+        while (match = Link.regexWikilink.exec(fileContent)) {
+            const { type, id: targetId, text } = match.groups;
+            links[targetId] = { type, targetId, text, context: [] };
+        }
+
+        let paraphs = fileContent.match(Link.regexParagraph) || [];
 
         for (const paraph of paraphs) {
-            // get links from their paragraph = their context
-            let linksFromContent = new Set(paraph.match(/(?<=\[\[\s*).*?(?=\s*\]\])/gs));
-            if (linksFromContent.size === 0) { continue; }
-            linksFromContent = Array.from(linksFromContent);
-
-            for (const linkFromContent of linksFromContent) {
-                const linkNormalized = Link.normalizeLinks(linkFromContent);
-                if (linkNormalized === undefined) { continue; }
-
-                const { type, target } = linkNormalized;
-
-                links.push(new Link(
-                    undefined,
-                    paraph,
-                    type,
-                    undefined,
-                    undefined,
-                    undefined,
-                    fileId,
-                    target.id
-                ));
-            } 
+            let match;
+            while (match = Link.regexWikilink.exec(paraph)) {
+                const { id: targetId } = match.groups;
+                links[targetId].context.push(paraph);
+            }
         }
-        return links;
+
+        return Object.values(links).map(({ type, targetId, text, context }) => {
+            return new Link(
+                undefined,
+                context,
+                type,
+                undefined,
+                undefined,
+                undefined,
+                fileId,
+                targetId
+            );
+        });
     }
 
     /**
@@ -252,6 +236,8 @@ module.exports = class Link {
 
     static formatedDatasetToLinks(data) {
         return data.map(({ label, source, target }, i) => {
+            if (label) { label = [label]; }
+
             const link = new Link(
                 i,
                 label,
@@ -270,7 +256,7 @@ module.exports = class Link {
 
     /**
      * @param {number} id
-     * @param {string} context
+     * @param {string[]} context
      * @param {string} type
      * @param {Shape} [shape = Link.baseShape]
      * @param {string} color
@@ -279,7 +265,7 @@ module.exports = class Link {
      * @param {number} target
      */
 
-    constructor(id, context = '', type, shape = Link.baseShape, color, colorHighlight, source, target) {
+    constructor(id, context = [], type, shape = Link.baseShape, color, colorHighlight, source, target) {
         this.id = id;
         this.context = context;
         this.type = type;
