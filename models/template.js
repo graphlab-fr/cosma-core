@@ -26,7 +26,8 @@ mdIt.use(mdItAttr, {
 
 const Link = require('./link')
     , Config = require('./config')
-    , Bibliography = require('./bibliography');
+    , Bibliography = require('./bibliography')
+    , Graph = require('./graph');
 
 const { isAnImagePath } = require('../utils/misc');
 const translation = require('./lang').i;
@@ -153,6 +154,9 @@ module.exports = class Template {
      */
 
     constructor(graph, params = []) {
+        if (!graph || graph instanceof Graph === false) {
+            throw new Error('Need instance of Config to process');
+        }
         this.params = new Set(
             params.filter(param => Template.validParams.has(param))
         );
@@ -241,7 +245,7 @@ module.exports = class Template {
             this.custom_css = fs.readFileSync(cssCustomPath, 'utf-8');
         }
 
-        this.html = templateEngine.render('template.njk', {
+        this.html = templateEngine.render('cosmoscope.njk', {
 
             publishMode: this.params.has('publish') === true,
 

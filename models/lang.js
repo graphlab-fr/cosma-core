@@ -8,8 +8,9 @@ const path = require('path')
     , fs = require('fs')
     , yml = require('js-yaml');
 
-const config = require('./config').get();
+const Config = require('./config');
 
+const config = new Config();
 const file = fs.readFileSync(path.join(__dirname, '../i18n.yml'));
 const content = yml.load(file);
 
@@ -21,7 +22,7 @@ module.exports = {
      * @type string
      */
 
-    flag: config.lang,
+    flag: config.opts.lang,
 
     /**
      * Get the translate for a multilingual object
@@ -37,7 +38,7 @@ module.exports = {
      */
 
     getFor (i) {
-        return i[config.lang];
+        return i[config.opts.lang];
     },
 
     /**
@@ -53,14 +54,14 @@ module.exports = {
      */
 
     getWith (i, substitutes) {
-        let str = i[config.lang];
+        let str = i[config.opts.lang];
 
         for (let y = 0; y < substitutes.length; y++) {
             const subst = substitutes[y];
 
             const I = y + 1;
 
-            str = str.replaceAll('$'+I, subst);
+            str = str.replace('$'+I, subst);
         }
 
         return str;

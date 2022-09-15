@@ -2,9 +2,8 @@ const assert = require('assert');
 
 const moment = require('moment');
 
-const Graph = require('../models/graph'),
-    Record = require('../models/record');
-    // , { config: fakeOpts } = require('../utils/fake');
+const Graph = require('../models/graph')
+    , Record = require('../models/record');
 
 describe('Graph verif', () => {
     describe('params', () => {
@@ -20,27 +19,6 @@ describe('Graph verif', () => {
             );
         })
     })
-
-    describe('records', () => {
-        it('should report duplicated records', () => {
-            const graph = new Graph(
-                [
-                    new Record(
-                        777,
-                        'Record 1'
-                    ),
-                    new Record(
-                        777,
-                        'Record 2'
-                    ),
-                ]
-            );
-            assert.deepStrictEqual(
-                graph.report.duplicates,
-                [{ id: 777, title: 'Record 2' }]
-            );
-        })
-    });
 
     describe('chronos', () => {
         it('should get begin and end timestamps from graph records', () => {
@@ -87,8 +65,8 @@ describe('Graph verif', () => {
             assert.deepStrictEqual(
                 graph.chronos,
                 {
-                    begin: moment('1701-01-01').unix(),
-                    end: moment('2020-01-01').unix()
+                    begin: new Date('1701-01-01').getTime() / 1000,
+                    end: new Date('2020-01-01').getTime() / 1000
                 }
             );
         });

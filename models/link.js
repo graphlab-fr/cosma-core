@@ -27,6 +27,9 @@
  * @property {string} label
  */
 
+const Config = require('./config')
+    , Report = require('./report');
+
 module.exports = class Link {
     /**
      * List of valid values for the links stroke
@@ -79,7 +82,7 @@ module.exports = class Link {
             return new Link(
                 undefined,
                 context,
-                type,
+                type || 'undefined',
                 undefined,
                 undefined,
                 undefined,
@@ -91,7 +94,7 @@ module.exports = class Link {
 
     /**
      * 
-     * @param {object} configOpts 
+     * @param {Config.opts} configOpts 
      * @param {string} linkType 
      * @returns {object}
      */
@@ -140,7 +143,10 @@ module.exports = class Link {
             .map(({ context, type, source: sourceId, target: targetId }) => {
                 const nodeTarget = nodes.find(n => n.id === targetId);
                 const nodeSource = nodes.find(n => n.id === sourceId);
-                if (!nodeTarget || !nodeSource) { return undefined; }
+                if (!nodeTarget || !nodeSource) {
+                    new Report(nodeSource.id, nodeSource.label, 'error').aboutBrokenLinks(nodeSource.label, context);
+                    return undefined;
+                }
                 const { label: targetLabel, type: targetType } = nodeTarget;
                 const { label: sourceLabel, type: sourceType } = nodeSource;
                 return {

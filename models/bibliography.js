@@ -20,6 +20,7 @@
  * @type {object}
  * @property {string} cluster Quoting string to insert in text
  * @property {string} record Bibliographic record in HTML
+ * @property {string[]} unknowedIds Ids out from library
  */
 
 const fs = require('fs')
@@ -164,12 +165,18 @@ module.exports = class Bibliography {
      */
 
     get(bibliographicRecord) {
+        const unknowedIds = [];
         const ids = Array.from(bibliographicRecord.ids)
-            .filter(id => this.ids.has(id));
+            .filter(id => {
+                if (this.ids.has(id)) { return true; }
+                unknowedIds.push(id);
+                return false;
+            });
         if (ids.length === 0) {
             return {
                 record: undefined,
-                cluster: ''
+                cluster: '',
+                unknowedIds
             }
         }
 
@@ -187,7 +194,8 @@ module.exports = class Bibliography {
 
         return {
             record,
-            cluster
+            cluster,
+            unknowedIds
         };
     }
 

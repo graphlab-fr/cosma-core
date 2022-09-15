@@ -6,6 +6,8 @@
 
 const { scaleLinear } = require('d3-scale');
 
+const Config = require('./config');
+
 module.exports = class Node {
     /**
      * @param {number} linksNb 
@@ -35,6 +37,9 @@ module.exports = class Node {
      */
 
     static getNodeStyle(config, nodeType) {
+        if (!config || config instanceof Config === false) {
+            throw new Error('Need instance of Config to process');
+        }
         const format = config.getFormatOfTypeRecord(nodeType);
         let fill;
         switch (format) {

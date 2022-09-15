@@ -60,7 +60,8 @@ const Config = require('./config')
     , Bibliography = require('./bibliography')
     , Node = require('./node')
     , Link = require('./link')
-    , lang = require('./lang');
+    , lang = require('./lang')
+    , Report = require('./report');
 
 module.exports = class Record {
     /**
@@ -217,6 +218,9 @@ module.exports = class Record {
      */
 
     static formatedDatasetToRecords(data, links, config) {
+        if (!config || config instanceof Config === false) {
+            throw new Error('Need instance of Config to process');
+        }
         const { record_types: recordTypes } = config.opts;
 
         const nodes = data.map(({ id, title, ...rest }) => {
@@ -495,12 +499,21 @@ module.exports = class Record {
         this.type = this.type.filter(type => !!type);
         this.type = this.type.map(type => {
             if (typesRecords.has(type)) { return type; }
+            new Report(this.id, this.title, 'warning').aboutRecordTypeChange(this.title, type);
             return 'undefined';
         });
         this.type = Array.from(new Set(this.type));
         metas = Object.entries(metas)
-            .filter(([key, value]) => recordMetas.has(key))
-            .filter(([key, value]) => value !== null);
+            .filter(([key, value]) => {
+                if (recordMetas.has(key)) { return true; }
+                new Report(this.id, this.title, 'warning').aboutIgnoredRecordMeta(this.title, key);
+                return false;
+            })
+            .filter(([key, value]) => {
+                if (value !== null) { return true; }
+                new Report(this.id, this.title, 'warning').aboutNullRecordMeta(this.title, key);
+                return false;
+            });
         this.metas = Object.fromEntries(metas);
 
         this.ymlFrontMatter = this.getYamlFrontMatter();
@@ -508,18 +521,29 @@ module.exports = class Record {
         this.links = links;
         this.backlinks = backlinks;
         this.begin;
-        if (begin && moment(begin).isValid() === true) {
-            this.begin = moment(begin).unix();
+        if (begin) {
+            const beginUnix = new Date(begin).getTime() / 1000;
+            if (isNaN(beginUnix)) {
+                new Report(this.id, this.title, 'error').aboutInvalidRecordTimeBegin(this.title, begin);
+            } else {
+                this.begin = beginUnix;
+            }
         }
         this.end;
-        if (end && moment(end).isValid() === true) {
-            this.end = moment(end).unix();
+        if (end) {
+            const endUnix = new Date(end).getTime() / 1000;
+            if (isNaN(endUnix)) {
+                new Report(this.id, this.title, 'error').aboutInvalidRecordTimeEnd(this.title, end);
+            } else {
+                this.end = endUnix;
+            }
         }
 
         this.links = this.links.map((link) => {
             if (typesLinks.has(link.type)) {
                 return link;
             }
+            new Report(this.id, this.title, 'warning').aboutLinkTypeChange(this.title, link.target.id, link.type);
             link.type = 'undefined';
             return link;
         });
@@ -556,9 +580,15 @@ module.exports = class Record {
      */
 
     replaceBibliographicText(bibliography) {
+        if (!bibliography || bibliography instanceof Bibliography === false) {
+            throw new Error('Need instance of Bibliography to process');
+        }
         const bibliographyHtml = new Set();
         for (const bibliographicRecord of this.bibliographicRecords) {
-            const { record, cluster } = bibliography.get(bibliographicRecord);
+            const { record, cluster, unknowedIds } = bibliography.get(bibliographicRecord);
+            for (const id of unknowedIds) {
+                new Report(this.id, this.title, 'error').aboutUnknownBibliographicReference(this.title, id);
+            }
             bibliographyHtml.add(record);
             const { text } = bibliographicRecord;
             if (!text) { continue; }

@@ -44,7 +44,8 @@ const Graph = require('./graph')
     , Node = require('./node')
     , Link = require('./link')
     , Record = require('./record')
-    , Bibliography = require('./bibliography');
+    , Bibliography = require('./bibliography')
+    , Report = require('./report');
 
 module.exports = class Cosmocope extends Graph {
     /**
@@ -116,9 +117,13 @@ module.exports = class Cosmocope extends Graph {
             file.metas.id = file.metas.id;
             file.metas.references = file.metas.references || [];
             return file;
-        }).filter(({ metas }) => {
-            if (metas.id === undefined) { return false; }
-        })
+        }).filter(({ name, metas }) => {
+            if (metas.id === undefined) {
+                new Report(name, '', 'error').aboutNoId(name);
+                return false;
+            }
+            return true;
+        });
 
 
         if (opts['record_filters'] && opts['record_filters'].length > 0) {

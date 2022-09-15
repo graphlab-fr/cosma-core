@@ -1005,3 +1005,35 @@ app_menu:
   shortcuts:
     fr: Raccourcis clavier
     en: Shortcuts
+
+report:
+  no_id:
+    fr: Le fichier $1 n'a pas d'identifiant
+    en: The file $1 has no identifier
+  duplicated_ids:
+    fr: La fiche $2 ($1) a un identifiant commun avec la fiche $3
+    en: The file $2 ($1) has a common identifier with the file $3
+  broken_links:
+    fr: Un lien intégré dans le paragraphe de la fiche $1 suivant n'a pas de cible <em>"$2"</em>
+    en: A link embedded in the next paragraph of the $1 file does not have a target <em>"$2"</em>
+  link_type_change:
+    fr: Le type "$3" initial (non enregistré) du lien $2 dans la fiche $1 a été remplacé par "undefined"
+    en: The initial (unregistered) type "$3" of the $2 link in the $1 record has been changed to "undefined".
+  record_type_change:
+    fr: Le type "$2" initial (non enregistré) de la fiche $1 a été remplacé par "undefined"
+    en: The initial (unregistered) type "$2" of the $1 record has been changed to "undefined"
+  ignored_record_meta:
+    fr: La métadonnée "$2" (non enregistrée) de la fiche $1 n'a pas été intégrée
+    en: The "$2" (unregistered) metadata of the $1 record has not been integrated
+  null_record_meta:
+    fr: La valeur de la métadonnée "$2" de la fiche $1 est nulle et n'a pas été intégrée
+    en: The value of the metadata "$2" of the record $1 is null and has not been integrated
+  invalid_record_time_begin:
+    fr: La date de début "$2" de la fiche $1 est invalide
+    en: The start date "$2" of the record $1 is invalid
+  invalid_record_time_end:
+    fr: La date de fin "$2" de la fiche $1 est invalide
+    en: The end date "$2" of the record $1 is invalid
+  unknown_bibliographic_reference:
+    fr: La référence "$2" de la fiche $1 n'est pas enregistrée dans le fichier CSL JSON
+    en: The reference "$2" of the record $1 is not recorded in the CSL JSON file

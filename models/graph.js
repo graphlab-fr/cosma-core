@@ -16,7 +16,8 @@ const { extent } = require('d3-array');
 const Config = require('./config')
     , Record = require('./record')
     , Link = require('./link')
-    , Node = require('./node');
+    , Node = require('./node')
+    , Report = require('./report');
 
 module.exports = class Graph {
     static validParams = new Set([
@@ -59,25 +60,7 @@ module.exports = class Graph {
         /** @type {Chronos} */
         this.chronos = this.getChronosFromRecords();
 
-        this.report = {
-            // /** @exemple push object { fileName: '', invalidMeta: '' } */
-            // ignored_files: [],
-            // /** @exemple push object { fileName: '', type: '' } */
-            // type_record_change: [],
-            // /** @exemple push object { fileName: '', type: '' } */
-            // type_link_change: [],
-            // /** @exemple push object { fileName: '', targetId: '' } */
-            // link_invalid: [],
-            // /** @exemple push object { fileName: '', targetId: '' } */
-            // link_no_target: [],
-            // /** @exemple push object { fileName: '', quoteId: '' } */
-            // quotes_without_reference: [],
-            duplicates: [],
-            brokenLinks: []
-        };
-
         this.reportDuplicatedIds();
-        this.reportBrokenLinks();
     }
 
     /**
@@ -86,21 +69,13 @@ module.exports = class Graph {
 
     reportDuplicatedIds() {
         const recordsIdAlreadyAnalysed = new Set();
+        let lastRecordTitle;
         for (const { id, title } of this.records) {
             if (recordsIdAlreadyAnalysed.has(id)) {
-                this.report.duplicates.push({ id, title });
-                continue;
+                new Report(id, title, 'error').aboutDuplicatedIds(id, title, lastRecordTitle);
             }
             recordsIdAlreadyAnalysed.add(id);
-        }
-    }
-
-    reportBrokenLinks() {
-        const nodesId = new Set(this.data.nodes.map(({ id }) => id));
-        for (const { id, context, source, target } of this.data.links) {
-            if (nodesId.has(source) === false || nodesId.has(target) === false) {
-                this.report.brokenLinks.push({ id, context });
-            }
+            lastRecordTitle = title;
         }
     }
 
