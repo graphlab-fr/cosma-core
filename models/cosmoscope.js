@@ -116,7 +116,10 @@ module.exports = class Cosmocope extends Graph {
             file.metas.id = file.metas.id;
             file.metas.references = file.metas.references || [];
             return file;
-        });
+        }).filter(({ metas }) => {
+            if (metas.id === undefined) { return false; }
+        })
+
 
         if (opts['record_filters'] && opts['record_filters'].length > 0) {
             files = files.filter((file) => {
