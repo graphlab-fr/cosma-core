@@ -73,7 +73,8 @@ for (const fileId of ids) {
                 faker.helpers.arrayElement(tags)
             ],
             thumbnail: thumbnail,
-            references: ['Masure_2014']
+            references: ['Masure_2014'],
+            ['phone number']: faker.phone.number('06 ## ## ## ##')
         }
     })
 }

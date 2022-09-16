@@ -11,6 +11,13 @@
  * @property {number | undefined} end
  */
 
+/**
+ * @typedef Folksonomy
+ * @type {object}
+ * @property {object} tags
+ * @property {object} metas
+ */
+
 const { extent } = require('d3-array');
 
 const Config = require('./config')
@@ -57,9 +64,6 @@ module.exports = class Graph {
         };
         this.config = new Config(opts);
 
-        /** @type {Chronos} */
-        this.chronos = this.getChronosFromRecords();
-
         this.reportDuplicatedIds();
     }
 
@@ -90,5 +94,71 @@ module.exports = class Graph {
         }
         const [begin, end] = extent(dates);
         return { begin, end };
+    }
+
+    /**
+     * @returns {Map<string, Set<string|number>}
+     */
+
+    getTypesFromRecords() {
+        const typesList = new Map();
+        for (const { type: types, id } of this.records) {
+            for (const type of types) {
+                if (typesList.has(type)) {
+                    typesList.get(type).add(id)
+                } else {
+                    typesList.set(type, new Set([id]));
+                }
+            }
+        }
+        return typesList;
+    }
+
+    /**
+     * @returns {Map<string, Set<string|number>}
+     */
+
+    getTagsFromRecords() {
+        const tagsList = new Map();
+        for (const { tags, id } of this.records) {
+            for (const tag of tags) {
+                if (tagsList.has(tag)) {
+                    tagsList.get(tag).add(id)
+                } else {
+                    tagsList.set(tag, new Set([id]));
+                }
+            }
+        }
+        return tagsList;
+    }
+
+    /**
+     * @returns {Set<string>}
+     */
+
+    getMetasKeyFromRecords() {
+        const metasKey = new Set();
+        for (const { metas } of this.records) {
+            for (const metaKey of Object.keys(metas)) {
+                metasKey.add(metaKey);
+            }
+        }
+        return metasKey;
+    }
+
+    /**
+     * Get graph tags and metas to save them in file.
+     * @returns {string}
+     */
+
+    getFolksonomyAsText() {
+        const folksonomy = {
+            tags: Object.fromEntries(this.getTagsFromRecords()),
+            metas: Array.from(this.getMetasKeyFromRecords())
+        };
+        return JSON.stringify(
+            folksonomy,
+            (key, value) => (value instanceof Set ? Array.from(value) : value)
+        );
     }
 }

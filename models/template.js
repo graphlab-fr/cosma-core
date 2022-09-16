@@ -181,6 +181,17 @@ module.exports = class Template {
         } = this.config.opts;
         let references;
 
+        const typesFromGraph = [];
+        graph.getTypesFromRecords().forEach((nodes, name) => {
+            nodes = Array.from(nodes);
+            typesFromGraph.push({ name, nodes });
+        });
+        const tagsFromGraph = [];
+        graph.getTagsFromRecords().forEach((nodes, name) => {
+            nodes = Array.from(nodes);
+            tagsFromGraph.push({ name, nodes });
+        });
+
         if (this.params.has('citeproc')) {
             const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
             const bibliography = new Bibliography(
@@ -194,8 +205,6 @@ module.exports = class Template {
             references = Object.values(bibliography.library).filter(({ used }) => !!used);
         }
 
-        this.types = {};
-        this.tags = {};
         const thumbnailsFromTypesRecords = Array.from(this.config.getTypesRecords())
             .filter(type => this.config.getFormatOfTypeRecord(type) === 'image')
             .map(type => {
@@ -230,9 +239,6 @@ module.exports = class Template {
         templateEngine.addFilter('imgPathToBase64', Template.imagePathToBase64);
 
         graph.records = graph.records.map((record) => {
-            const { id, type, tags } = record;
-            this.registerType(type, id);
-            this.registerTags(tags, id);
             record.content = Template.convertLinks(record, record.content, linkSymbol || undefined);
             record.links = Template.markLinkContext(record.links, linkSymbol);
             record.backlinks = Template.markLinkContext(record.backlinks, linkSymbol);
@@ -282,7 +288,7 @@ module.exports = class Template {
                 minValues: Config.minValues
             },
 
-            chronos: graph.chronos,
+            chronos: graph.getChronosFromRecords(),
 
             translation: translation,
             lang: lang,
@@ -290,14 +296,8 @@ module.exports = class Template {
             customCss: this.custom_css,
 
             views: views || [],
-            types: Object.entries(this.types).map(([type, nodesId]) => {
-                return { name: type, nodes: nodesId };
-            }),
-            tags: Object.entries(this.tags)
-                .filter(([tag, _]) => tag !== '')
-                .map(([tag, nodesId]) => {
-                    return { name: tag, nodes: nodesId };
-                }),
+            types: typesFromGraph,
+            tags: tagsFromGraph,
 
             references,
 
@@ -328,30 +328,5 @@ module.exports = class Template {
             app: app // app version, description, license…
         });
 
-    }
-
-    registerType(fileTypes, fileId) {
-        if (typeof fileTypes === 'string') {
-            fileTypes = [fileTypes];
-        }
-        for (const fileType of fileTypes) {
-            // create associate object key for type if not exist
-            if (this.types[fileType] === undefined) {
-                this.types[fileType] = [];
-            }
-            // push the file id into associate object key
-            this.types[fileType].push(fileId);
-        }
-    }
-
-    registerTags(recordTagList, recordId) {
-        for (const tag of recordTagList) {
-            // create associate object key for tag if not exist
-            if (this.tags[tag] === undefined) {
-                this.tags[tag] = [];
-            }
-            // push the record id into associate object key
-            this.tags[tag].push(recordId);
-        }
     }
 }

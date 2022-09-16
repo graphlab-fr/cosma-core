@@ -46,8 +46,7 @@ keywords:
 lang: 'en'
 node_size: 10
 record_metas:
-  - prenom
-  - nom
+  - phone number
 # link_symbol: ↠
 # record_filters:
 #   -
