@@ -62,6 +62,14 @@ module.exports = class Config {
     };
 
     /**
+     * @returns {Set<string>}
+     */
+
+    static getOptionsList () {
+        return new Set(Object.keys(Config.base));
+    }
+
+    /**
      * Contains all options gotten with Config.get() from config files.
      * For each config file, memory get a property with the config file path and a value as the options contained.
      * @static
@@ -605,7 +613,7 @@ module.exports = class Config {
      * @returns {boolean}
      */
 
-     canModelizeFromCsvFiles() {
+    canModelizeFromCsvFiles() {
         const options = [
             { filePath: this.opts['nodes_origin'], extension: '.csv' },
             { filePath: this.opts['links_origin'], extension: '.csv' }
