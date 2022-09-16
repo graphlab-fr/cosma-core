@@ -305,6 +305,9 @@ windows:
       images_origin:
         fr: Répertoire des images
         en: Images directory
+      record_metas:
+        fr: Métadonnées des fiches
+        en: Records metas
       history:
         fr: Enregistrer automatiquement les cosmoscopes dans l’historique
         en: Automatically save cosmoscopes in the history
