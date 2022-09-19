@@ -125,15 +125,17 @@ module.exports = class Cosmocope extends Graph {
             return true;
         });
 
-
         if (opts['record_filters'] && opts['record_filters'].length > 0) {
             files = files.filter((file) => {
                 for (const { meta, value } of opts['record_filters']) {
+                    if (typeof file.metas[meta] === 'string' && file.metas[meta] == value) {
+                        return true;
+                    }
                     if (Array.isArray(file.metas[meta]) && file.metas[meta].includes(value)) {
-                        return false;
+                        return true;
                     }
                 }
-                return true;
+                return false;
             });
         }
         return files;

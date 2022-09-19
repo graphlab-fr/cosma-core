@@ -155,5 +155,6 @@ module.exports = {
     fetchBibliographyFiles,
     fetchFakeImages,
     fetchFakeThumbnails,
-    fetchSpreadsheets
+    fetchSpreadsheets,
+    tempDirPath
 };

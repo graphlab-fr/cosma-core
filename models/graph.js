@@ -133,17 +133,21 @@ module.exports = class Graph {
     }
 
     /**
-     * @returns {Set<string>}
+     * @returns {Map<string, Set<string>}
      */
 
     getMetasKeyFromRecords() {
-        const metasKey = new Set();
+        const metasList = new Map();
         for (const { metas } of this.records) {
-            for (const metaKey of Object.keys(metas)) {
-                metasKey.add(metaKey);
+            for (const [meta, value] of Object.entries(metas)) {
+                if (metasList.has(meta)) {
+                    metasList.get(meta).add(value)
+                } else {
+                    metasList.set(meta, new Set([value]));
+                }
             }
         }
-        return metasKey;
+        return metasList;
     }
 
     /**
@@ -154,7 +158,7 @@ module.exports = class Graph {
     getFolksonomyAsText() {
         const folksonomy = {
             tags: Object.fromEntries(this.getTagsFromRecords()),
-            metas: Array.from(this.getMetasKeyFromRecords())
+            metas: Object.fromEntries(this.getMetasKeyFromRecords())
         };
         return JSON.stringify(
             folksonomy,

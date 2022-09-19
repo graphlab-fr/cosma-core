@@ -280,6 +280,9 @@ windows:
       views:
         fr: Vues
         en: Views
+      records_filter:
+        fr: Filtrage des fiches
+        en: Records filter
       advanced:
         fr: Avancé
         en: Advanced
@@ -410,6 +413,12 @@ windows:
       look:
         fr: Apparence
         en: Look
+      meta:
+        fr: Métadonnée
+        en: Meta
+      value_filter:
+        fr: Valeur filtrée
+        en: Filted value
     btns:
       add:
         fr: Ajouter
@@ -580,6 +589,27 @@ windows:
       description:
         fr: Description
         en: Description
+  records_filter:
+    title:
+      fr: Ajouter un filtres de fiches
+      en: Add a records filter
+    fields:
+      meta:
+        fr: Métadonnée de filtrage
+        en: Filter meta
+      value:
+        fr: Valeur filtrée
+        en: Filtered value
+    options:
+      meta_type:
+        fr: Type de fiche
+        en: Record type
+      meta_tags:
+        fr: Tag de fiches
+        en: Record tag
+      meta_custom:
+        fr: Métadonnées personnalisées
+        en: Custom metas
   doc:
     title:
       fr: Manuel d'utilisation
