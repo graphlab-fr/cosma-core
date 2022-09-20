@@ -296,6 +296,9 @@ windows:
       csv_origin:
         fr: Feuille de calcul
         en: Spreadsheet files
+      online_origin:
+        fr: Feuille de calcul en ligne
+        en: Online spreadsheet files
       files_origin:
         fr: Répertoire des fiches
         en: Records directory
@@ -305,6 +308,12 @@ windows:
       links_origin:
         fr: Feuille de calcul des liens
         en: Spreadsheet file of links
+      nodes_online:
+        fr: URL vers la feuille de calcul des nœuds
+        en: Spreadsheet for links
+      links_online:
+        fr: URL vers la feuille de calcul des liens
+        en: Spreadsheet for links
       images_origin:
         fr: Répertoire des images
         en: Images directory
@@ -703,6 +712,9 @@ dialog:
     message_source_csv:
       fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré les feuilles de calcul dans la configuration.
       en: You cannot generate a cosmoscope. You have not configured the spreadsheets in the configuration.
+    message_source_online:
+      fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré les feuilles de calcul en ligne dans la configuration.
+      en: You cannot generate a cosmoscope. You have not configured online spreadsheets in the configuration.
 
 record:
   errors:
