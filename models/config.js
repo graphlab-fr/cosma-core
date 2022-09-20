@@ -108,7 +108,7 @@ module.exports = class Config {
 
         if (context === 'electron') {
             const { app } = require('electron');
-            const configFileInElectronUserDataDir = path.join(app.getPath('userData'), 'config.json');
+            const configFileInElectronUserDataDir = path.join(app.getPath('userData'), 'default-options.json');
             return configFileInElectronUserDataDir;
         }
         
@@ -665,15 +665,15 @@ module.exports = class Config {
         return new Promise((resolve, reject) => {
             for (const url of [this.opts['nodes_online'], this.opts['links_online']]) {
                 if (Config.isValidUrl(url) === false) {
-                    reject();
+                    resolve(false);
                 }
                 const { host, port, pathname: path } = new URL(url);
                 const options = {method: 'HEAD', host, port, path};
                 const req = http.request(options, (r) => {});
-                req.on('error', (err) => reject(err));
+                req.on('error', (err) => resolve(false));
                 req.end();
             }
-            resolve();
+            resolve(true);
         });
     }
 

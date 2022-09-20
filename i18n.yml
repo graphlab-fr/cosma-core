@@ -626,6 +626,46 @@ windows:
     src:
       fr: cosma-manuel-d-utilisation.html
       en: cosma-user-manual.html
+  projects:
+    title:
+      fr: Projets
+      en: Projects
+  project_origin:
+    title:
+      fr: Source des données
+      en: Data origin
+    fields:
+      select_origin:
+        fr: Source de données
+        en: Data origin
+      directory_origin:
+        fr: Fichiers Markdown
+        en: Markdown files
+      csv_origin:
+        fr: Feuille de calcul
+        en: Spreadsheet files
+      online_origin:
+        fr: Feuille de calcul en ligne
+        en: Online spreadsheet files
+      files_origin:
+        fr: Répertoire des fiches
+        en: Records directory
+      nodes_origin:
+        fr: Feuille de calcul des nœuds
+        en: Spreadsheet file of nodes
+      links_origin:
+        fr: Feuille de calcul des liens
+        en: Spreadsheet file of links
+      nodes_online:
+        fr: URL vers la feuille de calcul des nœuds
+        en: Spreadsheet for links
+      links_online:
+        fr: URL vers la feuille de calcul des liens
+        en: Spreadsheet for links
+    btns:
+      select:
+        fr: Sélectionner
+        en: Select
 
 dialog:
   file_filter:
@@ -715,6 +755,13 @@ dialog:
     message_source_online:
       fr: Vous ne pouvez pas générer de cosmoscope.\nVous n'avez pas configuré les feuilles de calcul en ligne dans la configuration.
       en: You cannot generate a cosmoscope. You have not configured online spreadsheets in the configuration.
+  no_origin:
+    title:
+      fr: Aucune source
+      en: No origin
+    message:
+      fr: Veuillez compléter au moins une source
+      en: Please complete at least one origin
 
 record:
   errors:
