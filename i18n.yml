@@ -745,6 +745,12 @@ config:
     images_origin:
       fr: Le chemin vers l'image sélectionnée est invalide
       en: Invalid image file path
+    nodes_online:
+      fr: L'url vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
+    links_online:
+      fr: L'url vers la feuille de calcul sélectionnée est invalide
+      en: Invalid spreadsheet directory path
     export_target:
       fr: Le chemin vers le répertoire d'export du cosmocope est invalide
       en: Invalid export directory path

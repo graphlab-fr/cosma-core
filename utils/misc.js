@@ -1,8 +1,6 @@
 const fs = require('fs')
     , path = require('path');
 
-const axios = require('axios');
-
 module.exports = {
     /**
      * @param {string} url
@@ -12,6 +10,7 @@ module.exports = {
 
     downloadFile: function (url, pathTarget) {
         return new Promise((resolve, reject) => {
+            const axios = require('axios');
             axios({
                 url,
                 responseType: 'stream'

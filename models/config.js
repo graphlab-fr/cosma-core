@@ -5,8 +5,7 @@
  */
 
 const path = require('path')
-    , fs = require('fs')
-    , yml = require('js-yaml');
+    , fs = require('fs');
 
 const Link = require('./link');
 
@@ -26,6 +25,8 @@ module.exports = class Config {
         files_origin: '',
         nodes_origin: '',
         links_origin: '',
+        nodes_online: '',
+        links_online: '',
         images_origin: '',
         export_target: '',
         history: true,
@@ -158,6 +159,18 @@ module.exports = class Config {
         if (fs.existsSync(path)) { return true; }
 
         return false;
+    }
+
+    static isValidUrl (url) {
+        if (typeof url !== 'string') { return false; }
+        if (url === '') { return false; }
+
+        try {
+            new URL(url)
+        } catch (error) {
+            return false
+        }
+        return true;
     }
 
     static isValidNodeSize (nodeSize) {
@@ -314,6 +327,7 @@ module.exports = class Config {
                         break;
     
                     case '.yml':
+                        const yml = require('js-yaml')
                         opts = yml.load(fileContent);
                         break;
                 }
@@ -406,6 +420,7 @@ module.exports = class Config {
                     break;
 
                 case '.yml':
+                    const yml = require('js-yaml')
                     fs.writeFileSync(configFilePath, yml.dump(this.opts));
                     break;
             }
@@ -423,7 +438,7 @@ module.exports = class Config {
 
     verif () {
         const select_origin = (
-            new Set(['directory', 'csv']).has(this.opts.select_origin) ?
+            new Set(['directory', 'csv', 'online']).has(this.opts.select_origin) ?
             null : 'select_origin'
         );
 
@@ -444,6 +459,18 @@ module.exports = class Config {
             return Config.isValidPath(this.opts[option]) === false;
         }).map((invalidPath) => {
             return invalidPath;
+        });
+
+        const urls = [
+            'nodes_online',
+            'links_online'
+        ].filter((option) => {
+            if (this.opts[option] === '') {
+                return false;
+            }
+            return Config.isValidUrl(this.opts[option]) === false;
+        }).map((invalidUrl) => {
+            return invalidUrl;
         });
 
         const numbers = [
@@ -503,7 +530,7 @@ module.exports = class Config {
             null : 'record_filters'
         );
 
-        this.report = [select_origin, ...paths, ...numbers, ...bools, record_types, link_types, lang, views, node_size_method, record_filters]
+        this.report = [select_origin, ...paths, ...urls, ...numbers, ...bools, record_types, link_types, lang, views, node_size_method, record_filters]
             .filter(invalidOption => invalidOption !== null);
     }
 
@@ -627,6 +654,27 @@ module.exports = class Config {
             }
         }
         return true;
+    }
+
+    /**
+     * @returns {Promise}
+     */
+
+    canModelizeFromOnline() {
+        const http = require('http');
+        return new Promise((resolve, reject) => {
+            for (const url of [this.opts['nodes_online'], this.opts['links_online']]) {
+                if (Config.isValidUrl(url) === false) {
+                    reject();
+                }
+                const { host, port, pathname: path } = new URL(url);
+                const options = {method: 'HEAD', host, port, path};
+                const req = http.request(options, (r) => {});
+                req.on('error', (err) => reject(err));
+                req.end();
+            }
+            resolve();
+        });
     }
 
     /**

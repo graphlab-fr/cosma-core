@@ -19,6 +19,13 @@ describe('Config', () => {
         });
     });
 
+    describe('url validator', () => {
+        it('should return false if empty', () => Config.isValidUrl('').should.be.false);
+        it('should return false if juste a curious word', () => Config.isValidUrl('wrong').should.be.false);
+        it('should return false if no protocol', () => Config.isValidUrl('site.com').should.be.false);
+        it('should return true for valid and existing website', () => Config.isValidUrl('https://myllaume.fr/').should.be.true);
+    });
+
     describe('path validator', () => {
         it('should return false if empty', () => Config.isValidPath('').should.be.false);
         it('should return false if undefined or null', () => {

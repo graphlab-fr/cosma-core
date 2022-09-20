@@ -24,6 +24,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
+    "axios": "^0.27.2",
     "citeproc": "^2.4.62",
     "d3-array": "^2.12.1",
     "d3-scale": "^3.3.0",
@@ -38,7 +39,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
-    "axios": "^0.27.2",
     "chai": "^4.3.6",
     "chai-fs": "^2.0.0",
     "mocha": "^10.0.0",
