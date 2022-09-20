@@ -1,12 +1,10 @@
 const assert = require('assert');
 
-const moment = require('moment');
-
 const Graph = require('../models/graph')
     , Config = require('../models/config')
     , Record = require('../models/record');
 
-describe.only('Graph verif', () => {
+describe('Graph verif', () => {
     describe('params', () => {
         it('should register only valid params', () => {
             const graph = new Graph(
@@ -32,7 +30,7 @@ describe.only('Graph verif', () => {
     const graph = new Graph(
         [
             new Record(1, 'Record 1', 'foo', ['foo', 'bar'], { 'foo': 'bar' }, undefined, undefined, undefined, '1901-01-01', '1999-01-01', undefined, undefined, opts),
-            new Record(2, 'Record 2', 'bar', 'foo,bar', { 'foo': 'bar' }, undefined, undefined, undefined, '1999', '2020-01-01', undefined, undefined, opts),
+            new Record(2, 'Record 2', 'bar', 'foo,bar', { 'foo': 'baz' }, undefined, undefined, undefined, '1999', '2020-01-01', undefined, undefined, opts),
             new Record(3, 'Record 2', 'bar', 'bar', { 'out': 'bar' }, undefined, undefined, undefined, '', '1701-01-01', undefined, undefined, opts)
         ]
     );
@@ -85,9 +83,16 @@ describe.only('Graph verif', () => {
 
     describe('metas', () => {
         it('should get all metas keys from records', () => {
+            const metasFromGraph = [];
+            graph.getMetasKeyFromRecords().forEach((values, meta) => {
+                values = Array.from(values);
+                metasFromGraph.push({ meta, values });
+            });
             assert.deepStrictEqual(
-                graph.getMetasKeyFromRecords(),
-                new Set(['foo'])
+                metasFromGraph,
+                [
+                    { meta: 'foo', values: [ 'bar', 'baz' ] },
+                ]
             );
         });
     });
