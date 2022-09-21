@@ -1082,6 +1082,9 @@ app_menu:
   select_all:
     fr: Tout sélectionner
     en: Select all
+  projects:
+    fr: Liste des projets…
+    en: Projects list
   speech:
     fr: Parole
     en: Speech
