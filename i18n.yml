@@ -630,6 +630,19 @@ windows:
     title:
       fr: Projets
       en: Projects
+    btns:
+      new:
+        fr: Ajouter un projet
+        en: Add a project
+      edit_end:
+        fr: Terminer
+        en: Finish
+      edit_start:
+        fr: Modifier
+        en: Edit
+      delete:
+        fr: Supprimer
+        en: Delete
   project_origin:
     title:
       fr: Source des données
@@ -762,6 +775,20 @@ dialog:
     message:
       fr: Veuillez compléter au moins une source
       en: Please complete at least one origin
+  project_no_exist:
+    title:
+      fr: Ce projet n'existe pas
+      en: Project does not exist
+    message:
+      fr: Le projet ciblé n'existe pas.
+      en: Target project does not exist.
+  project_can_not_save:
+    title:
+      fr: Erreur de sauvegarde
+      en: Saving error
+    message:
+      fr: La sauvegarde du projet a échoué.
+      en: The project saving failed.
 
 record:
   errors:
