@@ -287,6 +287,9 @@ windows:
         fr: Avancé
         en: Advanced
     fields:
+      project_name:
+        fr: Nom du projet
+        en: Project name
       select_origin:
         fr: Source de données
         en: Data origin

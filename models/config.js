@@ -21,6 +21,7 @@ module.exports = class Config {
      */
 
     static base = {
+        name: '',
         select_origin: 'directory',
         files_origin: '',
         nodes_origin: '',
