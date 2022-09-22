@@ -363,7 +363,7 @@ module.exports = class Record {
     static generateId () {
         const currentDate = new Date();
         const year = currentDate.getFullYear().toString().padStart(4, "0");;
-        const month = currentDate.getMonth().toString().padStart(2, "0");
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
         const day = currentDate.getDate().toString().padStart(2, "0");
         const hour = currentDate.getHours().toString().padStart(2, "0");
         const minute = currentDate.getMinutes().toString().padStart(2, "0");
@@ -381,7 +381,7 @@ module.exports = class Record {
     static generateOutDailyId () {
         const currentDate = new Date();
         const year = currentDate.getFullYear().toString().padStart(4, "0");;
-        const month = currentDate.getMonth().toString().padStart(2, "0");
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
         const day = currentDate.getDate().toString().padStart(2, "0");
         const maxHour = '24', maxMinute = '60', maxSecond = '60';
         const idAsString = [year, month, day, maxHour, maxMinute, maxSecond].join('');

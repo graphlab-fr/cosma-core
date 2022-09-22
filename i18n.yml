@@ -816,6 +816,9 @@ config:
     name_already_used:
       fr: Ce nom de configuration est déjà utilisé
       en: This name is already used
+    name:
+      fr: Le nom de configuration est invalide
+      en: The configuration name is invalid
     invalid_path:
       fr: Le chemin vers la configruation est invalide
       en: The config file path is invalid

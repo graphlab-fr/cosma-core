@@ -189,6 +189,23 @@ describe('Record', () => {
     });
 
     describe('ymlFrontMatter', () => {
+        it('should have a today identifier', () => {
+            const recordIdAsString = new Record(
+                undefined,
+                'the title'
+            ).id.toString();
+            const year = recordIdAsString.substring(0, 4);
+            const month = recordIdAsString.substring(4, 6);
+            const day = recordIdAsString.substring(6, 8);
+            const hour = recordIdAsString.substring(8, 10);
+            const minute = recordIdAsString.substring(10, 12);
+            const second = recordIdAsString.substring(12, 14);
+            assert.strictEqual(
+                new Date(`${[year, month, day].join('-')} ${[hour, minute, second].join(':')}`).toString(),
+                new Date().toString()
+            )
+        });
+
         it('should be render a string from some attributes', () => {
             const recordId = Record.generateId();
             let recordYmlFrontMatter = new Record(
