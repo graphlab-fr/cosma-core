@@ -37,14 +37,16 @@ module.exports = class Report {
         if (Report.listErrors.size === 0 && Report.listWarnings.size === 0) {
             return null;
         }
-        let message = ['Report'];
+        let message = 'Report ';
+        const sentences = [];
         if (Report.listErrors.size > 0) {
-            message.push(`${Report.listErrors.size} \x1b[31merrors\x1b[0m`)
+            sentences.push(`${Report.listErrors.size} ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`)
         }
         if (Report.listWarnings.size > 0) {
-            message.push('and',`${Report.listWarnings.size} \x1b[33mwarnings\x1b[0m`)
+            sentences.push(`${Report.listWarnings.size} ${['\x1b[33m', 'warnings', '\x1b[0m'].join('')}`)
         }
-        return message.join(' ');
+        message = message +  sentences.join(' and ')
+        return message;
     }
 
     /**
