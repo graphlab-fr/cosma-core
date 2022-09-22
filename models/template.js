@@ -12,8 +12,7 @@ const fs = require('fs')
         linkify: true,
         breaks: true
     })
-    , mdItAttr = require('markdown-it-attrs')
-    , moment = require('moment');
+    , mdItAttr = require('markdown-it-attrs');
 
 const app = require('../package.json');
 
@@ -222,8 +221,6 @@ module.exports = class Template {
                 }
             });
 
-        moment.locale(lang);
-
         const templateEngine = new nunjucks.Environment(
             new nunjucks.FileSystemLoader(path.join(__dirname, '../'))
         );
@@ -272,7 +269,6 @@ module.exports = class Template {
                     title,
                     type,
                     tags,
-                    lastEditDate: moment().format('LLLL'),
                     content,
                     metas,
                     links,
@@ -323,7 +319,7 @@ module.exports = class Template {
 
             nblinks: graph.data.links.length,
 
-            date: moment().format(),
+            date: new Date().toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }),
 
             app: app // app version, description, license…
         });

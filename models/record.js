@@ -53,7 +53,6 @@
 const path = require('path')
     , fs = require('fs')
     , yml = require('js-yaml')
-    , moment = require('moment')
     , slugify = require('slugify');
 
 const Config = require('./config')
@@ -362,7 +361,15 @@ module.exports = class Record {
      */
 
     static generateId () {
-        return Number(moment().format('YYYYMMDDHHmmss'));
+        const currentDate = new Date();
+        const year = currentDate.getFullYear().toString().padStart(4, "0");;
+        const month = currentDate.getMonth().toString().padStart(2, "0");
+        const day = currentDate.getDate().toString().padStart(2, "0");
+        const hour = currentDate.getHours().toString().padStart(2, "0");
+        const minute = currentDate.getMinutes().toString().padStart(2, "0");
+        const second = currentDate.getSeconds().toString().padStart(2, "0");
+        const idAsString = [year, month, day, hour, minute, second].join('');
+        return Number(idAsString);
     }
 
     /**
@@ -372,8 +379,13 @@ module.exports = class Record {
      */
 
     static generateOutDailyId () {
-        const maxHour = 24, maxMinute = 60, maxSecond = 60;
-        return Number(moment().format('YYYYMMDD') + maxHour + maxMinute + maxSecond);
+        const currentDate = new Date();
+        const year = currentDate.getFullYear().toString().padStart(4, "0");;
+        const month = currentDate.getMonth().toString().padStart(2, "0");
+        const day = currentDate.getDate().toString().padStart(2, "0");
+        const maxHour = '24', maxMinute = '60', maxSecond = '60';
+        const idAsString = [year, month, day, maxHour, maxMinute, maxSecond].join('');
+        return Number(idAsString);
     }
 
     /**
