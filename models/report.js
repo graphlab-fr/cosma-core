@@ -49,6 +49,11 @@ module.exports = class Report {
         return message;
     }
 
+    static reset() {
+        Report.listWarnings = new Map();
+        Report.listErrors = new Map();
+    }
+
     /**
      * Generate and register a report
      * @param {Record.id} recordId 
