@@ -630,9 +630,13 @@ module.exports = class Record {
                 if (this.isValid() === false) {
                     throw new ErrorRecord(this.writeReport(), 'report');
                 }
+                const saveDir = this.config.opts.files_origin;
+                if (Config.isValidPath(saveDir) === false) {
+                    throw new ErrorRecord('Directory for record save is unset', 'no dir');
+                }
 
                 this.fileName = Record.getSlugFileName(fileName);
-                this.path = path.join(this.config.opts.files_origin, this.fileName);
+                this.path = path.join(saveDir, this.fileName);
 
                 if (this.willOverwrite() === true && force === false) {
                     throw new ErrorRecord(lang.getFor(lang.i.record.errors['overwriting']), 'overwriting');
@@ -714,7 +718,7 @@ module.exports = class Record {
 class ErrorRecord extends Error {
     /**
      * @param {string} message
-     * @param {'report'|'overwritting'|'fs error'} type
+     * @param {'report'|'overwritting'|'fs error'|'no dir'} type
      */
     constructor(message, type) {
         super(message);
