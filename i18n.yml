@@ -633,6 +633,29 @@ windows:
     title:
       fr: Projets
       en: Projects
+    fields:
+      project_sorting:
+        fr: Trier les projets
+        en: Projects sorting
+    options:
+      first_last:
+        fr: Du premier créé au dernier
+        en: From the first created to the last
+      last_first:
+        fr: Du dernier créé au premier
+        en: Last created to first
+      new_old:
+        fr: Du plus récemment ouvert au plus ancien
+        en: Newest to oldest
+      old_new:
+        fr: Du plus anciennement ouvert au plus récent
+        en: From oldest to newest
+      a_z:
+        fr: De A à Z
+        en: From A to Z
+      z_a:
+        fr: De Z à A
+        en: From Z to A
     btns:
       new:
         fr: Ajouter un projet
