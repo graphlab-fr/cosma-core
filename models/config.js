@@ -633,6 +633,14 @@ module.exports = class Config {
      * @returns {boolean}
      */
 
+    canSaveRecords() {
+        return Config.isValidPath(this.opts['files_origin']);
+    }
+
+    /**
+     * @returns {boolean}
+     */
+
     canModelizeFromDirectory() {
         return Config.isValidPath(this.opts['files_origin']);
     }
@@ -651,6 +659,19 @@ module.exports = class Config {
                 return false;
             }
             if (path.extname(filePath) !== extension) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+
+    canModelizeFromOnlineSync() {
+        for (const url of [this.opts['nodes_online'], this.opts['links_online']]) {
+            if (Config.isValidUrl(url) === false) {
                 return false;
             }
         }
