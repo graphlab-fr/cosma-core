@@ -136,7 +136,7 @@ module.exports = class Graph {
      * @returns {Map<string, Set<string>}
      */
 
-    getMetasKeyFromRecords() {
+    getMetasFromRecords() {
         const metasList = new Map();
         for (const { metas } of this.records) {
             for (const [meta, value] of Object.entries(metas)) {
@@ -151,18 +151,19 @@ module.exports = class Graph {
     }
 
     /**
-     * Get graph tags and metas to save them in file.
+     * Get graph tags and metas as arrays.
      * @returns {string}
      */
 
-    getFolksonomyAsText() {
-        const folksonomy = {
+    getFolksonomyAsObjectOfArrays() {
+        let folksonomy = {
             tags: Object.fromEntries(this.getTagsFromRecords()),
-            metas: Object.fromEntries(this.getMetasKeyFromRecords())
+            metas: Object.fromEntries(this.getMetasFromRecords())
         };
-        return JSON.stringify(
+        folksonomy = JSON.stringify(
             folksonomy,
             (key, value) => (value instanceof Set ? Array.from(value) : value)
         );
+        return JSON.parse(folksonomy);
     }
 }

@@ -84,7 +84,7 @@ describe('Graph verif', () => {
     describe('metas', () => {
         it('should get all metas keys from records', () => {
             const metasFromGraph = [];
-            graph.getMetasKeyFromRecords().forEach((values, meta) => {
+            graph.getMetasFromRecords().forEach((values, meta) => {
                 values = Array.from(values);
                 metasFromGraph.push({ meta, values });
             });
