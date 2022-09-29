@@ -520,7 +520,7 @@ isDead: false
                     { columns: true, trim: true, rtrim: true, skip_empty_lines: true }
                 );
                 const data = csv.map(line => Record.getFormatedDataFromCsvLine(line));
-                const index = Cosmocope.getIndexToMassSave();
+                const index = Cosmocope.getIndexToMassSave(tempFolderPath);
                 await Record.massSave(data, index, opts)
 
                 filePath.should.be.a.file();
@@ -544,7 +544,7 @@ isDead: false
                 const minimalData = [{
                     "title" : "Paul Otlet"
                 }];
-                const index = Cosmocope.getIndexToMassSave();
+                const index = Cosmocope.getIndexToMassSave(tempFolderPath);
                 await Record.massSave(minimalData, index, { files_origin: tempFolderPath });
     
                 filePath.should.be.a.file();
@@ -565,7 +565,7 @@ isDead: false
                     "thumbnail" : "image.jpg",
                     "references" : ["otlet1934"]
                 }];
-                const index = Cosmocope.getIndexToMassSave();
+                const index = Cosmocope.getIndexToMassSave(tempFolderPath);
                 await Record.massSave(data, index, { files_origin: tempFolderPath });
     
                 filePath.should.be.a.file();

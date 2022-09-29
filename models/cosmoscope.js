@@ -246,11 +246,11 @@ module.exports = class Cosmocope extends Graph {
      * Get the index from which to create new records in the mass
      * The index depends on the identifier of the last record created in the mass
      * The index is obtained via the Graph analysis
+     * @param {string} filesPath
      * @return {number}
      */
 
-    static getIndexToMassSave () {
-        const { files_origin: filesPath } = Config.get();
+    static getIndexToMassSave (filesPath) {
         const todayMassSavedRecordIds = Cosmocope.getFromPathFiles(filesPath) // get graph analyse
             .map(file => file.metas.id)
             .filter(Record.isTodayOutDailyId) // ignore not today mass saved records id
