@@ -49,6 +49,7 @@ module.exports = class Config {
         attraction_vertical: 0,
         attraction_horizontal: 0,
         views: {},
+        chronological_record_meta: 'last_edit',
         record_metas: [],
         title: '',
         author: '',
@@ -495,6 +496,11 @@ module.exports = class Config {
             null : 'views'
         );
 
+        const chronological_record_meta = (
+            new Set(['last_open', 'last_edit', 'created', 'timestamp']).has(this.opts.chronological_record_meta) ?
+            null : 'chronological_record_meta'
+        );
+
         const node_size_method = (
             new Set(['unique', 'degree']).has(this.opts.node_size_method) ?
             null : 'node_size_method'
@@ -505,7 +511,7 @@ module.exports = class Config {
             null : 'record_filters'
         );
 
-        this.report = [select_origin, ...paths, ...urls, ...numbers, ...bools, record_types, link_types, lang, views, node_size_method, record_filters]
+        this.report = [select_origin, ...paths, ...urls, ...numbers, ...bools, record_types, link_types, lang, views, chronological_record_meta, node_size_method, record_filters]
             .filter(invalidOption => invalidOption !== null);
     }
 

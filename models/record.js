@@ -362,7 +362,7 @@ module.exports = class Record {
 
     static generateId () {
         const currentDate = new Date();
-        const year = currentDate.getFullYear().toString().padStart(4, "0");;
+        const year = currentDate.getFullYear().toString().padStart(4, "0");
         const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
         const day = currentDate.getDate().toString().padStart(2, "0");
         const hour = currentDate.getHours().toString().padStart(2, "0");
@@ -390,6 +390,7 @@ module.exports = class Record {
 
     /**
      * Test if an id is out of today common time
+     * @param {number} idTest Id as number
      * @return {boolean}
      */
 
@@ -401,6 +402,30 @@ module.exports = class Record {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param {number} id Id as number
+     * @return {Date|undefined}
+     */
+
+    static getDateFromId (id) {
+        const recordIdAsString = id.toString();
+        const year = recordIdAsString.substring(0, 4);
+        const month = recordIdAsString.substring(4, 6);
+        const day = recordIdAsString.substring(6, 8);
+        const hour = recordIdAsString.substring(8, 10);
+        const minute = recordIdAsString.substring(10, 12);
+        const second = recordIdAsString.substring(12, 14);
+        if (year && month && day && hour && minute && second) {
+            const date = new Date(`${[year, month, day].join('-')} ${[hour, minute, second].join(':')}`);
+            if (isNaN(date)) {
+                return undefined;
+            } else {
+                return date;
+            }
+        }
+        return undefined;
     }
 
     /**
