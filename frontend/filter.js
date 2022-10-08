@@ -4,7 +4,31 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
+import { displayNodes, hideNodes } from './graph';
+import { setCounters } from './counter';
+
 let filterAltMode = false;
+
+// window.onkeydown = function(e) {
+//     switch (e.key) {
+//         case 'Alt':
+//             e.preventDefault();
+//             filterAltMode = true;
+//             return;
+//     }
+//     console.log(filterAltMode);
+// }
+
+// window.onkeyup = function(e) {
+//     switch (e.key) {
+//         case 'Alt':
+//             e.preventDefault();
+//             filterAltMode = false;
+//             return;
+//     }
+//     console.log(filterAltMode);
+// }
+
 
 /**
  * Toggle a filter from his checkbox
@@ -15,7 +39,6 @@ let filterAltMode = false;
  */
 
 function filter(isChecked, nodeIdsList, input, fromElt = false) {
-
     nodeIdsList = parseIdsString(nodeIdsList);
 
     if (isChecked === true) {
@@ -25,19 +48,26 @@ function filter(isChecked, nodeIdsList, input, fromElt = false) {
         hideNodes(nodeIdsList);
         input.checked = false;
     }
+
     
-    if (fromElt && pressedKeys.Alt) {
-        if (filterAltMode && isChecked == false) {
-            setFilters(getFilterNames()); // active all types
-            filterAltMode = false;
-            return;
-        }
-        setFilters([input.name]); // first time alt+click
-        filterAltMode = true; // active alt+click mode
-    } else {
-        filterAltMode = false; // after last time alt+click
-    }
+    setCounters();
+
+    console.log(filterAltMode);
+    
+    // if (fromElt && pressedKeys.Alt) {
+    //     if (filterAltMode && isChecked == false) {
+    //         setFilters(getFilterNames()); // active all types
+    //         filterAltMode = false;
+    //         return;
+    //     }
+    //     setFilters([input.name]); // first time alt+click
+    //     filterAltMode = true; // active alt+click mode
+    // } else {
+    //     filterAltMode = false; // after last time alt+click
+    // }
 }
+
+window.filter = filter;
 
 /**
  * Activate filters by their name and if their are not already activated

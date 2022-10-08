@@ -1,10 +1,12 @@
-/**
- * @file Generate nodes, labels & links for graph. Highlight, hide & display nodes & links. Set mouse graph events.
- * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
- */
+import * as d3 from "d3";
 
-(function() {
+import View from './view';
+import {
+    hideFromIndex,
+    displayFromIndex,
+} from './records';
+import { setCounters } from './counter';
+
 
 /** Data serialization
 ------------------------------------------------------------*/
@@ -19,7 +21,7 @@ data.nodes = data.nodes.map(function (node) {
 /** Box sizing
 ------------------------------------------------------------*/
 
-window.svg = d3.select("#graph-canvas");
+const svg = d3.select("#graph-canvas");
 
 let svgSize = svg.node().getBoundingClientRect();
 
@@ -65,17 +67,17 @@ window.updateForces = function () {
 updateForces();
 
 simulation
-    .on("tick", function() {
+    .on("tick", function () {
         elts.links
             .attr("x1", d => d.source.x)
             .attr("y1", d => d.source.y)
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y);
 
-        elts.nodes.attr("transform", function(d) {
+        elts.nodes.attr("transform", function (d) {
             d.x = Math.max(d.size, Math.min(width - d.size, d.x));
             d.y = Math.max(d.size, Math.min(height - d.size, d.y));
-    
+
             return "translate(" + d.x + "," + d.y + ")";
         });
 
@@ -96,14 +98,16 @@ elts.links = svg.append("g")
     .attr("title", (d) => d.title)
     .attr("data-source", (d) => d.source.id)
     .attr("data-target", (d) => d.target.id)
-    .attr("stroke-dasharray", function(d) {
+    .attr("stroke-dasharray", function (d) {
         if (d.shape.stroke === 'dash' || d.shape.stroke === 'dotted') {
-            return d.shape.dashInterval }
+            return d.shape.dashInterval
+        }
         return false;
     })
-    .attr("filter", function(d) {
+    .attr("filter", function (d) {
         if (d.shape.stroke === 'double') {
-            return 'url(#double)' }
+            return 'url(#double)'
+        }
         return false;
     });
 
@@ -117,7 +121,7 @@ elts.nodes = svg.append("g")
     .data(data.nodes)
     .enter().append("g")
     .attr("data-node", (d) => d.id)
-    .on('click', function(d) {
+    .on('click', function (d) {
         openRecord(d.id);
     });
 
@@ -127,24 +131,27 @@ elts.circles = elts.nodes.append("circle")
     .attr("stroke", (d) => d.colorStroke)
     .attr("stroke-width", (d) => d.strokeWidth)
     .call(d3.drag()
-        .on("start", function(d) {
+        .on("start", function (d) {
             if (!d3.event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
-            d.fy = d.y; })
-        .on("drag", function(d) {
+            d.fy = d.y;
+        })
+        .on("drag", function (d) {
             d.fx = d3.event.x;
-            d.fy = d3.event.y; })
-        .on("end", function(d) {
+            d.fy = d3.event.y;
+        })
+        .on("end", function (d) {
             if (!d3.event.active) simulation.alphaTarget(0.0001);
             d.fx = null;
-            d.fy = null; })
-        )
-    .on('mouseenter', function(nodeMetas) {
+            d.fy = null;
+        })
+    )
+    .on('mouseenter', function (nodeMetas) {
         if (!graphProperties.graph_highlight_on_hover) { return; }
 
         let nodesIdsHovered = [nodeMetas.id];
 
-        const linksToModif = elts.links.filter(function(link) {
+        const linksToModif = elts.links.filter(function (link) {
             if (link.source.id === nodeMetas.id || link.target.id === nodeMetas.id) {
                 nodesIdsHovered.push(link.source.id, link.target.id);
                 return false;
@@ -152,21 +159,21 @@ elts.circles = elts.nodes.append("circle")
             return true;
         })
 
-        const nodesToModif = elts.nodes.filter(function(node) {
+        const nodesToModif = elts.nodes.filter(function (node) {
             if (nodesIdsHovered.includes(node.id)) {
                 return false;
             }
             return true;
         })
 
-        const linksHovered = elts.links.filter(function(link) {
+        const linksHovered = elts.links.filter(function (link) {
             if (link.source.id !== nodeMetas.id && link.target.id !== nodeMetas.id) {
                 return false;
             }
             return true;
         })
 
-        const nodesHovered = elts.nodes.filter(function(node) {
+        const nodesHovered = elts.nodes.filter(function (node) {
             if (!nodesIdsHovered.includes(node.id)) {
                 return false;
             }
@@ -178,7 +185,7 @@ elts.circles = elts.nodes.append("circle")
         nodesToModif.attr('opacity', 0.5);
         linksToModif.attr('stroke-opacity', 0.5);
     })
-    .on('mouseout', function() {
+    .on('mouseout', function () {
         if (!graphProperties.graph_highlight_on_hover) { return; }
 
         elts.nodes.selectAll("circle").attr('stroke', d => d.colorStroke);
@@ -188,7 +195,7 @@ elts.circles = elts.nodes.append("circle")
     });
 
 elts.labels = elts.nodes.append("text")
-    .each(function(d) {
+    .each(function (d) {
         const words = d.label.split(' ')
             , max = 25
             , text = d3.select(this);
@@ -219,10 +226,10 @@ elts.labels = elts.nodes.append("text")
 ------------------------------------------------------------*/
 
 /**
- * Get nodes and their links
- * @param {array} nodeIds - List of nodes ids
- * @returns {array} - DOM elts : nodes and their links
- */
+* Get nodes and their links
+* @param {array} nodeIds - List of nodes ids
+* @returns {array} - DOM elts : nodes and their links
+*/
 
 function getNodeNetwork(nodeIds) {
     const diplayedNodes = elts.nodes
@@ -232,11 +239,13 @@ function getNodeNetwork(nodeIds) {
 
     const nodes = elts.nodes.filter(node => nodeIds.includes(node.id));
 
-    const links = elts.links.filter(function(link) {
+    const links = elts.links.filter(function (link) {
         if (!nodeIds.includes(link.source.id) && !nodeIds.includes(link.target.id)) {
-            return false; }
+            return false;
+        }
         if (!diplayedNodes.includes(link.source.id) || !diplayedNodes.includes(link.target.id)) {
-            return false; }
+            return false;
+        }
 
         return true;
     });
@@ -248,21 +257,21 @@ function getNodeNetwork(nodeIds) {
 }
 
 /**
- * Hide some nodes & their links, by their id
- * @param {array} nodeIds - List of nodes ids
- */
+* Hide some nodes & their links, by their id
+* @param {array} nodeIds - List of nodes ids
+*/
 
-window.hideNodes = function (nodeIds) {
+function hideNodes (nodeIds) {
     let nodesToHideIds;
 
-    nodesToHideIds = data.nodes.filter(function(item) {
+    nodesToHideIds = data.nodes.filter(function (item) {
         if (nodeIds.includes(item.id) && item.hidden === false) {
             return true;
         }
     });
 
-    if (view.focusMode) {
-        nodesToHideIds = nodesToHideIds.filter(function(item) {
+    if (View.focusMode) {
+        nodesToHideIds = nodesToHideIds.filter(function (item) {
             if (item.isolated === true) {
                 return true;
             }
@@ -278,9 +287,10 @@ window.hideNodes = function (nodeIds) {
     elts.nodes.data(
         elts.nodes
             .data()
-            .map(function(node) {
+            .map(function (node) {
                 if (nodesToHideIds.includes(node.id)) {
-                    node.hidden = true; }
+                    node.hidden = true;
+                }
 
                 return node;
             })
@@ -288,21 +298,21 @@ window.hideNodes = function (nodeIds) {
 }
 
 /**
- * Display some nodes & their links, by their id
- * @param {array} nodeIds - List of nodes ids
- */
+* Display some nodes & their links, by their id
+* @param {array} nodeIds - List of nodes ids
+*/
 
-window.displayNodes = function (nodeIds) {
+function displayNodes (nodeIds) {
     let nodesToDisplayIds;
 
-    nodesToDisplayIds = data.nodes.filter(function(item) {
+    nodesToDisplayIds = data.nodes.filter(function (item) {
         if (nodeIds.includes(item.id) && item.hidden === true) {
             return true;
         }
     });
 
-    if (view.focusMode) {
-        nodesToDisplayIds = nodesToDisplayIds.filter(function(item) {
+    if (View.focusMode) {
+        nodesToDisplayIds = nodesToDisplayIds.filter(function (item) {
             if (item.isolated === true) {
                 return true;
             }
@@ -315,9 +325,10 @@ window.displayNodes = function (nodeIds) {
     elts.nodes.data(
         elts.nodes
             .data()
-            .map(function(node) {
+            .map(function (node) {
                 if (nodesToDisplayIds.includes(node.id)) {
-                    node.hidden = false; }
+                    node.hidden = false;
+                }
 
                 return node;
             })
@@ -328,9 +339,9 @@ window.displayNodes = function (nodeIds) {
 }
 
 /**
- * Zoom to a node from its coordinates
- * @param {number} nodeId
- */
+* Zoom to a node from its coordinates
+* @param {number} nodeId
+*/
 
 window.zoomToNode = function (nodeId) {
     const nodeToZoomMetas = elts.nodes.filter(node => node.id === nodeId).datum()
@@ -348,7 +359,7 @@ window.zoomToNode = function (nodeId) {
     x += (window.innerWidth - recordWidth) / 2;
     y += window.innerHeight / 2;
 
-    view.position = {
+    View.position = {
         zoom: zoom,
         x: x,
         y: y
@@ -358,9 +369,9 @@ window.zoomToNode = function (nodeId) {
 }
 
 /**
- * Display none nodes and their link
- * @param {array} nodeIds - List of nodes ids
- */
+* Display none nodes and their link
+* @param {array} nodeIds - List of nodes ids
+*/
 
 window.hideNodeNetwork = function (nodeIds) {
     const ntw = getNodeNetwork(nodeIds);
@@ -370,9 +381,9 @@ window.hideNodeNetwork = function (nodeIds) {
 }
 
 /**
- * Reset display nodes and their link
- * @param {array} nodeIds - List of nodes ids
- */
+* Reset display nodes and their link
+* @param {array} nodeIds - List of nodes ids
+*/
 
 window.displayNodeNetwork = function (nodeIds) {
     const ntw = getNodeNetwork(nodeIds);
@@ -382,38 +393,38 @@ window.displayNodeNetwork = function (nodeIds) {
 }
 
 /**
- * Apply highlightColor (from config) to somes nodes and their links
- * @param {array} nodeIds - List of nodes ids
- */
+* Apply highlightColor (from config) to somes nodes and their links
+* @param {array} nodeIds - List of nodes ids
+*/
 
-window.highlightNodes = function (nodeIds) {
+function highlightNodes (nodeIds) {
     const ntw = getNodeNetwork(nodeIds);
 
     ntw.nodes.selectAll("circle").style('stroke', 'var(--highlight)');
     ntw.links.style('stroke', 'var(--highlight)');
 
-    view.highlightedNodes = view.highlightedNodes.concat(nodeIds);
+    View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
 }
 
 /**
- * remove highlightColor from all highlighted nodes and their links
- */
+* remove highlightColor from all highlighted nodes and their links
+*/
 
-window.unlightNodes = function() {
-    if (view.highlightedNodes.length === 0) { return; }
+function unlightNodes () {
+    if (View.highlightedNodes.length === 0) { return; }
 
-    const ntw = getNodeNetwork(view.highlightedNodes);
+    const ntw = getNodeNetwork(View.highlightedNodes);
 
     ntw.nodes.selectAll("circle").style('stroke', null);
     ntw.links.style('stroke', null);
 
-    view.highlightedNodes = [];
+    View.highlightedNodes = [];
 }
 
 /**
- * Toggle display/hide nodes links
- * @param {bool} isChecked - 'checked' value send by a checkbox input
- */
+* Toggle display/hide nodes links
+* @param {bool} isChecked - 'checked' value send by a checkbox input
+*/
 
 window.linksDisplayToggle = function (isChecked) {
     if (isChecked) {
@@ -424,9 +435,9 @@ window.linksDisplayToggle = function (isChecked) {
 }
 
 /**
- * Toggle display/hide nodes label
- * @param {bool} isChecked - 'checked' value send by a checkbox input
- */
+* Toggle display/hide nodes label
+* @param {bool} isChecked - 'checked' value send by a checkbox input
+*/
 
 window.labelDisplayToggle = function (isChecked) {
     if (isChecked) {
@@ -437,17 +448,18 @@ window.labelDisplayToggle = function (isChecked) {
 }
 
 /**
- * Add 'highlight' class to texts linked to nodes ids
- * @param {array} nodeIds - List of node ids
- */
+* Add 'highlight' class to texts linked to nodes ids
+* @param {array} nodeIds - List of node ids
+*/
 
 window.labelHighlight = function (nodeIds) {
     const labelsToHighlight = elts.nodes
         .filter(node => nodeIds.includes(node.id)).select('text');
 
-    data.nodes = data.nodes.map(function(node) {
+    data.nodes = data.nodes.map(function (node) {
         if (nodeIds.includes(node.id)) {
-            node.highlighted = true; }
+            node.highlighted = true;
+        }
         return node;
     });
 
@@ -455,25 +467,26 @@ window.labelHighlight = function (nodeIds) {
 }
 
 /**
- * Change the font size of graph labels
- */
+* Change the font size of graph labels
+*/
 
 window.updateFontsize = function () {
     elts.labels.attr('font-size', graphProperties.text_size);
 }
 
 /**
- * Remove 'highlight' class from texts linked to nodes ids
- * @param {array} nodeIds - List of node ids
- */
+* Remove 'highlight' class from texts linked to nodes ids
+* @param {array} nodeIds - List of node ids
+*/
 
 window.labelUnlight = function (nodeIds) {
     const labelsToHighlight = elts.nodes
         .filter(node => nodeIds.includes(node.id)).select('text');
 
-    data.nodes = data.nodes.map(function(node) {
+    data.nodes = data.nodes.map(function (node) {
         if (nodeIds.includes(node.id)) {
-            node.highlighted = false; }
+            node.highlighted = false;
+        }
         return node;
     });
 
@@ -481,11 +494,11 @@ window.labelUnlight = function (nodeIds) {
 }
 
 /**
- * Remove 'highlight' class from all texts
- */
+* Remove 'highlight' class from all texts
+*/
 
 window.labelUnlightAll = function () {
-    data.nodes = data.nodes.map(function(node) {
+    data.nodes = data.nodes.map(function (node) {
         node.highlighted = false;
         return node;
     });
@@ -494,8 +507,8 @@ window.labelUnlightAll = function () {
 }
 
 /**
- * @param {number} timestamp
- */
+* @param {number} timestamp
+*/
 
 window.chronosAction = function (timestamp) {
     if (chronos.begin === undefined || chronos.end === undefined) {
@@ -517,6 +530,12 @@ window.chronosAction = function (timestamp) {
 
     hideNodes(toHide);
     displayNodes(toDisplay);
+    setCounters();
 }
 
-})();
+function translate() {
+    const { x, y, zoom } = View.position;
+    svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
+}
+
+export { svg, hideNodes, displayNodes, highlightNodes, unlightNodes };
