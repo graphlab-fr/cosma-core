@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const webpackDevServer = require('webpack-dev-server');
 const webpackConfig = require('./webpack.config');
 
 /**
@@ -29,5 +30,20 @@ module.exports = {
                 }
             );
         })
+    },
+    startServer: function() {
+        return new Promise(async (resolve, reject) => {
+            const compiler = await webpack({ ...webpackConfig, mode: 'development' })
+                , server = new webpackDevServer(webpackConfig.devServer, compiler);
+    
+            try {
+                await server.start();
+            } catch (error) {
+                await server.stop();
+                reject(error);
+            }
+    
+            resolve(server);
+        });
     }
 }

@@ -92,11 +92,15 @@ function fetchFakeThumbnails(thumbnailNames) {
     })
 }
 
+<<<<<<< HEAD
 function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc']) {
     const Cosmoscope = require('../models/cosmoscope')
         , Template = require('../models/template');
 
     const { config: fakeConfig, records, nodeThumbnails, images: recordImages } = require('./fake');
+=======
+function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc', 'dev']) {
+>>>>>>> 73ffbc0 (add dev server)
     return new Promise(async (resolve, reject) => {
         Promise.all([fetchBibliographyFiles(), fetchFakeImages(recordImages), fetchFakeThumbnails(nodeThumbnails)])
             .then(() => {
@@ -117,6 +121,7 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
     })
 }
 
+<<<<<<< HEAD
 function opensphere(savePath, templateOptions = ['publish', 'citeproc']) {
     const Cosmoscope = require('../models/cosmoscope')
         , Record = require('../models/record')
@@ -124,6 +129,9 @@ function opensphere(savePath, templateOptions = ['publish', 'citeproc']) {
         , Template = require('../models/template');
 
     const { config: fakeConfig, nodeThumbnails } = require('./fake');
+=======
+function opensphere(savePath, templateOptions = ['publish', 'citeproc', 'dev']) {
+>>>>>>> 73ffbc0 (add dev server)
     return new Promise(async (resolve, reject) => {
         fetchSpreadsheets()
             .then(() => {
