@@ -1,36 +1,25 @@
-/**
- * @file Activate search engine and its keyboard shortcuts.
- * @author Guillaume Brioudes
- * @copyright GNU GPL 3.0 ANR HyperOtlet
- */
+import Fuse from 'fuse.js/dist/fuse.basic';
 
-let searchInput = document.querySelector('#search');
+let searchInput = document.getElementById('search');
+let resultContainer = document.getElementById('search-result-list');
 
-(function() {
+let maxResultNb = 5 , resultList = [] , selectedResult = 0;
 
-let resultContainer = document.querySelector('#search-result-list')
-    , maxResultNb = 5
-    , resultList = []
-    , selectedResult = 0;
-
-searchInput.value = ''; // reset at page loading
+searchInput.value = '';
 
 searchInput.addEventListener('focus', () => {
-    keyboardShortcutsAreWorking = false; // unactive all letters shortcuts
-
-    // initialize search engine with no hidden nodes
-    const fuse = new Fuse(data.nodes.filter(item => item.hidden === false), {
+    const fuse = new Fuse(data.nodes, {
         includeScore: false,
         keys: ['label'] // search field from nodes metas
     });
 
     searchInput.addEventListener('input', () => {
-        // reset search results for each input value modification
         resultContainer.innerHTML = ''; selectedResult = 0; resultList = [];
 
         if (searchInput.value === '') { return; }
-        
+
         resultList = fuse.search(searchInput.value);
+        console.log(resultList);
 
         for (let i = 0; i < maxResultNb; i++) {
             let result = resultList[i];
@@ -49,15 +38,10 @@ searchInput.addEventListener('focus', () => {
             resultElement.addEventListener('click', () => {
                 openRecord(result.item.id); });
         }
-    });
-
-    // switch between results by arrows from keyboard. key Enter to validate
-    document.addEventListener('keydown', keyboardResultNavigation)
-});
-
-searchInput.addEventListener('blur', () => {
-    keyboardShortcutsAreWorking = true;
+    })
 })
+
+document.addEventListener('keydown', keyboardResultNavigation)
 
 function keyboardResultNavigation(e) {
     if (resultList.length === 0) { return; }
@@ -107,5 +91,3 @@ function removeOutlineElt() {
     resultContainer.childNodes[selectedResult]
         .classList.remove('outline');
 }
-
-})();
