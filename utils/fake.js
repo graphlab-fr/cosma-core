@@ -12,7 +12,7 @@ const Config = require('../models/config')
     , Cosmoscope = require('../models/cosmoscope')
     , Record = require('../models/record');
 
-const bib = require('./fake-bib.json');
+const bib = require('../static/fake/bib.json');
 const tempDirPath = path.join(__dirname, '../temp');
 
 const nodesNb = 10;
@@ -21,14 +21,14 @@ const ids = [];
 const files = [];
 const bibKeys = Object.values(bib).map(({ id }) => `${id}`);
 
-let config = Config.get(path.join(__dirname, 'fake-config.yml'));
+let config = Config.get(path.join(__dirname, '../static/fake/config.yml'));
 config = new Config(config);
 const { record_types: recordTypes } = config.opts;
 config.opts['images_origin'] = tempDirPath;
 config.opts['csl'] = path.join(tempDirPath, 'iso690.csl')
 config.opts['csl_locale'] = path.join(tempDirPath, 'locales-fr-FR.xml')
-config.opts['css_custom'] = path.join(__dirname, 'fake.css');
-config.opts['bibliography'] = path.join(__dirname, 'fake-bib.json');
+config.opts['css_custom'] = path.join(__dirname, '../static/fake/style.css');
+config.opts['bibliography'] = path.join(__dirname, '../static/fake/bib.json');
 config.opts['views'] = {
     [faker.word.verb()]: fakeView(),
     [faker.word.verb()]: fakeView(),
@@ -48,9 +48,9 @@ for (let i = 0; i < nodesNb; i++) {
 
 for (const fileId of ids) {
     const templateEngine = new nunjucks.Environment(
-        new nunjucks.FileSystemLoader(path.join(__dirname))
+        new nunjucks.FileSystemLoader(path.join(__dirname, '../static'))
     );
-    const content = templateEngine.render('fake-record.njk', {
+    const content = templateEngine.render('fake/record.njk', {
         ids,
         imgSrc: images[0],
         bibKeys
