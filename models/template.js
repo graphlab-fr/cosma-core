@@ -39,7 +39,8 @@ module.exports = class Template {
     static validParams = new Set([
         'publish',
         'css_custom',
-        'citeproc'
+        'citeproc',
+        'dev'
     ]);
 
     /**
@@ -254,6 +255,7 @@ module.exports = class Template {
         this.html = templateEngine.render('template/cosmoscope.njk', {
 
             publishMode: this.params.has('publish') === true,
+            devMode: this.params.has('dev') === true,
 
             records: graph.records.map(({thumbnail, ...rest}) => {
                 return {
