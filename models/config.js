@@ -358,25 +358,11 @@ module.exports = class Config {
          * All options & their value from the config
          * @type object
          */
-        this.opts;
+        this.opts = Object.assign({}, Config.base, opts);
 
-        let configFromFile;
-        try {
-            configFromFile = Config.get(this.path);
-            this.opts = Object.assign({}, Config.base, configFromFile);
-        } catch (error) {
-            this.opts = Config.base;
-        }
-        
         if (this.isValid() === false) {
-            // if options from config file are deprecated or invalid, we fix and replace them
             this.fix();
             this.save();
-        }
-
-        this.opts = Object.assign({}, this.opts, opts);
-        if (this.isValid() === false) {
-            this.fix();
         }
     }
 
