@@ -22,20 +22,13 @@
             {% endfor %}
             --highlight: {{ graph.config.graph_highlight_color }};
         }
-        {% include "styles.css" %}
-        {% include "print.css" %}
+        {% include "styles/styles.css" %}
+        {% include "styles/print.css" %}
 
         {% if customCss %}
         {{ customCss | safe }}
         {% endif %}
     </style>
-
-    {# JS libraries #}
-
-    <script>
-        {% include "libs/d3.js" %}
-        {% include "libs/fuse.js" %}
-    </script>
 </head>
 
 <body>
@@ -563,24 +556,7 @@
     {# Cosma functions #}
 
     <script>
-        {% include "scripts/main.js" %}
-        {% include "scripts/history.js" %}
-        {% include "scripts/graph.js" %}
-        {% include "scripts/zoom.js" %}
-        {% include "scripts/search.js" %}
-        {% include "scripts/filter.js" %}
-        {% include "scripts/focus.js" %}
-        {% include "scripts/tag.js" %}
-        {% include "scripts/index.js" %}
-        {% include "scripts/record.js" %}
-        {% include "scripts/view.js" %}
-        {% include "scripts/keyboard.js" %}
-        {% include "scripts/counter.js" %}
-        {% include "scripts/chronos.js" %}
-
-        {% if references %}
-            {% include "scripts/bibliography.js" %}
-        {% endif %}
+        {% include "bundle.js" %}
     </script>
 </body>
 
