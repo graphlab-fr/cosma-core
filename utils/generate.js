@@ -99,7 +99,7 @@ function fetchFakeThumbnails(thumbnailNames) {
     })
 }
 
-function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc']) {
+function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc', 'dev']) {
     return new Promise(async (resolve, reject) => {
         Promise.all([fetchBibliographyFiles(), fetchFakeImages(recordImages), fetchFakeThumbnails(nodeThumbnails)])
             .then(() => {
@@ -120,7 +120,7 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
     })
 }
 
-function opensphere(savePath, templateOptions = ['publish', 'citeproc']) {
+function opensphere(savePath, templateOptions = ['publish', 'citeproc', 'dev']) {
     return new Promise(async (resolve, reject) => {
         fetchSpreadsheets()
             .then(() => {
