@@ -43,12 +43,4 @@ const historique = {
     }
 }
 
-// At navigation travel, with forward/backward webbrowser's buttons
-window.onpopstate = function(e) {
-    if (e.state === null) { return; }
-    // open record from a history entry
-    const timeline = e.state.hist
-        , recordId = timeline[timeline.length - 1];
-
-    openRecord(recordId, false);
-};
+export default historique;
