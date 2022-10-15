@@ -348,8 +348,9 @@ module.exports = class Record {
 
     static getSlugFileName(fileName) {
         const slugName = slugify(fileName, {
-            replacement: ' ',
+            replacement: '-',
             remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/]/g,
+            lower: true
         });
         return slugName + '.md';
     }

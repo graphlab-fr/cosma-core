@@ -293,7 +293,7 @@ isDead: false
 
         const content = 'Lorem ipsum dolor est'
             , recordConfig = { files_origin: tempFolderPath }
-            , fileName = 'My record.md'
+            , fileName = 'my-record.md'
             , filePath = path.join(tempFolderPath, fileName);
 
         before(() => {
