@@ -37,7 +37,7 @@ module.exports = class Report {
         if (Report.listErrors.size === 0 && Report.listWarnings.size === 0) {
             return null;
         }
-        let message = 'Report ';
+        let message = 'Report: ';
         const sentences = [];
         if (Report.listErrors.size > 0) {
             sentences.push(`${Report.listErrors.size} ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`)
