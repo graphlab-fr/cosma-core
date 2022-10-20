@@ -155,7 +155,7 @@ right_panel:
 
     documentation_link_href:
       fr: https://cosma.graphlab.fr/docs/
-      en: https://cosma.graphlab.fr/docs/
+      en: https://cosma.graphlab.fr/en/docs/
     documentation_link_placeholder: 
       fr: Cliquez ici pour accéder à la documentation de Cosma
       en: Click here to access Cosma's documentation
@@ -244,7 +244,7 @@ right_panel:
         comme Zotero, Mendeley ou Papers.
         Cliquez sur le bouton ci-dessous pour télécharger les données.
       en: >
-        The data below correspond to the references cited in this cosmoscope.
+        Below is the bibliographic data for this cosmoscope's citations.
         They are structured according to the Citation Style Language standard and expressed in JSON.
         This format is recognized by most popular bibliographic management software,
         such as Zotero, Mendeley or Papers.
@@ -297,32 +297,32 @@ windows:
         fr: Fichiers Markdown
         en: Markdown files
       csv_origin:
-        fr: Feuille de calcul
-        en: Spreadsheet files
+        fr: Données tabulaires
+        en: Tabular data
       online_origin:
-        fr: Feuille de calcul en ligne
-        en: Online spreadsheet files
+        fr: Données tabulaires en ligne
+        en: Online tabular data
       files_origin:
         fr: Répertoire des fiches
         en: Records directory
       nodes_origin:
-        fr: Feuille de calcul des nœuds
-        en: Spreadsheet file of nodes
+        fr: Fichier de nœuds
+        en: Nodes file
       links_origin:
-        fr: Feuille de calcul des liens
-        en: Spreadsheet file of links
+        fr: Fichier de liens
+        en: Links file
       nodes_online:
-        fr: URL vers la feuille de calcul des nœuds
-        en: Spreadsheet for links
+        fr: URL du fichier de nœuds
+        en: Nodes file URL
       links_online:
-        fr: URL vers la feuille de calcul des liens
-        en: Spreadsheet for links
+        fr: URL du fichier de liens
+        en: Links file URL
       images_origin:
         fr: Répertoire des images
         en: Images directory
       record_metas:
         fr: Métadonnées des fiches
-        en: Records metas
+        en: Records metadata
       history:
         fr: Enregistrer automatiquement les cosmoscopes dans l’historique
         en: Automatically save cosmoscopes in the history
@@ -363,20 +363,20 @@ windows:
         fr: Méthode de dimensionnement des nœuds
         en: Node sizing method
       node_size_method_unique:
-        fr: Taille unique
-        en: Unique size
+        fr: Taille fixe
+        en: Fixed size
       node_size_method_degree:
-        fr: Taille proportionnelle
-        en: Proportional size
+        fr: Taille proportionnelle au degré
+        en: Size proportional to degree
       node_size:
         fr: Taille des nœuds
         en: Nodes size
       node_size_min:
         fr: Taille minimum des nœuds
-        en: Min nodes size
+        en: Min. node size
       node_size_max:
         fr: Taille maximum des nœuds
-        en: Max nodes size
+        en: Max. node size
       title:
         fr: Titre
         en: Title
@@ -399,8 +399,8 @@ windows:
         fr: Données bibliographiques (CSL JSON)
         en: Bibliographic data (CSL JSON)
       csl_locale:
-        fr: Localisation (XML)
-        en: Localisation (XML)
+        fr: Localisation bibliographique (XML)
+        en: Bibliographical localization (XML)
       css_custom:
         fr: CSS personnalisée
         en: Custom CSS
@@ -427,10 +427,10 @@ windows:
         en: Look
       meta:
         fr: Métadonnée
-        en: Meta
+        en: Metadata
       value_filter:
         fr: Valeur filtrée
-        en: Filted value
+        en: Filtered value
     btns:
       add:
         fr: Ajouter
@@ -456,7 +456,7 @@ windows:
         en: Download styles
       csl_locale:
         fr: Télécharger des fichiers de localisation
-        en: Download localisation files
+        en: Download localization files
   record:
     title:
       fr: Nouvelle fiche
@@ -524,8 +524,8 @@ windows:
         en: Empty history…
   report:
     title:
-      fr: Rapport d'alertes
-      en: Warnings log
+      fr: Rapport d'erreurs et d'alertes
+      en: Warnings and errors report
   linktype:
     title:
       add:
@@ -603,12 +603,12 @@ windows:
         en: Description
   records_filter:
     title:
-      fr: Ajouter un filtres de fiches
+      fr: Ajouter un filtre de fiches
       en: Add a records filter
     fields:
       meta:
         fr: Métadonnée de filtrage
-        en: Filter meta
+        en: Filter metadata
       value:
         fr: Valeur filtrée
         en: Filtered value
@@ -617,11 +617,11 @@ windows:
         fr: Type de fiche
         en: Record type
       meta_tags:
-        fr: Tag de fiches
-        en: Record tag
+        fr: Mot-clé
+        en: Keyword
       meta_custom:
         fr: Métadonnées personnalisées
-        en: Custom metas
+        en: Custom metadata
   doc:
     title:
       fr: Manuel d'utilisation
@@ -636,33 +636,33 @@ windows:
     fields:
       project_sorting:
         fr: Trier les projets
-        en: Projects sorting
+        en: Sort projects
     options:
       first_last:
-        fr: Du premier créé au dernier
-        en: From the first created to the last
+        fr: Date de création
+        en: Creation date
       last_first:
-        fr: Du dernier créé au premier
-        en: Last created to first
+        fr: Date de création
+        en: Creation date
       new_old:
-        fr: Du plus récemment ouvert au plus ancien
-        en: Newest to oldest
+        fr: Date de dernière ouverture
+        en: Last opened date
       old_new:
-        fr: Du plus anciennement ouvert au plus récent
-        en: From oldest to newest
+        fr: Date de dernière ouverture
+        en: Last opened date
       a_z:
-        fr: De A à Z
-        en: From A to Z
+        fr: Nom
+        en: Name
       z_a:
-        fr: De Z à A
-        en: From Z to A
+        fr: Nom
+        en: Name
     btns:
       new:
         fr: Ajouter un projet
         en: Add a project
       edit_end:
-        fr: Terminer
-        en: Finish
+        fr: Enregistrer
+        en: Save
       edit_start:
         fr: Modifier
         en: Edit
@@ -681,26 +681,26 @@ windows:
         fr: Fichiers Markdown
         en: Markdown files
       csv_origin:
-        fr: Feuille de calcul
-        en: Spreadsheet files
+        fr: Données tabulaires
+        en: Online tabular
       online_origin:
-        fr: Feuille de calcul en ligne
-        en: Online spreadsheet files
+        fr: Données tabulaires en ligne
+        en: Online tabular data
       files_origin:
         fr: Répertoire des fiches
         en: Records directory
       nodes_origin:
-        fr: Feuille de calcul des nœuds
-        en: Spreadsheet file of nodes
+        fr: Fichier de nœuds
+        en: Nodes file
       links_origin:
-        fr: Feuille de calcul des liens
-        en: Spreadsheet file of links
+        fr: Fichier de liens
+        en: Links file
       nodes_online:
-        fr: URL vers la feuille de calcul des nœuds
-        en: Spreadsheet for links
+        fr: URL du fichier de nœuds
+        en: Nodes file URL
       links_online:
-        fr: URL vers la feuille de calcul des liens
-        en: Spreadsheet for links
+        fr: URL du fichier de liens
+        en: Links file URL
     btns:
       select:
         fr: Sélectionner
@@ -726,12 +726,12 @@ dialog:
       en: Records directory
   nodes_origin:
     title:
-      fr: Feuille de calcul des nœuds
-      en: Spreadsheet for nodes
+      fr: Fichier de nœuds
+      en: Nodes file
   links_origin:
     title:
-      fr: Feuille de calcul des liens
-      en: Spreadsheet for links
+      fr: Fichier de liens
+      en: Links file
   images_origin:
     title:
       fr: Répertoire des images
@@ -747,7 +747,7 @@ dialog:
   csl_locale:
     title:
       fr: Localisation bibliographique (XML)
-      en: Bibliographical locale (XML)
+      en: Bibliographical localization (XML)
   css_custom:
     title:
       fr: CSS personnalisée
@@ -843,7 +843,7 @@ config:
       fr: Le nom de configuration est invalide
       en: The configuration name is invalid
     invalid_path:
-      fr: Le chemin vers la configruation est invalide
+      fr: Le chemin vers la configuration est invalide
       en: The config file path is invalid
     select_origin:
       fr: Ce type de source de données n'est pas valide
@@ -972,7 +972,7 @@ config:
   info:
     lang:
       fr: Le changement de langue sera effectif après un redémarrage de l'application
-      en: The change of language will be effective after a restart of the app
+      en: The change of language will be effective after restarting the application
 
 graph_report:
   ignored_files:
@@ -981,7 +981,7 @@ graph_report:
       en: "The following files have been ignored:"
     item_message:
       fr: "$1 : $2 invalide"
-      en: "$1 : $2 invalid"
+      en: "$1: $2 invalid"
   duplicates:
     head_message:
       fr: "Des doublons d'identifiants ont été trouvés dans les fichiers suivants :"
@@ -991,14 +991,14 @@ graph_report:
       en: "id '$1' from $2"
   type_record_change:
     head_message:
-      fr: "Les fichiers suivants ont un type de fiche inconnu qui a été interprété comme 'undefined':"
+      fr: "Les fichiers suivants ont un type de fiche inconnu qui a été interprété comme 'undefined' :"
       en: "The following records' type is unknown and has been interpreted as 'undefined':"
     item_message:
       fr: "$1"
       en: "$1"
   type_link_change:
     head_message:
-      fr: "Les fichiers suivants comportent un type de lien inconnu qui a été interprété comme 'undefined':"
+      fr: "Les fichiers suivants comportent un type de lien inconnu qui a été interprété comme 'undefined' :"
       en: "The following records contain an unknown link type which has been interpreted as 'undefined':"
     item_message:
       fr: "$1"
@@ -1174,23 +1174,23 @@ report:
     fr: Un lien intégré dans le paragraphe de la fiche $1 suivant n'a pas de cible <em>"$2"</em>
     en: A link embedded in the next paragraph of the $1 file does not have a target <em>"$2"</em>
   link_type_change:
-    fr: Le type "$3" initial (non enregistré) du lien $2 dans la fiche $1 a été remplacé par "undefined"
-    en: The initial (unregistered) type "$3" of the $2 link in the $1 record has been changed to "undefined".
+    fr: Type "$3" du lien $2 dans la fiche $1 non reconnu, interprété comme "undefined"
+    en: Type "$3" of link $2 in the record $1 unrecognized, treated as "undefined"
   record_type_change:
-    fr: Le type "$2" initial (non enregistré) de la fiche $1 a été remplacé par "undefined"
-    en: The initial (unregistered) type "$2" of the $1 record has been changed to "undefined"
+    fr: Type "$2" de la fiche $1 non reconnu, interprété comme "undefined"
+    en: Type "$2" of record $1 unrecognized, treated as "undefined"
   ignored_record_meta:
-    fr: La métadonnée "$2" (non enregistrée) de la fiche $1 n'a pas été intégrée
-    en: The "$2" (unregistered) metadata of the $1 record has not been integrated
+    fr: Métadonnée "$2" de la fiche $1 non reconnue, ignorée
+    en: Ignored unknown metadata "$2" from record $1
   null_record_meta:
-    fr: La valeur de la métadonnée "$2" de la fiche $1 est nulle et n'a pas été intégrée
-    en: The value of the metadata "$2" of the record $1 is null and has not been integrated
+    fr: Métadonnée "$2" de la fiche $1 ignorée (valeur nulle)
+    en: Ignored metadata "$2" from record $1 (null value)
   invalid_record_time_begin:
     fr: La date de début "$2" de la fiche $1 est invalide
-    en: The start date "$2" of the record $1 is invalid
+    en: Invalid start date "$2" for record $1
   invalid_record_time_end:
     fr: La date de fin "$2" de la fiche $1 est invalide
-    en: The end date "$2" of the record $1 is invalid
+    en: Invalid end date "$2" for record $1
   unknown_bibliographic_reference:
-    fr: La référence "$2" de la fiche $1 n'est pas enregistrée dans le fichier CSL JSON
-    en: The reference "$2" of the record $1 is not recorded in the CSL JSON file
+    fr: Clé de citation "$2" dans la fiche $1 non trouvée dans les données bibliographiques
+    en: Citation key "$2" in record $1 not found in bibliographic data
