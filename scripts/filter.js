@@ -9,9 +9,9 @@ let filterAltMode = false;
 /**
  * Toggle a filter from his checkbox
  * @param {bool} isChecked - Checkbox boolean : checked or not
- * @param {string} nodeIdsList - List of nodes id to filter, separeted by comas
+ * @param {string} nodeIdsList - List of nodes id to filter, separated by commas
  * @param {HTMLElement} input - The filter element from DOM
- * @param {bool} fromElt - If function is activeted from a 'onchange' attribute
+ * @param {bool} fromElt - If function is activated from a 'onchange' attribute
  */
 
 function filter(isChecked, nodeIdsList, input, fromElt = false) {
