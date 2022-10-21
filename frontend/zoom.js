@@ -65,8 +65,6 @@ window.zoomMore = zoomMore;
 window.zoomLess = zoomLess;
 window.zoomReset = zoomReset;
 
-translate();
-
 function translate() {
     const { x, y, zoom } = View.position;
     const viewBox = [-x, -y, width / zoom, height / zoom].join(' ');

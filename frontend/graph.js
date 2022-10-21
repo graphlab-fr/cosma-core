@@ -24,15 +24,9 @@ data.nodes = data.nodes.map(function (node) {
 const svg = d3.select("#graph-canvas");
 const svgSub = svg.append("svg");
 
-let svgSize = svg.node().getBoundingClientRect();
+const { width, height } = svg.node().getBoundingClientRect();
 
-const width = svgSize.width;
-const height = svgSize.height;
-
-svg
-    .attr("viewBox", [0, 0, width, height])
-    .attr("preserveAspectRatio", "xMinYMin meet");
-svg
+svgSub
     .attr("viewBox", [0, 0, width, height])
     .attr("preserveAspectRatio", "xMinYMin meet");
 
