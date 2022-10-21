@@ -5,17 +5,16 @@ import { svg, svgSub } from './graph';
 
 let { width, height } = svg.node().getBoundingClientRect();
 
-const zoomInterval = 0.3 // interval between two (de)zoom
+const zoomInterval = 1.2 // interval between two (de)zoom
     , zoomMax = 10
     , zoomMin = 0;
 
 const zoom = d3.zoom()
-    // .scaleExtent([1 / 2, 4])
     .on("zoom", () => {
         const { x, y, k } = d3.event.transform;
         View.position.x = x || 0;
         View.position.y = y || 0;
-        View.position.zoom = k || 1;
+        View.position.zoom = k * zoomInterval || 1;
         translate();
     });
 
@@ -65,6 +64,8 @@ function zoomReset() {
 window.zoomMore = zoomMore;
 window.zoomLess = zoomLess;
 window.zoomReset = zoomReset;
+
+translate();
 
 function translate() {
     const { x, y, zoom } = View.position;

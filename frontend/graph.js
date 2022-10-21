@@ -78,12 +78,8 @@ simulation
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y);
 
-        elts.nodes.attr("transform", function (d) {
-            d.x = Math.max(d.size, Math.min(width - d.size, d.x));
-            d.y = Math.max(d.size, Math.min(height - d.size, d.y));
-
-            return "translate(" + d.x + "," + d.y + ")";
-        });
+        elts.nodes
+            .attr("transform", (d) => "translate(" + d.x + "," + d.y + ")");
 
         d3.select('#load-bar-value')
             .style('flex-basis', (simulation.alpha() * 100) + '%');
