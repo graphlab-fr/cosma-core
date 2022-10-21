@@ -22,12 +22,16 @@ data.nodes = data.nodes.map(function (node) {
 ------------------------------------------------------------*/
 
 const svg = d3.select("#graph-canvas");
+const svgSub = svg.append("svg");
 
 let svgSize = svg.node().getBoundingClientRect();
 
 const width = svgSize.width;
 const height = svgSize.height;
 
+svg
+    .attr("viewBox", [0, 0, width, height])
+    .attr("preserveAspectRatio", "xMinYMin meet");
 svg
     .attr("viewBox", [0, 0, width, height])
     .attr("preserveAspectRatio", "xMinYMin meet");
@@ -90,7 +94,7 @@ simulation
 
 const elts = {};
 
-elts.links = svg.append("g")
+elts.links = svgSub.append("g")
     .selectAll("line")
     .data(data.links)
     .enter().append("line")
@@ -116,7 +120,7 @@ if (graphProperties.graph_arrows === true) {
         .attr("marker-end", 'url(#arrow)');
 }
 
-elts.nodes = svg.append("g")
+elts.nodes = svgSub.append("g")
     .selectAll("g")
     .data(data.nodes)
     .enter().append("g")
@@ -538,4 +542,4 @@ function translate() {
     svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
 }
 
-export { svg, hideNodes, displayNodes, highlightNodes, unlightNodes };
+export { svg, svgSub, hideNodes, displayNodes, highlightNodes, unlightNodes };
