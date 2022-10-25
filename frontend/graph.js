@@ -4,6 +4,7 @@ import View from './view';
 import {
     hideFromIndex,
     displayFromIndex,
+    recordContainer
 } from './records';
 import { setCounters } from './counter';
 

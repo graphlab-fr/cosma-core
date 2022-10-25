@@ -149,5 +149,6 @@ export {
     hideFromIndex,
     hideAllFromIndex,
     displayFromIndex,
-    displayAllFromIndex
+    displayAllFromIndex,
+    recordContainer
 };

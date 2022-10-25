@@ -258,6 +258,8 @@
 
         {% for record in records %}
         <article id="{{ record.id }}" class="record">
+            <button onclick="zoomToNode({{ record.id }})">Zoomer sur le nœud</button>
+
             <header>
                 <h1 class="record-title">{{ record.title }}</h1>
 
