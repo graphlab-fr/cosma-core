@@ -311,6 +311,7 @@ module.exports = class Record {
                     references = [],
                     thumbnail
                 }) => {
+                    index++;
                     return new Record(
                         Record.generateOutDailyId() + index,
                         title,
