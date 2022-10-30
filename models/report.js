@@ -37,9 +37,6 @@ module.exports = class Report {
     }
 
     static getAsMessage() {
-        if (Report.listErrors.size === 0 && Report.listWarnings.size === 0) {
-            return null;
-        }
         let message = 'Report: ';
         const sentences = [];
         if (Report.listErrors.size > 0) {
@@ -55,6 +52,15 @@ module.exports = class Report {
     static reset() {
         Report.listWarnings = new Map();
         Report.listErrors = new Map();
+    }
+
+    /**
+     * Return true if there is any error or warning to report
+     * @returns {boolean}
+     */
+
+    static isItEmpty() {
+        return Report.listErrors.size === 0 && Report.listWarnings.size === 0;
     }
 
     /**
