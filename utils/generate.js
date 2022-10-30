@@ -96,7 +96,6 @@ function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citepr
     const Cosmoscope = require('../models/cosmoscope')
         , Template = require('../models/template');
     const { config: fakeConfig, records, nodeThumbnails, images: recordImages } = require('./fake');
-
     return new Promise(async (resolve, reject) => {
         Promise.all([fetchBibliographyFiles(), fetchFakeImages(recordImages), fetchFakeThumbnails(nodeThumbnails)])
             .then(() => {
