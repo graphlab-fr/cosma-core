@@ -602,7 +602,7 @@ module.exports = class Record {
         const ymlContent = yml.dump({
             title: this.title,
             id: this.id,
-            type: this.type,
+            type: this.type.length === 1 ? this.type[0] : this.type,
             tags: this.tags.length === 0 ? undefined : this.tags,
             references: bibliographicIds.length === 0 ? undefined : bibliographicIds,
             thumbnail: this.thumbnail,

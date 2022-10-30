@@ -227,8 +227,7 @@ describe('Record', () => {
 `---
 title: the title
 id: ${recordId}
-type:
-  - undefined
+type: undefined
 tags:
   - tag 1
   - tag 2
