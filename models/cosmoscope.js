@@ -18,7 +18,7 @@
  * @type {object}
  * @property {number} id
  * @property {string} title
- * @property {string | string[] | 'undefined'} type
+ * @property {string[]} type
  * @property {string[]} tags
  * @property {string[]} references
  * @property {string | undefined} thumbnail
@@ -221,11 +221,12 @@ module.exports = class Cosmocope extends Graph {
             return Link.getWikiLinksFromFileContent(id, content);
         }).flat();
 
-        let nodes = files.map((file) => {
+        const nodes = files.map((file) => {
             let { id, title, type } = file.metas;
             return new Node(
                 id,
-                title
+                title,
+                type[0]
             );
         });
 
