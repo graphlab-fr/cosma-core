@@ -3,15 +3,18 @@ import * as d3 from "d3";
 import View from './view';
 import { svg, svgSub } from './graph';
 
-let { width, height } = svg.node().getBoundingClientRect();
+const { width, height } = svg.node().getBoundingClientRect();
 
-const zoomMax = 10, zoomMin = 0;
+const zoomMax = 10, zoomMin = 1, zoomInterval = 0.2;
 
 const zoom = d3.zoom()
+    .extent([[0, 0], [width, height]])
+    // .scaleExtent([zoomMin,zoomMax])
+    // .translateExtent([-width, -height], [width, height])
     .on("zoom", () => {
         const { x, y, k } = d3.event.transform;
-        View.position.x = x || 0;
-        View.position.y = y || 0;
+        View.position.x = x / k || 0;
+        View.position.y = y / k || 0;
         View.position.zoom = k || 1;
         translate();
     });
@@ -19,31 +22,11 @@ const zoom = d3.zoom()
 svg.call(zoom);
 
 function zoomMore() {
-    View.position.zoom += zoomInterval;
-    if (View.position.zoom >= zoomMax) {
-        View.position.zoom = zoomMax;
-    }
-    svg.call(
-        zoom.transform,
-        d3.zoomIdentity
-            .translate(View.position.y, View.position.x)
-            .scale(View.position.zoom)
-    );
-    translate();
+    zoom.scaleTo(svg, View.position.zoom + zoomInterval);
 }
 
 function zoomLess() {
-    View.position.zoom -= zoomInterval;
-    if (View.position.zoom <= zoomMin) {
-        View.position.zoom = zoomMin;
-    }
-    svg.call(
-        zoom.transform,
-        d3.zoomIdentity
-            .translate(View.position.y, View.position.x)
-            .scale(View.position.zoom)
-    );
-    translate();
+    zoom.scaleTo(svg, View.position.zoom - zoomInterval);
 }
 
 function zoomReset() {
