@@ -2,7 +2,7 @@ record_types:
   undefined:
     fill: 'daniel.jpg'
     stroke: '#858585'
-  idea:
+  super idea:
     fill: '#1b9e77'
     stroke: '#1b9e77'
   concept:
