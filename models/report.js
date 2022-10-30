@@ -22,7 +22,10 @@ module.exports = class Report {
             new nunjucks.FileSystemLoader(path.join(__dirname, '../'))
         );
         templateEngine.addFilter('translate', (input, args) => {
-            return lang.getWith(lang.i['report'][input], Object.values(args));
+            if (args) {
+                return lang.getWith(lang.i['report'][input], Object.values(args));
+            }
+            return lang.getFor(lang.i['report'][input]);
         });
         return templateEngine.render('report.njk', {
             lang: lang.flag,

@@ -61,7 +61,7 @@ module.exports = class Config {
         csl_locale: '',
         css_custom: '',
         devtools: false,
-        lang: 'fr'
+        lang: 'en'
     });
 
     /**

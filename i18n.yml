@@ -1164,6 +1164,15 @@ app_menu:
     en: Shortcuts
 
 report:
+  title:
+    fr: Rapport d'erreur
+    en: Error report
+  section_error:
+    fr: Erreur ($1 fiches)
+    en: Errors ($1 records)
+  section_warning:
+    fr: Avertissements ($1 fiches)
+    en: Warnings ($1 records)
   no_id:
     fr: Le fichier $1 n'a pas d'identifiant
     en: The file $1 has no identifier
