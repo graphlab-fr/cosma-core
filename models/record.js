@@ -311,6 +311,7 @@ module.exports = class Record {
                     references = [],
                     thumbnail
                 }) => {
+                    index++;
                     return new Record(
                         Record.generateOutDailyId() + index,
                         title,
@@ -348,8 +349,9 @@ module.exports = class Record {
 
     static getSlugFileName(fileName) {
         const slugName = slugify(fileName, {
-            replacement: ' ',
+            replacement: '-',
             remove: /[&*+=~'"!?:@#$%^(){}\[\]\\/]/g,
+            lower: true
         });
         return slugName + '.md';
     }
@@ -362,7 +364,7 @@ module.exports = class Record {
 
     static generateId () {
         const currentDate = new Date();
-        const year = currentDate.getFullYear().toString().padStart(4, "0");;
+        const year = currentDate.getFullYear().toString().padStart(4, "0");
         const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
         const day = currentDate.getDate().toString().padStart(2, "0");
         const hour = currentDate.getHours().toString().padStart(2, "0");
@@ -390,6 +392,7 @@ module.exports = class Record {
 
     /**
      * Test if an id is out of today common time
+     * @param {number} idTest Id as number
      * @return {boolean}
      */
 
@@ -401,6 +404,30 @@ module.exports = class Record {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param {number} id Id as number
+     * @return {Date|undefined}
+     */
+
+    static getDateFromId (id) {
+        const recordIdAsString = id.toString();
+        const year = recordIdAsString.substring(0, 4);
+        const month = recordIdAsString.substring(4, 6);
+        const day = recordIdAsString.substring(6, 8);
+        const hour = recordIdAsString.substring(8, 10);
+        const minute = recordIdAsString.substring(10, 12);
+        const second = recordIdAsString.substring(12, 14);
+        if (year && month && day && hour && minute && second) {
+            const date = new Date(`${[year, month, day].join('-')} ${[hour, minute, second].join(':')}`);
+            if (isNaN(date)) {
+                return undefined;
+            } else {
+                return date;
+            }
+        }
+        return undefined;
     }
 
     /**
@@ -575,7 +602,7 @@ module.exports = class Record {
         const ymlContent = yml.dump({
             title: this.title,
             id: this.id,
-            type: this.type,
+            type: this.type.length === 1 ? this.type[0] : this.type,
             tags: this.tags.length === 0 ? undefined : this.tags,
             references: bibliographicIds.length === 0 ? undefined : bibliographicIds,
             thumbnail: this.thumbnail,
@@ -629,6 +656,9 @@ module.exports = class Record {
             try {
                 if (this.isValid() === false) {
                     throw new ErrorRecord(this.writeReport(), 'report');
+                }
+                if (this.config.canSaveRecords() === false) {
+                    throw new ErrorRecord('Directory for record save is unset', 'no dir');
                 }
 
                 this.fileName = Record.getSlugFileName(fileName);
@@ -714,7 +744,7 @@ module.exports = class Record {
 class ErrorRecord extends Error {
     /**
      * @param {string} message
-     * @param {'report'|'overwritting'|'fs error'} type
+     * @param {'report'|'overwritting'|'fs error'|'no dir'} type
      */
     constructor(message, type) {
         super(message);

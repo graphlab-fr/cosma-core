@@ -228,6 +228,9 @@ module.exports = class Template {
 
         mdIt.inline.ruler2.push('image_to_base64', state => Template.mdItImageToBase64(imagesPath, state));
 
+        templateEngine.addFilter('slugify', (input) => {
+            return input.split(' ').join('-');
+        });
         templateEngine.addFilter('markdown', (input) => {
             return mdIt.render(input);
         });
@@ -254,28 +257,9 @@ module.exports = class Template {
             publishMode: this.params.has('publish') === true,
             devMode: this.params.has('dev') === true,
 
-            records: graph.records.map(({
-                id,
-                title,
-                type,
-                tags,
-                content,
-                metas,
-                links,
-                backlinks,
-                bibliography,
-                thumbnail
-            }) => {
+            records: graph.records.map(({thumbnail, ...rest}) => {
                 return {
-                    id,
-                    title,
-                    type,
-                    tags,
-                    content,
-                    metas,
-                    links,
-                    backlinks,
-                    bibliography,
+                    ...rest,
                     thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined
                 }
             }).sort(function (a, b) { return a.title.localeCompare(b.title); }),
@@ -313,7 +297,7 @@ module.exports = class Template {
 
             focusIsActive: !(focusMax <= 0),
 
-            guiContext: (Config.getContext() === 'electron' && graph.params.has('publish') === false),
+            guiContext: (Config.getContext() === 'electron' && this.params.has('publish') === false),
 
             faviconPath: path.join(__dirname, '../static/icons/cosmafavicon.png'),
 

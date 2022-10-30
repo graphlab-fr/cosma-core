@@ -22,7 +22,10 @@ module.exports = class Report {
             new nunjucks.FileSystemLoader(path.join(__dirname, '../'))
         );
         templateEngine.addFilter('translate', (input, args) => {
-            return lang.getWith(lang.i['report'][input], Object.values(args));
+            if (args) {
+                return lang.getWith(lang.i['report'][input], Object.values(args));
+            }
+            return lang.getFor(lang.i['report'][input]);
         });
         return templateEngine.render('report.njk', {
             lang: lang.flag,
@@ -34,19 +37,30 @@ module.exports = class Report {
     }
 
     static getAsMessage() {
-        if (Report.listErrors.size === 0 && Report.listWarnings.size === 0) {
-            return null;
-        }
-        let message = 'Report ';
+        let message = 'Report: ';
         const sentences = [];
         if (Report.listErrors.size > 0) {
-            sentences.push(`${Report.listErrors.size} ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`)
+            sentences.push(`${Report.listErrors.size} records got ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`)
         }
         if (Report.listWarnings.size > 0) {
-            sentences.push(`${Report.listWarnings.size} ${['\x1b[33m', 'warnings', '\x1b[0m'].join('')}`)
+            sentences.push(`${Report.listWarnings.size} records got ${['\x1b[33m', 'warnings', '\x1b[0m'].join('')}`)
         }
-        message = message +  sentences.join(' and ')
+        message = message + sentences.join(' and ')
         return message;
+    }
+
+    static reset() {
+        Report.listWarnings = new Map();
+        Report.listErrors = new Map();
+    }
+
+    /**
+     * Return true if there is any error or warning to report
+     * @returns {boolean}
+     */
+
+    static isItEmpty() {
+        return Report.listErrors.size === 0 && Report.listWarnings.size === 0;
     }
 
     /**

@@ -12,6 +12,19 @@ const Config = require('../models/config')
 describe('Config', () => {
     const tempFolderPath = path.join(__dirname, '../temp');
 
+    describe('base', () => {
+        it('should not be mutable', () => {
+            const option = 'node_size_method';
+            const validValue = Config.base[option];
+            const invalidValue = 'invalid value';
+            const config = new Config({
+                [option]: invalidValue
+            });
+            Config.base[option] = invalidValue;
+            Config.base.should.have.property(option).and.to.be.equal(validValue);
+        });
+    })
+
     describe('config report array', () => {
         it('should be empty with base config', () => {
             const config = new Config(Config.base);

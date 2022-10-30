@@ -9,7 +9,6 @@
  * @type {object}
  * @property {string} path
  * @property {string} name
- * @property {string} lastEditDate
  * @property {string} content
  * @property {FileMetas} metas
  */
@@ -19,10 +18,12 @@
  * @type {object}
  * @property {number} id
  * @property {string} title
- * @property {string | string[] | 'undefined'} type
+ * @property {string[]} type
  * @property {string[]} tags
  * @property {string[]} references
  * @property {string | undefined} thumbnail
+ * @property {string | undefined} begin
+ * @property {string | undefined} end
  */
 
 /**
@@ -105,7 +106,6 @@ module.exports = class Cosmocope extends Graph {
             const file = {
                 path: filePath,
                 name: path.basename(filePath),
-                lastEditDate: fs.statSync(filePath).mtime,
                 content,
                 metas
             };
@@ -116,6 +116,24 @@ module.exports = class Cosmocope extends Graph {
             file.metas.tags =  file.metas['tags'] || file.metas['keywords'] || [];
             file.metas.id = file.metas.id;
             file.metas.references = file.metas.references || [];
+            file.metas.begin = undefined;
+            file.metas.end = undefined;
+
+            switch (opts['chronological_record_meta']) {
+                case 'last_open':
+                    file.metas.begin = fs.statSync(filePath).atime;
+                    break;
+                case 'last_edit':
+                    file.metas.begin = fs.statSync(filePath).mtime;
+                    break;
+                case 'created':
+                    file.metas.begin = fs.statSync(filePath).birthtime;
+                    break;
+                case 'timestamp':
+                    const date = Record.getDateFromId(file.metas.id);
+                    if (date) { file.metas.begin = date; }
+                    break;
+            }
             return file;
         }).filter(({ name, metas }) => {
             if (metas.id === undefined) {
@@ -203,16 +221,17 @@ module.exports = class Cosmocope extends Graph {
             return Link.getWikiLinksFromFileContent(id, content);
         }).flat();
 
-        let nodes = files.map((file) => {
+        const nodes = files.map((file) => {
             let { id, title, type } = file.metas;
             return new Node(
                 id,
-                title
+                title,
+                type[0]
             );
         });
 
         const records = files.map((file) => {
-            const { id, title, type, tags, thumbnail, references, ...rest } = file.metas;
+            const { id, title, type, tags, thumbnail, references, begin, end, ...rest } = file.metas;
             const {
                 linksReferences,
                 backlinksReferences
@@ -231,7 +250,7 @@ module.exports = class Cosmocope extends Graph {
                 file.content,
                 linksReferences,
                 backlinksReferences,
-                file.lastEditDate,
+                begin,
                 undefined,
                 bibliographicRecords,
                 thumbnail,
@@ -246,11 +265,11 @@ module.exports = class Cosmocope extends Graph {
      * Get the index from which to create new records in the mass
      * The index depends on the identifier of the last record created in the mass
      * The index is obtained via the Graph analysis
+     * @param {string} filesPath
      * @return {number}
      */
 
-    static getIndexToMassSave () {
-        const { files_origin: filesPath } = Config.get();
+    static getIndexToMassSave (filesPath) {
         const todayMassSavedRecordIds = Cosmocope.getFromPathFiles(filesPath) // get graph analyse
             .map(file => file.metas.id)
             .filter(Record.isTodayOutDailyId) // ignore not today mass saved records id

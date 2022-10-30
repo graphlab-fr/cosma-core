@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Rapport d'erreur</title>
+    <title>{{ 'title' | translate }}</title>
     <style>
         :root {
             /* typography */
@@ -38,12 +38,12 @@
 
 <body>
     <header>
-        <h1>Rapport d'erreur</h1>
+        <h1>{{ 'title' | translate }}</h1>
     </header>
 
     <main>
         <section>
-            <h2>Erreurs ({{errorsLength}} fiches)</h2>
+            <h2>{{ 'section_error' | translate({ length: errorsLength }) }}</h2>
             {% for recordId, lines in listErrors %}
             {% set title = lines[0].recordTitle %}
             <h3>{{ title }}</h3>
@@ -56,7 +56,7 @@
         </section>
 
         <section>
-            <h2>Averissements ({{warningsLength}} fiches)</h2>
+            <h2>{{ 'section_warning' | translate({ length: warningsLength }) }}</h2>
             {% for recordId, lines in listWarnings %}
             {% set title = lines[0].recordTitle %}
             <h3>{{ title }}</h3>

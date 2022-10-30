@@ -227,8 +227,7 @@ describe('Record', () => {
 `---
 title: the title
 id: ${recordId}
-type:
-  - undefined
+type: undefined
 tags:
   - tag 1
   - tag 2
@@ -293,7 +292,7 @@ isDead: false
 
         const content = 'Lorem ipsum dolor est'
             , recordConfig = { files_origin: tempFolderPath }
-            , fileName = 'My record.md'
+            , fileName = 'my-record.md'
             , filePath = path.join(tempFolderPath, fileName);
 
         before(() => {
@@ -520,7 +519,7 @@ isDead: false
                     { columns: true, trim: true, rtrim: true, skip_empty_lines: true }
                 );
                 const data = csv.map(line => Record.getFormatedDataFromCsvLine(line));
-                const index = Cosmocope.getIndexToMassSave();
+                const index = Cosmocope.getIndexToMassSave(tempFolderPath);
                 await Record.massSave(data, index, opts)
 
                 filePath.should.be.a.file();
@@ -544,7 +543,7 @@ isDead: false
                 const minimalData = [{
                     "title" : "Paul Otlet"
                 }];
-                const index = Cosmocope.getIndexToMassSave();
+                const index = Cosmocope.getIndexToMassSave(tempFolderPath);
                 await Record.massSave(minimalData, index, { files_origin: tempFolderPath });
     
                 filePath.should.be.a.file();
@@ -565,11 +564,30 @@ isDead: false
                     "thumbnail" : "image.jpg",
                     "references" : ["otlet1934"]
                 }];
-                const index = Cosmocope.getIndexToMassSave();
+                const index = Cosmocope.getIndexToMassSave(tempFolderPath);
                 await Record.massSave(data, index, { files_origin: tempFolderPath });
     
                 filePath.should.be.a.file();
             });
         });
     });
+
+    describe('record id as date', () => {
+        it('should return a valid date for a 14 caracters number identifier', () => {
+            const id = 20210619091954;
+            const date = Record.getDateFromId(id);
+            const year = date.getFullYear().toString().padStart(4, "0");
+            const month = (date.getMonth() + 1).toString().padStart(2, "0");
+            const day = date.getDate().toString().padStart(2, "0");
+            const hour = date.getHours().toString().padStart(2, "0");
+            const minute = date.getMinutes().toString().padStart(2, "0");
+            const second = date.getSeconds().toString().padStart(2, "0");
+            assert.strictEqual(id.toString(), [year, month, day, hour, minute, second].join(''));
+        });
+
+        it('should return undefined for 14 caracters string identifier', () => {
+            const date = Record.getDateFromId('string_identifer');
+            assert.strictEqual(date, undefined);
+        });
+    })
 });
