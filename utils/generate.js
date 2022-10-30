@@ -92,7 +92,7 @@ function fetchFakeThumbnails(thumbnailNames) {
     })
 }
 
-function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc']) {
+function cosmocope(savePath, templateOptions = ['publish', 'css_custom', 'citeproc', 'dev']) {
     const Cosmoscope = require('../models/cosmoscope')
         , Template = require('../models/template');
 
