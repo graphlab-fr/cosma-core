@@ -231,7 +231,7 @@ module.exports = class Cosmocope extends Graph {
         });
 
         const records = files.map((file) => {
-            const { id, title, type, tags, thumbnail, references, begin, ...rest } = file.metas;
+            const { id, title, type, tags, thumbnail, references, begin, end, ...rest } = file.metas;
             const {
                 linksReferences,
                 backlinksReferences

@@ -40,12 +40,12 @@ module.exports = class Report {
         let message = 'Report: ';
         const sentences = [];
         if (Report.listErrors.size > 0) {
-            sentences.push(`${Report.listErrors.size} ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`)
+            sentences.push(`${Report.listErrors.size} records got ${['\x1b[31m', 'errors', '\x1b[0m'].join('')}`)
         }
         if (Report.listWarnings.size > 0) {
-            sentences.push(`${Report.listWarnings.size} ${['\x1b[33m', 'warnings', '\x1b[0m'].join('')}`)
+            sentences.push(`${Report.listWarnings.size} records got ${['\x1b[33m', 'warnings', '\x1b[0m'].join('')}`)
         }
-        message = message +  sentences.join(' and ')
+        message = message + sentences.join(' and ')
         return message;
     }
 
