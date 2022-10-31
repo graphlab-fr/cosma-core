@@ -1165,41 +1165,41 @@ app_menu:
 
 report:
   title:
-    fr: Rapport d'erreur
-    en: Error report
+    fr: Rapport
+    en: Report
   section_error:
-    fr: Erreur ($1 fiches)
+    fr: Erreurs ($1 fiches)
     en: Errors ($1 records)
   section_warning:
     fr: Avertissements ($1 fiches)
     en: Warnings ($1 records)
   no_id:
-    fr: Le fichier $1 n'a pas d'identifiant
-    en: The file $1 has no identifier
+    fr: Le fichier "$1" n'a pas d'identifiant
+    en: The file "$1" has no identifier
   duplicated_ids:
-    fr: La fiche $2 ($1) a un identifiant commun avec la fiche $3
-    en: The file $2 ($1) has a common identifier with the file $3
+    fr: La fiche "$2" ($1) a un identifiant commun avec la fiche "$3"
+    en: The file "$2" ($1) has a common identifier with the file "$3"
   broken_links:
-    fr: Un lien intégré dans le paragraphe de la fiche $1 suivant n'a pas de cible <em>"$2"</em>
-    en: A link embedded in the next paragraph of the $1 file does not have a target <em>"$2"</em>
+    fr: Dans la fiche "$1", le paragraphe suivant contient un lien dont la cible n'a pas été trouvée <em>"$2"</em>
+    en: The following paragraph contains a broken link <em>"$2"</em>
   link_type_change:
-    fr: Type "$3" du lien $2 dans la fiche $1 non reconnu, interprété comme "undefined"
-    en: Type "$3" of link $2 in the record $1 unrecognized, treated as "undefined"
+    fr: Type "$3" du lien "$2" dans la fiche "$1" non reconnu, interprété comme "undefined"
+    en: Type "$3" of link "$2" in the record "$1" unrecognized, treated as "undefined"
   record_type_change:
-    fr: Type "$2" de la fiche $1 non reconnu, interprété comme "undefined"
-    en: Type "$2" of record $1 unrecognized, treated as "undefined"
+    fr: Type "$2" de la fiche "$1" non reconnu, interprété comme "undefined"
+    en: Type "$2" of record "$1" unrecognized, treated as "undefined"
   ignored_record_meta:
-    fr: Métadonnée "$2" de la fiche $1 non reconnue, ignorée
-    en: Ignored unknown metadata "$2" from record $1
+    fr: Métadonnée "$2" de la fiche "$1" non reconnue, ignorée
+    en: Ignored unknown metadata "$2" from record "$1"
   null_record_meta:
-    fr: Métadonnée "$2" de la fiche $1 ignorée (valeur nulle)
-    en: Ignored metadata "$2" from record $1 (null value)
+    fr: Métadonnée "$2" de la fiche "$1" ignorée (valeur nulle)
+    en: Ignored metadata "$2" from record "$1" (null value)
   invalid_record_time_begin:
-    fr: La date de début "$2" de la fiche $1 est invalide
-    en: Invalid start date "$2" for record $1
+    fr: La date de début "$2" de la fiche "$1" est invalide
+    en: Invalid start date "$2" for record "$1"
   invalid_record_time_end:
-    fr: La date de fin "$2" de la fiche $1 est invalide
-    en: Invalid end date "$2" for record $1
+    fr: La date de fin "$2" de la fiche "$1" est invalide
+    en: Invalid end date "$2" for record "$1"
   unknown_bibliographic_reference:
-    fr: Clé de citation "$2" dans la fiche $1 non trouvée dans les données bibliographiques
-    en: Citation key "$2" in record $1 not found in bibliographic data
+    fr: Clé de citation "$2" dans la fiche "$1" non trouvée dans les données bibliographiques
+    en: Citation key "$2" in record "$1" not found in bibliographic data
