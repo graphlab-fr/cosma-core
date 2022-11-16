@@ -1,6 +1,6 @@
 {
   "name": "cosma-core",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Cosma is a document graph visualization tool. It modelizes interlinked Markdown files and renders them as an interactive network in a web interface.",
   "homepage": "https://cosma.graphlab.fr/",
   "repository": {
@@ -11,16 +11,17 @@
     "url": "https://github.com/graphlab-fr/cosma-core/issues"
   },
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "./node_modules/.bin/mocha --timeout 30000"
+  },
   "contributors": [
     "Arthur Perret",
     "Guillaume Brioudes",
     "Clément Borel",
     "Olivier Le Deuff"
   ],
-  "scripts": {
-    "start": "node index.js",
-    "test": "./node_modules/.bin/mocha --timeout 30000"
-  },
+  "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@zettlr/citr": "^1.2.2",
