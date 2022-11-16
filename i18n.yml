@@ -1166,7 +1166,7 @@ app_menu:
 report:
   title:
     fr: Rapport
-    en: Report
+    en: Log file
   section_error:
     fr: Erreurs ($1 fiches)
     en: Errors ($1 records)
