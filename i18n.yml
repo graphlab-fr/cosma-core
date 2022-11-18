@@ -1063,6 +1063,9 @@ app_menu:
   quit:
     fr: Quitter Cosma
     en: Quit Cosma
+  window_close:
+    fr: Fermer la fenêtre
+    en: Close windo 
   file:
     fr: Fichier
     en: File
