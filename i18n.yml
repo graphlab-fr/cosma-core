@@ -273,7 +273,7 @@ windows:
         en: Graph
       metas:
         fr: Métadonnées
-        en: Metas
+        en: Metadata
       bibliography:
         fr: Bibliographie
         en: Bibliography
@@ -434,10 +434,10 @@ windows:
     btns:
       add:
         fr: Ajouter
-        en: Add
+        en: Add…
       update:
         fr: Modifier
-        en: Update
+        en: Edit…
       rename:
         fr: Renommer
         en: Rename
@@ -681,11 +681,11 @@ windows:
         fr: Fichiers Markdown
         en: Markdown files
       csv_origin:
-        fr: Données tabulaires
-        en: Online tabular
+        fr: Données tabulaires (local)
+        en: Tabular data (local files)
       online_origin:
-        fr: Données tabulaires en ligne
-        en: Online tabular data
+        fr: Données tabulaires (en ligne)
+        en: Tabular data (online files)
       files_origin:
         fr: Répertoire des fiches
         en: Records directory
@@ -1065,7 +1065,7 @@ app_menu:
     en: Quit Cosma
   window_close:
     fr: Fermer la fenêtre
-    en: Close windo 
+    en: Close window
   file:
     fr: Fichier
     en: File
