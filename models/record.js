@@ -236,7 +236,7 @@ module.exports = class Record {
             return new Node(
                 id,
                 title,
-                type
+                type[0]
             );
         });
 
