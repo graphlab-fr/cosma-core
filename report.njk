@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ 'title' | translate }}</title>
+    <title>{{ 'title' | translate({ date: date }) }}</title>
     <style>
         :root {
             /* typography */
@@ -38,7 +38,7 @@
 
 <body>
     <header>
-        <h1>{{ 'title' | translate }}</h1>
+        <h1>{{ 'title' | translate({ date: date }) }}</h1>
     </header>
 
     <main>

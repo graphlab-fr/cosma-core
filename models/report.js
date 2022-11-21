@@ -27,8 +27,10 @@ module.exports = class Report {
             }
             return lang.getFor(lang.i['report'][input]);
         });
+        const date = new Date().toLocaleDateString(lang, { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })
         return templateEngine.render('report.njk', {
             lang: lang.flag,
+            date,
             listWarnings: Object.fromEntries(Report.listWarnings),
             listErrors: Object.fromEntries(Report.listErrors),
             warningsLength: Report.listWarnings.size,
