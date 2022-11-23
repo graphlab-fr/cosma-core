@@ -6,6 +6,7 @@ import {
     displayFromIndex,
 } from './records';
 import { setCounters } from './counter';
+import hotkeys from "hotkeys-js";
 
 
 /** Data serialization
@@ -65,6 +66,11 @@ window.updateForces = function () {
 }
 
 updateForces();
+
+hotkeys('space', (e) => {
+    e.preventDefault();
+    updateForces()
+});
 
 simulation
     .on("tick", function () {
