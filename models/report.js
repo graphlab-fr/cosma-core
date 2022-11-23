@@ -12,11 +12,11 @@ module.exports = class Report {
     static listErrors = new Map();
 
     /**
-     * @param {Config} config 
+     * @param {string} projectTitle
      * @returns {string} HTML
      */
 
-    static getAsHtmlFile() {
+    static getAsHtmlFile(projectTitle) {
         const lang = require('./lang');
         const templateEngine = new nunjucks.Environment(
             new nunjucks.FileSystemLoader(path.join(__dirname, '../'))
@@ -31,6 +31,7 @@ module.exports = class Report {
         return templateEngine.render('report.njk', {
             lang: lang.flag,
             date,
+            projectTitle,
             listWarnings: Object.fromEntries(Report.listWarnings),
             listErrors: Object.fromEntries(Report.listErrors),
             warningsLength: Report.listWarnings.size,

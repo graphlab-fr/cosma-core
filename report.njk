@@ -3,7 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ 'title' | translate({ date: date }) }}</title>
+    <title>
+        Cosma
+         - {{ 'title' | translate }}
+        {% if projectTitle %}
+         - {{ 'project' | translate({ project: projectTitle }) }}
+        {% endif %}
+    </title>
     <style>
         :root {
             /* typography */
@@ -38,7 +44,14 @@
 
 <body>
     <header>
-        <h1>{{ 'title' | translate({ date: date }) }}</h1>
+        <h1>
+            Cosma
+             - {{ 'title' | translate }}
+            {% if projectTitle %}
+             - {{ 'project' | translate({ project: projectTitle }) }}
+            {% endif %}
+             - {{ date }}
+        </h1>
     </header>
 
     <main>

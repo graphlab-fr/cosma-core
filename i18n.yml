@@ -1168,8 +1168,11 @@ app_menu:
 
 report:
   title:
-    fr: Cosma - Rapport - $1
-    en: Cosma - Log file - $1
+    fr: Rapport
+    en: Log file
+  project:
+    fr: Projet "$1"
+    en: Project "$1"
   section_error:
     fr: Erreurs ($1 fiches)
     en: Errors ($1 records)
