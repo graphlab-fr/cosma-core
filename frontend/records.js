@@ -1,6 +1,7 @@
 import View from './view';
 import historique from './history';
 import { highlightNodes, unlightNodes } from './graph';
+import hotkeys from 'hotkeys-js';
 
 const recordContainer = document.getElementById('record-container');
 
@@ -45,6 +46,11 @@ window.closeRecord = function() {
     View.openedRecordId = undefined;
     unlightNodes();
 }
+
+hotkeys('escape', (e) => {
+    e.preventDefault();
+    closeRecord();
+});
 
 window.addEventListener("DOMContentLoaded", () => {
     const hash = window.location.hash;
