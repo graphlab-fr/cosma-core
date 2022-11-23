@@ -37,7 +37,7 @@ link_types:
     stroke: dash
     color: '#e1e1e1'
 attraction_force: 500
-attraction_distance_max: 600
+attraction_distance_max: 1400
 title: 'Test'
 description: 'This cosmoscope was automatically generated with example data in order to test the functionality of the software.'
 keywords:
