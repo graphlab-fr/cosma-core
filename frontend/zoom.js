@@ -57,6 +57,11 @@ window.zoomMore = zoomMore;
 window.zoomLess = zoomLess;
 window.zoomReset = zoomReset;
 
+hotkeys('r', (e) => {
+    e.preventDefault();
+    zoomReset();
+});
+
 function translate() {
     const { x, y, zoom } = View.position;
     svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
