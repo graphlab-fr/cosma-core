@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js/dist/fuse.basic';
+import hotkeys from 'hotkeys-js';
 
 let searchInput = document.getElementById('search');
 let resultContainer = document.getElementById('search-result-list');
@@ -19,7 +20,6 @@ searchInput.addEventListener('focus', () => {
         if (searchInput.value === '') { return; }
 
         resultList = fuse.search(searchInput.value);
-        console.log(resultList);
 
         for (let i = 0; i < maxResultNb; i++) {
             let result = resultList[i];
@@ -40,6 +40,11 @@ searchInput.addEventListener('focus', () => {
         }
     })
 })
+
+hotkeys('s', (e) => {
+    e.preventDefault();
+    searchInput.focus();
+});
 
 document.addEventListener('keydown', keyboardResultNavigation)
 
