@@ -147,7 +147,7 @@ describe('Config', () => {
     });
 
     describe('get fake config', () => {
-        const fakeConfigPath = path.join(__dirname, '../utils/fake-config.yml');
+        const fakeConfigPath = path.join(__dirname, '../static/fake/config.yml');
         const configOptsGotten = Config.get(fakeConfigPath);
         let fakeConfigOpts;
         before(() => {
@@ -207,7 +207,7 @@ describe('Config', () => {
         it('should be true with fake files', () => {
             const [csl, csl_locale] = bibliographyFiles;
             const config = new Config({
-                bibliography: path.join(__dirname, '../utils/fake-bib.json'),
+                bibliography: path.join(__dirname, '../static/fake/bib.json'),
                 csl,
                 csl_locale,
             });
@@ -218,7 +218,7 @@ describe('Config', () => {
     describe('can custom css', () => {
         it('should be true with fake CSS file', () => {
             const config = new Config({
-                css_custom: path.join(__dirname, '../utils/fake.css')
+                css_custom: path.join(__dirname, '../static/fake/style.css')
             });
             config.canCssCustom().should.be.true;
         });
