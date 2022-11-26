@@ -328,7 +328,7 @@ module.exports = class Config {
         const lang = require('./lang');
 
         return Object.assign({}, Config.base, {
-            files_origin: path.join(__dirname, '../sample', lang.flag),
+            files_origin: path.join(__dirname, '../static/sample', lang.flag),
             record_types: {
                 undefined: { fill: '#147899', stroke: '#147899' },
                 documentation: { fill: '#147899', stroke: '#147899' },
@@ -570,9 +570,11 @@ module.exports = class Config {
         ];
         for (const { filePath, extension } of options) {
             if (Config.isValidPath(filePath) === false) {
+                console.log(111, filePath, 111)
                 return false;
             }
             if (path.extname(filePath) !== extension) {
+                console.log('ext', filePath)
                 return false;
             }
         }
