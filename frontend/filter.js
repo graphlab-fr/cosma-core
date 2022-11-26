@@ -4,147 +4,156 @@
  * @copyright GNU GPL 3.0 ANR HyperOtlet
  */
 
-import hotkeys from "hotkeys-js";
+/**
+ * @typedef Filter
+ * @type {object}
+ * @property {boolean} active
+ * @property {string[]} nodes
+ */
+
 import { displayNodes, hideNodes } from './graph';
 import { setCounters } from './counter';
 
+/** @type {string[]} */
+const filtersName = Object.keys(filterList);
+
 /**
  * Toggle a filter from his checkbox
- * @param {bool} isChecked - Checkbox boolean : checked or not
- * @param {string} nodeIdsList - List of nodes id to filter, separated by commas
- * @param {HTMLElement} input - The filter element from DOM
- * @param {bool} fromElt - If function is activated from a 'onchange' attribute
  */
 
-function filter(isChecked, nodeIdsList, input, fromElt = false) {
-    nodeIdsList = parseIdsString(nodeIdsList);
+function toggleFilter(filterName) {
+    if (filtersName.includes(filterName) === false) {
+        throw new Error('This filter does not exist.');
+    }
 
-    if (isChecked === true) {
-        displayNodes(nodeIdsList);
-        input.checked = true;
-    } else {
-        hideNodes(nodeIdsList);
+    /** @type {HTMLInputElement} */
+    const input = document.getElementById(`filter-${filterName}`);
+    /** @type {Filter} */
+    const { active, nodes } = filterList[filterName];
+    if (active) {
+        hideNodes(nodes);
+
+        filterList[filterName].active = false;
         input.checked = false;
+    } else {
+        displayNodes(nodes);
+
+        filterList[filterName].active = true;
+        input.checked = true;
     }
 
     setCounters();
-    
-    if (fromElt && hotkeys.alt) {
-        // if (filterAltMode && isChecked == false) {
-        //     setFilters(getFilterNames()); // active all types
-        //     filterAltMode = false;
-        //     return;
-        // }
-        setFilters([input.name]); // first time alt+click
-        filterAltMode = true; // active alt+click mode
-    } else {
-        filterAltMode = false; // after last time alt+click
-    }
 }
 
-window.filter = filter;
+window.addEventListener("DOMContentLoaded", () => {
+    /** @type {HTMLInputElement[]} */
+    const filtersInput = [];
 
-/**
- * Activate filters by their name and if their are not already activated
- * Unactive others filters if their are not already unactivated
- * @param {array} filtersNameToActivate - List of filter names
- */
+    for (const filterName of filtersName) {
+        /** @type {Filter} */
+        const { active } = filterList[filterName];
+        /** @type {HTMLInputElement} */
+        const input = document.getElementById(`filter-${filterName}`);
+        input.checked = active;
 
-function setFilters(filtersNameToActivate) {
-    let filtersNames = Array.from(document.querySelectorAll('[data-filter]'))
-        .map(filter => filter.name);
-
-    let filtersToUnactivate = filtersNames.filter(function(filterName) {
-        if (filtersNameToActivate.includes(filterName)) {
-            return false; }
-        if (getUnactiveFilterNames().includes(filterName)) {
-            return false; }
-
-        return true;
-    });
-
-    filtersNameToActivate = filtersNameToActivate.filter(function(filterName) {
-        if (getActiveFilterNames().includes(filterName)) {
-            return false; }
-
-        return true;
-    });
-
-    for (const filterName of filtersToUnactivate) {
-        let filterElt = document.querySelector('[data-filter][name="' + filterName + '"]')
-            , data = filterElt.dataset.filter;
-
-        filter(false, data, filterElt);
+        filtersInput.push(input);
     }
 
-    for (const filterName of filtersNameToActivate) {
-        let filterElt = document.querySelector('[data-filter][name="' + filterName + '"]')
-            , data = filterElt.dataset.filter;
+    let filterNameAltMode;
+    for (const input of filtersInput) {
+        const { name: filterName, checked: active } = input;
 
-        filter(true, data, filterElt);
+        input.parentElement.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+
+            const altMode = e.altKey;
+
+            if (altMode) {
+                if (filterNameAltMode === filterName) {
+                    displayHidden();
+                    filterNameAltMode = undefined;
+                } else {
+                    hideAllButOne(filterName);
+                    filterNameAltMode = filterName;
+                }
+            } else {
+                toggleFilter(filterName);
+                filterNameAltMode = undefined;
+            }
+        })
     }
-}
 
-/**
- * Get all filters name from the page
- * @returns {array} - Filter names list
- */
+    /**
+     * Display one filter and hide others
+     * @param {string} oneFilterName
+     */
 
-function getFilterNames() {
-    return filterElts = Array.from(document.querySelectorAll('[data-filter]'))
-        .map(filterElt => filterElt.name);
-}
+    function hideAllButOne(oneFilterName) {
+        /** @type {HTMLInputElement|undefined} */
+        let oneFilterInput;
 
-/**
- * Get active filters name
- * @returns {array} - Filter names list
- */
+        /**
+         * Hide all
+         */
+        const nodesToHide = [];
+        for (const input of filtersInput) {
+            const { name: filterName, checked: active } = input;
+            if (filterName === oneFilterName) {
+                oneFilterInput = input;
+                continue;
+            }
+            if (active === false) {
+                continue;
+            }
 
-function getActiveFilterNames() {
-    let filterElts = Array.from(document.querySelectorAll('[data-filter]'))
-        .filter(filterElt => filterElt.checked === true)
+            /** @type {Filter} */
+            const { nodes } = filterList[filterName];
+            nodesToHide.push(...nodes);
 
-    return filterElts.map(filterElt => filterElt.name);
-}
+            filterList[filterName].active = false;
+            input.checked = false;
+        }
 
-/**
- * Get unactive filters name
- * @returns {array} - Filter names list
- */
+        hideNodes(nodesToHide);
 
-function getUnactiveFilterNames() {
-    let filterElts = Array.from(document.querySelectorAll('[data-filter]'))
-        .filter(filterElt => filterElt.checked === false)
+        /**
+         * Display one
+         */
+        if (filterList[oneFilterName].active === false) {
+            /** @type {Filter} */
+            const { nodes } = filterList[oneFilterName];
+            displayNodes(nodes);
 
-    return filterElts.map(filterElt => filterElt.name);
-}
+            filterList[oneFilterName].active = true;
+            oneFilterInput.checked = true;
+        }
 
-function activeAllFilters() {
-    Array.from(document.querySelectorAll('[data-filter]'))
-        .filter(filterElt => filterElt.checked === false)
-        .forEach(filterElt => {
-            filter(true, filterElt.dataset.filter, filterElt);
-        });
-}
+        setCounters();
+    }
 
-/**
- * Get nodes id hidden by filters into an array
- * @returns {array} - Nodes id list
- */
+    /**
+     * Display nodes from deactivated filters
+     */
 
-function getNodesHideByFilter() {
-    const unactiveFilters = Array.from(document.querySelectorAll('[data-filter]'))
-        .filter(filterElt => filterElt.checked === false);
+    function displayHidden() {
+        const nodesToDisplay = [];
+        for (const input of filtersInput) {
+            const { name: filterName, checked: active } = input;
+            if (active) {
+                continue;
+            }
 
-    return filtersIds = unactiveFilters
-        .map(filterElt => parseIdsString(filterElt.dataset.filter)).flat();
-}
+            /** @type {Filter} */
+            const { nodes } = filterList[filterName];
+            nodesToDisplay.push(...nodes);
 
-/**
- * Get nodes id list (array of numbers) from a string
- * @returns {array} - Ids array
- */
+            filterList[filterName].active = true;
+            input.checked = true;
+        }
 
-function parseIdsString(idsString) {
-    return idsString.split(',').map(id => Number(id));
-}
+        displayNodes(nodesToDisplay);
+
+        setCounters();
+    }
+});

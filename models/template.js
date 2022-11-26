@@ -181,10 +181,13 @@ module.exports = class Template {
         } = this.config.opts;
         let references;
 
-        const typesFromGraph = [];
+        const filtersFromGraph = {};
         graph.getTypesFromRecords().forEach((nodes, name) => {
             nodes = Array.from(nodes);
-            typesFromGraph.push({ name, nodes });
+            filtersFromGraph[name] = {
+                nodes,
+                active: true
+            }
         });
         const tagsFromGraph = [];
         graph.getTagsFromRecords().forEach((nodes, name) => {
@@ -278,7 +281,7 @@ module.exports = class Template {
             customCss: this.custom_css,
 
             views: views || [],
-            types: typesFromGraph,
+            filters: filtersFromGraph,
             tags: tagsFromGraph,
 
             references,
