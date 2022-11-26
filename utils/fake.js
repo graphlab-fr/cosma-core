@@ -67,7 +67,7 @@ for (const fileId of ids) {
         metas: {
             id: fileId,
             title: faker.name.jobTitle(),
-            type: [faker.helpers.arrayElement(Object.keys(recordTypes)), faker.helpers.arrayElement(Object.keys(recordTypes))],
+            type: faker.helpers.arrayElement(Object.keys(recordTypes)),
             tags: [
                 faker.helpers.arrayElement(tags),
                 faker.helpers.arrayElement(tags)
