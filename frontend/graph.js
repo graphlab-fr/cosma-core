@@ -1,3 +1,10 @@
+/**
+ * @typedef NodeNetwork
+ * @type {object}
+ * @property {d3.Selection<SVGGElement, Node, SVGElement>} nodes
+ * @property {d3.Selection<SVGLineElement, Link, SVGElement>} links
+ */
+
 import * as d3 from "d3";
 
 import View from './view';
@@ -12,8 +19,7 @@ import hotkeys from "hotkeys-js";
 /** Data serialization
 ------------------------------------------------------------*/
 
-data.nodes = data.nodes.map(function (node) {
-    node.hidden = false;
+data.nodes = data.nodes.map((node) => {
     node.isolated = false;
     node.highlighted = false;
     return node;
@@ -96,6 +102,7 @@ simulation
 
 const elts = {};
 
+/** @type {d3.Selection<SVGLineElement, Link, SVGElement, any>} */
 elts.links = svg.append("g")
     .selectAll("line")
     .data(data.links)
@@ -122,6 +129,7 @@ if (graphProperties.graph_arrows === true) {
         .attr("marker-end", 'url(#arrow)');
 }
 
+/** @type {d3.Selection<SVGGElement, Node, SVGElement, any>} */
 elts.nodes = svg.append("g")
     .selectAll("g")
     .data(data.nodes)
@@ -131,6 +139,7 @@ elts.nodes = svg.append("g")
         openRecord(d.id);
     });
 
+/** @type {d3.Selection<SVGCircleElement, any, SVGElement, any>} */
 elts.circles = elts.nodes.append("circle")
     .attr("r", (d) => d.size)
     .attr("fill", (d) => d.fill)
@@ -200,6 +209,7 @@ elts.circles = elts.nodes.append("circle")
         elts.links.attr('stroke-opacity', 1);
     });
 
+/** @type {d3.Selection<SVGTextElement, Node, SVGGElement, any>} */
 elts.labels = elts.nodes.append("text")
     .each(function (d) {
         const words = d.label.split(' ')
@@ -234,7 +244,7 @@ elts.labels = elts.nodes.append("text")
 /**
 * Get nodes and their links
 * @param {array} nodeIds - List of nodes ids
-* @returns {array} - DOM elts : nodes and their links
+* @returns {NodeNetwork} - DOM elts : nodes and their links
 */
 
 function getNodeNetwork(nodeIds) {
@@ -257,8 +267,8 @@ function getNodeNetwork(nodeIds) {
     });
 
     return {
-        nodes: nodes,
-        links: links
+        nodes,
+        links
     }
 }
 
@@ -346,7 +356,7 @@ function displayNodes (nodeIds) {
 
 /**
 * Zoom to a node from its coordinates
-* @param {number} nodeId
+* @param {string|number} nodeId
 */
 
 window.zoomToNode = function (nodeId) {
@@ -376,38 +386,38 @@ window.zoomToNode = function (nodeId) {
 
 /**
 * Display none nodes and their link
-* @param {array} nodeIds - List of nodes ids
+* @param {string[]|number[]} nodeIds - List of nodes ids
 */
 
 window.hideNodeNetwork = function (nodeIds) {
-    const ntw = getNodeNetwork(nodeIds);
+    const { nodes, links } = getNodeNetwork(nodeIds);
 
-    ntw.nodes.style('display', 'none');
-    ntw.links.style('display', 'none');
+    nodes.style('display', 'none');
+    links.style('display', 'none');
 }
 
 /**
 * Reset display nodes and their link
-* @param {array} nodeIds - List of nodes ids
+* @param {string[]|number[]} nodeIds - List of nodes ids
 */
 
 window.displayNodeNetwork = function (nodeIds) {
-    const ntw = getNodeNetwork(nodeIds);
+    const { nodes, links } = getNodeNetwork(nodeIds);
 
-    ntw.nodes.style('display', null);
-    ntw.links.style('display', null);
+    nodes.style('display', null);
+    links.style('display', null);
 }
 
 /**
 * Apply highlightColor (from config) to somes nodes and their links
-* @param {array} nodeIds - List of nodes ids
+* @param {string[]|number[]} nodeIds - List of nodes ids
 */
 
 function highlightNodes (nodeIds) {
-    const ntw = getNodeNetwork(nodeIds);
+    const { nodes, links } = getNodeNetwork(nodeIds);
 
-    ntw.nodes.selectAll("circle").style('stroke', 'var(--highlight)');
-    ntw.links.style('stroke', 'var(--highlight)');
+    nodes.selectAll("circle").style('stroke', 'var(--highlight)');
+    links.style('stroke', 'var(--highlight)');
 
     View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
 }
@@ -419,17 +429,17 @@ function highlightNodes (nodeIds) {
 function unlightNodes () {
     if (View.highlightedNodes.length === 0) { return; }
 
-    const ntw = getNodeNetwork(View.highlightedNodes);
+    const { nodes, links } = getNodeNetwork(View.highlightedNodes);
 
-    ntw.nodes.selectAll("circle").style('stroke', null);
-    ntw.links.style('stroke', null);
+    nodes.selectAll("circle").style('stroke', null);
+    links.style('stroke', null);
 
     View.highlightedNodes = [];
 }
 
 /**
 * Toggle display/hide nodes links
-* @param {bool} isChecked - 'checked' value send by a checkbox input
+* @param {boolean} isChecked - 'checked' value send by a checkbox input
 */
 
 window.linksDisplayToggle = function (isChecked) {
@@ -442,7 +452,7 @@ window.linksDisplayToggle = function (isChecked) {
 
 /**
 * Toggle display/hide nodes label
-* @param {bool} isChecked - 'checked' value send by a checkbox input
+* @param {boolean} isChecked - 'checked' value send by a checkbox input
 */
 
 window.labelDisplayToggle = function (isChecked) {
@@ -455,7 +465,7 @@ window.labelDisplayToggle = function (isChecked) {
 
 /**
 * Add 'highlight' class to texts linked to nodes ids
-* @param {array} nodeIds - List of node ids
+* @param {string[]|number[]} nodeIds - List of node ids
 */
 
 window.labelHighlight = function (nodeIds) {
@@ -482,7 +492,7 @@ window.updateFontsize = function () {
 
 /**
 * Remove 'highlight' class from texts linked to nodes ids
-* @param {array} nodeIds - List of node ids
+* @param {string[]|number[]} nodeIds - List of node ids
 */
 
 window.labelUnlight = function (nodeIds) {
