@@ -26,7 +26,7 @@ GOODY, Jack, 1979. La Raison graphique : la domestication de la pensée sauvag
   Paris : Les Editions de Minuit. ISBN 978-2-7073-0240-3.
 
 CHRISTIN, Anne-Marie, 1995. L’image écrite, ou, La déraison graphique.
-  Paris : Flammarion. Idées et recherches. ISBN 978-2-08-012635-1. 
+  Paris : Flammarion. Idées et recherches. ISBN 978-2-08-012635-1.
 ```
 
 You can change the citation style (default: ISO690-author-date-fr) by loading a CSL style file in the configuration. Download styles from the [Zotero database](https://www.zotero.org/styles).

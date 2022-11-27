@@ -51,10 +51,10 @@ Ajoutez `type: nom` à l'en-tête en YAML d'une fiche pour lui attribuer ce type
 
 Cette section permet de définir différent types de liens. Pour chaque type de lien, renseignez un nom, une couleur et un tracé. Les tracés disponibles sont :
 
-- continu (*simple*)
-- double (*double*)
-- tirets (*dash*)
-- pointillés (*dotted*)
+- continu (_simple_)
+- double (_double_)
+- tirets (_dash_)
+- pointillés (_dotted_)
 
 Pour qualifier un lien dans une fiche, préfixez l'identifiant par le nom d'un type de lien suivi d'un deux-points.
 
@@ -147,9 +147,9 @@ Les feuilles de style du cosmoscope utilisent notamment des variables CSS pour d
 
 ```css
 :root {
-  --sans: "IBM Plex Sans", sans-serif;
-  --serif: "IBM Plex Serif", serif;
-  --mono: "IBM Plex Mono", monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --serif: 'IBM Plex Serif', serif;
+  --mono: 'IBM Plex Mono', monospace;
   --condensed: 'Avenir Next Condensed', sans-serif;
 }
 ```

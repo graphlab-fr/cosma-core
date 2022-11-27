@@ -49,9 +49,9 @@ In order to design your custom CSS, you can :
 
 ```css
 :root {
-  --sans: "IBM Plex Sans", sans-serif;
-  --serif: "IBM Plex Serif", serif;
-  --mono: "IBM Plex Mono", monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --serif: 'IBM Plex Serif', serif;
+  --mono: 'IBM Plex Mono', monospace;
   --condensed: 'Avenir Next Condensed', sans-serif;
 }
 ```

@@ -10,7 +10,7 @@ Cosma a été développé initialement dans le cadre du programme de recherche A
 
 ## Spécificités de Cosma
 
-Dans le vaste champ des outils qui servent à penser (*tools for thought*), Cosma se démarque par **trois originalités** :
+Dans le vaste champ des outils qui servent à penser (_tools for thought_), Cosma se démarque par **trois originalités** :
 
 D'abord, **Cosma n'est pas lui-même un logiciel de prise de notes**. Il est pensé pour fonctionner en complémentarité avec ces logiciels. Nous nous sommes inspirés ici du fonctionnement de logiciels comme [Deckset](https://www.deckset.com), qui applique ce principe aux présentations.
 

@@ -19,18 +19,18 @@ Dans le fichier de données, chaque référence doit posséder un identifiant un
 ```json
 [
   {
-    "id":"goody1979",
-    "author":[{"family":"Goody","given":"Jack"}],
-    "citation-key":"goody1979",
-    "event-place":"Paris",
-    "ISBN":"978-2-7073-0240-3",
-    "issued":{"date-parts":[[1979]]},
-    "language":"fr",
-    "publisher":"Les Editions de Minuit",
-    "publisher-place":"Paris",
-    "title":"La Raison graphique : la domestication de la pensée sauvage",
-    "title-short":"La Raison graphique",
-    "type":"book"
+    "id": "goody1979",
+    "author": [{ "family": "Goody", "given": "Jack" }],
+    "citation-key": "goody1979",
+    "event-place": "Paris",
+    "ISBN": "978-2-7073-0240-3",
+    "issued": { "date-parts": [[1979]] },
+    "language": "fr",
+    "publisher": "Les Editions de Minuit",
+    "publisher-place": "Paris",
+    "title": "La Raison graphique : la domestication de la pensée sauvage",
+    "title-short": "La Raison graphique",
+    "type": "book"
   }
 ]
 ```

@@ -22,4 +22,3 @@ Le fichier `cosmoscope.html` exporté peut être partagé comme n'importe quel f
 Dans le cas d'un cosmoscope publié sur le Web, il est possible de créer un lien directement vers une fiche en ajoutant son identifiant précédé d'un croisillon `#` en fin d'URL. Exemple :
 
 `https://domaine.fr/cosmoscope.html#20210427185546`
-
