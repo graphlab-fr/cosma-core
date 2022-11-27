@@ -33,15 +33,15 @@ In YAML, a field consists of a name and a value separated by a colon. Cosma reco
 
 `tags` (optional): keywords assigned to the record. The value must be a list. A record can have as many keywords as you wish. You can use `keywords` instead of `tags`, for compatibility with Pandoc. If a record has a `tags` field and a `keywords` field, only the keywords declared in the `tags` field are interpreted by Cosma.
 
-In accordance with the YAML specification, the list of keywords can be written in *block* mode:
+In accordance with the YAML specification, the list of keywords can be written in _block_ mode:
 
 ```yaml
 tags:
-- keyword 1
-- keyword 2
+  - keyword 1
+  - keyword 2
 ```
 
-Or in *flow* mode:
+Or in _flow_ mode:
 
 ```yaml
 tags: [keyword 1, keyword 2]
@@ -55,4 +55,4 @@ Some applications opt to recognize file metadata heuristically. For example, if 
 
 This method is not interoperable: each program has its own conventions, which limits the user's ability to change tools.
 
-Using a YAML header allows writers to declare different metadata explicitly and separately. This has the advantage of making the detection and manipulation of this metadata trivial, both by machines and humans. The use of a common format (such as YAML) increases the number of tools that can be used seamlessly with the same set of files. And widely used computer tools such as regular expressions and *shell* scripts allow people to convert their data themselves in a relatively simple way if needed.
+Using a YAML header allows writers to declare different metadata explicitly and separately. This has the advantage of making the detection and manipulation of this metadata trivial, both by machines and humans. The use of a common format (such as YAML) increases the number of tools that can be used seamlessly with the same set of files. And widely used computer tools such as regular expressions and _shell_ scripts allow people to convert their data themselves in a relatively simple way if needed.

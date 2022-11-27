@@ -1,5 +1,5 @@
 const path = require('path');
-const { defineConfig } = require("cypress");
+const { defineConfig } = require('cypress');
 
 const { devServer } = require('./webpack.config');
 
@@ -11,6 +11,6 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: `http://localhost:${devServer.port}`,
     supportFile: false,
-    specPattern: 'e2e/**/*.js'
-  }
+    specPattern: 'e2e/**/*.js',
+  },
 });
