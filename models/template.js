@@ -273,7 +273,7 @@ module.exports = class Template {
                 minValues: Config.minValues
             },
 
-            chronos: graph.getChronosFromRecords(),
+            timeline: graph.getTimelineFromRecords(),
 
             translation: translation,
             lang: lang,
