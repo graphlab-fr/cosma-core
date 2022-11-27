@@ -277,7 +277,7 @@ module.exports = class Cosmocope extends Graph {
                 linksReferences,
                 backlinksReferences,
                 begin,
-                undefined,
+                end,
                 bibliographicRecords,
                 thumbnail,
                 opts
