@@ -1,6 +1,3 @@
-const { $dataMetaSchema } = require("ajv");
-const { expect } = require("chai");
-
 describe('Filters', () => {
     beforeEach(() => {
         cy.visit('/temp/cosmoscope.html')
