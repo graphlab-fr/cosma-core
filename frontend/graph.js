@@ -19,7 +19,10 @@ import hotkeys from "hotkeys-js";
 /** Data serialization
 ------------------------------------------------------------*/
 
+const nodeIds = [];
+
 data.nodes = data.nodes.map((node) => {
+    nodeIds.push(node.id);
     node.hidden = false;
     node.isolated = false;
     node.highlighted = false;
@@ -355,6 +358,10 @@ function displayNodes (nodeIds) {
     displayFromIndex(nodesToDisplayIds);
 }
 
+function displayNodesAll () {
+    displayNodes(nodeIds);
+}
+
 /**
 * Zoom to a node from its coordinates
 * @param {string|number} nodeId
@@ -555,4 +562,4 @@ function translate() {
     svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
 }
 
-export { svg, hideNodes, displayNodes, highlightNodes, unlightNodes };
+export { svg, hideNodes, displayNodes, displayNodesAll, highlightNodes, unlightNodes };

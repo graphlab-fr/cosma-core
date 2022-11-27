@@ -583,7 +583,7 @@ marker {
 	border-radius: 5px;
 }
 
-.graph-chronos {
+.graph-timeline {
 	position: absolute;
 	display: flex;
 	align-items: flex-start;
@@ -621,22 +621,22 @@ marker {
 .graph-controls #reset-isolate { display: none; }
 .graph-controls #reset-highlight { display: none; }
 
-.graph-chronos {
+.graph-timeline {
     width: calc(100% - 60px);
 }
 
-#chronos-form {
+#timeline-form {
 	width: 100%;
 	backdrop-filter: blur(7px);
 }
 
-#chronos-form:not(.active) { visibility: hidden; }
+#timeline-form:not(.active) { visibility: hidden; }
 
-#chronos-form input[type="range"] {
+#timeline-form input[type="range"] {
 	width: 100%;
 }
 
-#chronos-range output[name="chronos_output"] {
+#timeline-range output[name="timeline_output"] {
 	color: gray;
 	position: relative;
 	text-align: center;
