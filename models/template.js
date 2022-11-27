@@ -269,7 +269,7 @@ module.exports = class Template {
 
             graph: {
                 config: this.config.opts,
-                data: JSON.stringify(graph.data),
+                data: graph.data,
                 minValues: Config.minValues
             },
 
