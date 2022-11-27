@@ -20,6 +20,7 @@
   "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "scripts": {
     "start": "node index.js",
+    "format": "./node_modules/.bin/prettier --write",
     "test:unit": "./node_modules/.bin/mocha --timeout 30000",
     "test:e2e": "./node_modules/.bin/cypress open --config-file ./utils/cypress.config.js",
     "build": "./node_modules/.bin/webpack-cli build --config ./utils/webpack.config.js"
@@ -52,9 +53,20 @@
     "chai-fs": "^2.0.0",
     "cypress": "^10.9.0",
     "mocha": "^10.0.0",
+    "prettier": "2.8.0",
     "puppeteer": "^17.1.0",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "bracketSpacing": true,
+    "arrowParens": "always"
   }
 }
