@@ -20,6 +20,7 @@ import hotkeys from "hotkeys-js";
 ------------------------------------------------------------*/
 
 data.nodes = data.nodes.map((node) => {
+    node.hidden = false;
     node.isolated = false;
     node.highlighted = false;
     return node;
