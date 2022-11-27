@@ -16,4 +16,3 @@ Cosma also features automatic [[20210901134745]] citation processing. This relie
 This combination of writing standards combines several textual cultures: documentation (enriching and indexing content with metadata); wikis (interrelating documents); the Zettelkasten method (organising one's notes); academic writing with Pandoc (using plain text as a source for exporting in various formats). Therefore, Cosma works particularly well when used in tandem with writing environments that also adopt this approach, such as Zettlr or the Foam extension for Visual Studio Code and VSCodium.
 
 You can create a Cosma-compliant file via the application's record creation form (click File › New record, or type `Ctrl + N`) or manually with the text editor of your choice. Some text editors can save you time with document templates, which you can use to quickly create records for Cosma.
-

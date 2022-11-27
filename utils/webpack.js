@@ -7,43 +7,40 @@ const webpackConfig = require('./webpack.config');
  */
 
 module.exports = {
-    execute: function (mode) {
-        const configWebpackProd = { ...webpackConfig, mode };
+  execute: function (mode) {
+    const configWebpackProd = { ...webpackConfig, mode };
 
-        return new Promise((resolve, reject) => {
-            webpack(
-                configWebpackProd,
-                (err, stats) => {
-                    if (!stats) {
-                        return reject('Err. no infos');
-                    }
-    
-                    const info = stats.toJson();
-                    if (stats.hasErrors()) {
-                        return reject(info.errors);
-                    }
-                    if (stats && stats.hasWarnings()) { 
-                        return console.warn(info.warnings);
-                    }
-    
-                    resolve(info);
-                }
-            );
-        })
-    },
-    startServer: function() {
-        return new Promise(async (resolve, reject) => {
-            const compiler = await webpack({ ...webpackConfig, mode: 'development' })
-                , server = new webpackDevServer(webpackConfig.devServer, compiler);
-    
-            try {
-                await server.start();
-            } catch (error) {
-                await server.stop();
-                reject(error);
-            }
-    
-            resolve(server);
-        });
-    }
-}
+    return new Promise((resolve, reject) => {
+      webpack(configWebpackProd, (err, stats) => {
+        if (!stats) {
+          return reject('Err. no infos');
+        }
+
+        const info = stats.toJson();
+        if (stats.hasErrors()) {
+          return reject(info.errors);
+        }
+        if (stats && stats.hasWarnings()) {
+          return console.warn(info.warnings);
+        }
+
+        resolve(info);
+      });
+    });
+  },
+  startServer: function () {
+    return new Promise(async (resolve, reject) => {
+      const compiler = await webpack({ ...webpackConfig, mode: 'development' }),
+        server = new webpackDevServer(webpackConfig.devServer, compiler);
+
+      try {
+        await server.start();
+      } catch (error) {
+        await server.stop();
+        reject(error);
+      }
+
+      resolve(server);
+    });
+  },
+};
