@@ -3,7 +3,7 @@ import './search';
 import './graph';
 import './zoom';
 import './bibliography';
-import './chronos';
+import './timeline';
 import './filter';
 
 // const number = [1, 2, 3, 4];

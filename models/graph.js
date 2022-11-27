@@ -5,7 +5,7 @@
  */
 
 /**
- * @typedef Chronos
+ * @typedef Timeline
  * @type {object}
  * @property {number | undefined} begin
  * @property {number | undefined} end
@@ -84,10 +84,10 @@ module.exports = class Graph {
     }
 
     /**
-     * @returns {Chronos}
+     * @returns {Timeline}
      */
 
-    getChronosFromRecords() {
+    getTimelineFromRecords() {
         let dates = [];
         for (const { begin, end } of this.records) {
             dates.push(begin, end);
