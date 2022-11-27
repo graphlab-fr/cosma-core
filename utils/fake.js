@@ -59,6 +59,8 @@ for (const fileId of ids) {
     const thumbnail = `${fileId}.jpg`;
     nodeThumbnails.push(thumbnail);
 
+    const { begin, end } = fakeExtremeDates();
+
     files.push({
         path: undefined,
         name: faker.system.commonFileName('md'),
@@ -74,7 +76,9 @@ for (const fileId of ids) {
             ],
             thumbnail: thumbnail,
             references: ['Masure_2014'],
-            ['phone number']: faker.phone.number('06 ## ## ## ##')
+            ['phone number']: faker.phone.number('06 ## ## ## ##'),
+            begin,
+            end
         }
     })
 }
@@ -108,4 +112,38 @@ function fakeView() {
     const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64');
 
     return viewEncodeKey;
+}
+
+/**
+ * @returns {{ begin: string, end: string }}
+ * @exemple
+ * ```
+ * { begin: '2020-02-10', end: '2024-02-10' }
+ * ```
+ */
+
+function fakeExtremeDates() {
+    let begin = faker.datatype.datetime({
+        min: new Date('2000-01-01'),
+        max: new Date('2010-01-01')
+    });
+    begin = new Date(begin);
+    begin = [
+        begin.getFullYear().toString().padStart(4, "0"),
+        (begin.getMonth() + 1).toString().padStart(2, "0"),
+        begin.getDate().toString().padStart(2, "0")
+    ].join('-');
+    
+    let end = faker.datatype.datetime({
+        min: new Date('2010-01-01'),
+        max: new Date('2020-01-01')
+    });
+    end = new Date(end);
+    end = [
+        end.getFullYear().toString().padStart(4, "0"),
+        (end.getMonth() + 1).toString().padStart(2, "0"),
+        end.getDate().toString().padStart(2, "0")
+    ].join('-');
+
+    return { begin, end };
 }
