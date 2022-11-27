@@ -22,138 +22,138 @@ const filtersName = Object.keys(filterList);
  */
 
 function toggleFilter(filterName) {
-    if (filtersName.includes(filterName) === false) {
-        throw new Error('This filter does not exist.');
-    }
+  if (filtersName.includes(filterName) === false) {
+    throw new Error('This filter does not exist.');
+  }
 
+  /** @type {HTMLInputElement} */
+  const input = document.getElementById(`filter-${filterName}`);
+  /** @type {Filter} */
+  const { active, nodes } = filterList[filterName];
+  if (active) {
+    hideNodes(nodes);
+
+    filterList[filterName].active = false;
+    input.checked = false;
+  } else {
+    displayNodes(nodes);
+
+    filterList[filterName].active = true;
+    input.checked = true;
+  }
+
+  setCounters();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  /** @type {HTMLInputElement[]} */
+  const filtersInput = [];
+
+  for (const filterName of filtersName) {
+    /** @type {Filter} */
+    const { active } = filterList[filterName];
     /** @type {HTMLInputElement} */
     const input = document.getElementById(`filter-${filterName}`);
-    /** @type {Filter} */
-    const { active, nodes } = filterList[filterName];
-    if (active) {
-        hideNodes(nodes);
+    input.checked = active;
 
-        filterList[filterName].active = false;
-        input.checked = false;
-    } else {
-        displayNodes(nodes);
+    filtersInput.push(input);
+  }
 
-        filterList[filterName].active = true;
-        input.checked = true;
+  let filterNameAltMode;
+  for (const input of filtersInput) {
+    const { name: filterName, checked: active } = input;
+
+    input.parentElement.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      const altMode = e.altKey;
+
+      if (altMode) {
+        if (filterNameAltMode === filterName) {
+          displayHidden();
+          filterNameAltMode = undefined;
+        } else {
+          hideAllButOne(filterName);
+          filterNameAltMode = filterName;
+        }
+      } else {
+        toggleFilter(filterName);
+        filterNameAltMode = undefined;
+      }
+    });
+  }
+
+  /**
+   * Display one filter and hide others
+   * @param {string} oneFilterName
+   */
+
+  function hideAllButOne(oneFilterName) {
+    /** @type {HTMLInputElement|undefined} */
+    let oneFilterInput;
+
+    /**
+     * Hide all
+     */
+    const nodesToHide = [];
+    for (const input of filtersInput) {
+      const { name: filterName, checked: active } = input;
+      if (filterName === oneFilterName) {
+        oneFilterInput = input;
+        continue;
+      }
+      if (active === false) {
+        continue;
+      }
+
+      /** @type {Filter} */
+      const { nodes } = filterList[filterName];
+      nodesToHide.push(...nodes);
+
+      filterList[filterName].active = false;
+      input.checked = false;
+    }
+
+    hideNodes(nodesToHide);
+
+    /**
+     * Display one
+     */
+    if (filterList[oneFilterName].active === false) {
+      /** @type {Filter} */
+      const { nodes } = filterList[oneFilterName];
+      displayNodes(nodes);
+
+      filterList[oneFilterName].active = true;
+      oneFilterInput.checked = true;
     }
 
     setCounters();
-}
+  }
 
-window.addEventListener("DOMContentLoaded", () => {
-    /** @type {HTMLInputElement[]} */
-    const filtersInput = [];
+  /**
+   * Display nodes from deactivated filters
+   */
 
-    for (const filterName of filtersName) {
-        /** @type {Filter} */
-        const { active } = filterList[filterName];
-        /** @type {HTMLInputElement} */
-        const input = document.getElementById(`filter-${filterName}`);
-        input.checked = active;
-
-        filtersInput.push(input);
-    }
-
-    let filterNameAltMode;
+  function displayHidden() {
+    const nodesToDisplay = [];
     for (const input of filtersInput) {
-        const { name: filterName, checked: active } = input;
+      const { name: filterName, checked: active } = input;
+      if (active) {
+        continue;
+      }
 
-        input.parentElement.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
+      /** @type {Filter} */
+      const { nodes } = filterList[filterName];
+      nodesToDisplay.push(...nodes);
 
-            const altMode = e.altKey;
-
-            if (altMode) {
-                if (filterNameAltMode === filterName) {
-                    displayHidden();
-                    filterNameAltMode = undefined;
-                } else {
-                    hideAllButOne(filterName);
-                    filterNameAltMode = filterName;
-                }
-            } else {
-                toggleFilter(filterName);
-                filterNameAltMode = undefined;
-            }
-        })
+      filterList[filterName].active = true;
+      input.checked = true;
     }
 
-    /**
-     * Display one filter and hide others
-     * @param {string} oneFilterName
-     */
+    displayNodes(nodesToDisplay);
 
-    function hideAllButOne(oneFilterName) {
-        /** @type {HTMLInputElement|undefined} */
-        let oneFilterInput;
-
-        /**
-         * Hide all
-         */
-        const nodesToHide = [];
-        for (const input of filtersInput) {
-            const { name: filterName, checked: active } = input;
-            if (filterName === oneFilterName) {
-                oneFilterInput = input;
-                continue;
-            }
-            if (active === false) {
-                continue;
-            }
-
-            /** @type {Filter} */
-            const { nodes } = filterList[filterName];
-            nodesToHide.push(...nodes);
-
-            filterList[filterName].active = false;
-            input.checked = false;
-        }
-
-        hideNodes(nodesToHide);
-
-        /**
-         * Display one
-         */
-        if (filterList[oneFilterName].active === false) {
-            /** @type {Filter} */
-            const { nodes } = filterList[oneFilterName];
-            displayNodes(nodes);
-
-            filterList[oneFilterName].active = true;
-            oneFilterInput.checked = true;
-        }
-
-        setCounters();
-    }
-
-    /**
-     * Display nodes from deactivated filters
-     */
-
-    function displayHidden() {
-        const nodesToDisplay = [];
-        for (const input of filtersInput) {
-            const { name: filterName, checked: active } = input;
-            if (active) {
-                continue;
-            }
-
-            /** @type {Filter} */
-            const { nodes } = filterList[filterName];
-            nodesToDisplay.push(...nodes);
-
-            filterList[filterName].active = true;
-            input.checked = true;
-        }
-
-        displayNodes(nodesToDisplay);
-
-        setCounters();
-    }
+    setCounters();
+  }
 });

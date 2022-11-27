@@ -1,9 +1,9 @@
-const assert = require('assert')
-    , should = require('chai').should();
+const assert = require('assert'),
+  should = require('chai').should();
 
-const path = require('path')
-    , fs = require('fs')
-    , yml = require('js-yaml');
+const path = require('path'),
+  fs = require('fs'),
+  yml = require('js-yaml');
 
 const Config = require('../models/config');
 
@@ -12,25 +12,25 @@ const Config = require('../models/config');
  */
 
 describe('Lang', () => {
-    let langIndex;
+  let langIndex;
 
-    before(() => {
-        return new Promise((resolve) => {
-            fs.readFile(path.join(__dirname, '../i18n.yml'), 'utf8', (err, data) => {
-                data = yml.load(data);
-                langIndex = data;
-                resolve();
-            })
-        });
+  before(() => {
+    return new Promise((resolve) => {
+      fs.readFile(path.join(__dirname, '../i18n.yml'), 'utf8', (err, data) => {
+        data = yml.load(data);
+        langIndex = data;
+        resolve();
+      });
     });
+  });
 
-    it('should get an error message for each config option', () => {
-        langIndex.should.have.property('config');
-        langIndex['config'].should.have.property('errors');
-        const errorList = Object.keys(langIndex['config']['errors']);
+  it('should get an error message for each config option', () => {
+    langIndex.should.have.property('config');
+    langIndex['config'].should.have.property('errors');
+    const errorList = Object.keys(langIndex['config']['errors']);
 
-        for (const optionName of Object.keys(Config.base)) {
-            errorList.should.contains(optionName);
-        }
-    });
-})
+    for (const optionName of Object.keys(Config.base)) {
+      errorList.should.contains(optionName);
+    }
+  });
+});

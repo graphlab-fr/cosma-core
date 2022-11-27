@@ -4,7 +4,7 @@ id: 20210901132906
 type: documentation
 ---
 
-[[20210901131627]] Cosma est disponible en deux versions : une application à interface graphique (*graphical user interface*, GUI) et une application exécutable en ligne de commande (*command line interface*, CLI).
+[[20210901131627]] Cosma est disponible en deux versions : une application à interface graphique (_graphical user interface_, GUI) et une application exécutable en ligne de commande (_command line interface_, CLI).
 
 ## Version GUI
 

@@ -7,116 +7,113 @@ graph:
     en: Focus
 
 left_panel:
+  header:
+    spatialization_bar_desc:
+      fr: Spatialisation (Espace)
+      en: Spatialization (Space)
 
-    header:
-      spatialization_bar_desc:
-        fr: Spatialisation (Espace)
-        en: Spatialization (Space)
+  input_search:
+    placeholder:
+      fr: Rechercher…
+      en: Search…
 
-    input_search:
-        placeholder:
-          fr: Rechercher…
-          en: Search…
+  menu_types:
+    title:
+      fr: Types
+      en: Types
 
-    menu_types:
+  menu_keywords:
+    title:
+      fr: Mots-clés
+      en: Keywords
+
+  menu_index:
+    title:
+      fr: Index
+      en: Index
+
+  menu_views:
+    title:
+      fr: Vues
+      en: Views
+    btn_reset:
+      fr: Réinitialiser la vue actuelle
+      en: Reset current view
+    btn_save:
+      fr: Sauvegarder la vue actuelle
+      en: Save current view
+    tooltip:
+      fr: >
+        Enregistre l'état actuel de l'interface
+        (types et mots-clés actifs, mode focus)
+        et crée un raccourci vers cet état dans le menu Vues.
+      en: >
+        Save the current state of the interface
+        (selected node, types and keywords, focus)
+        and creates a shortcut to this state in the Views section.
+
+  menu_controls:
+    title:
+      fr: Paramètres du graphe
+      en: Graph parameters
+    input_links_show:
+      fr: Afficher les liens
+      en: Display links
+    input_labels_show:
+      fr: Afficher les étiquettes
+      en: Display labels
+    input_highlight_hover_node:
+      fr: Surbrillance au survol
+      en: Highlight on hover
+
+    form_attraction:
       title:
-        fr: Types
-        en: Types
-
-    menu_keywords:
-      title:
-        fr: Mots-clés
-        en: Keywords
-
-    menu_index:
-      title:
-        fr: Index
-        en: Index
-
-    menu_views:
-      title:
-        fr: Vues
-        en: Views
-      btn_reset:
-        fr: Réinitialiser la vue actuelle
-        en: Reset current view
-      btn_save:
-        fr: Sauvegarder la vue actuelle
-        en: Save current view
-      tooltip:
+        fr: Forces
+        en: Forces
+      help:
         fr: >
-          Enregistre l'état actuel de l'interface
-          (types et mots-clés actifs, mode focus)
-          et crée un raccourci vers cet état dans le menu Vues.
+          Contrôlez la répartition des nœuds dans l’espace
+          en modifiant la simulation des forces.
         en: >
-          Save the current state of the interface
-          (selected node, types and keywords, focus)
-          and creates a shortcut to this state in the Views section.
+          Tweak the force-layout simulation to control
+          the way nodes are displayed.
+      input_force:
+        fr: répulsion
+        en: repulsion
+      input_distance_max:
+        fr: distance max
+        en: max distance
+      input_vertical:
+        fr: attraction verticale
+        en: vertical attraction
+      input_horizontal:
+        fr: attraction horizontale
+        en: horizontal attraction
 
-    menu_controls:
+    form_text:
       title:
-        fr: Paramètres du graphe
-        en: Graph parameters
-      input_links_show:
-        fr: Afficher les liens
-        en: Display links
-      input_labels_show:
-        fr: Afficher les étiquettes
-        en: Display labels
-      input_highlight_hover_node:
-        fr: Surbrillance au survol
-        en: Highlight on hover
+        fr: Étiquettes
+        en: Labels
+      input_size:
+        fr: taille du texte
+        en: font size
 
-      form_attraction:
-        title:
-          fr: Forces
-          en: Forces
-        help:
-          fr: >
-            Contrôlez la répartition des nœuds dans l’espace
-            en modifiant la simulation des forces.
-          en: >
-            Tweak the force-layout simulation to control
-            the way nodes are displayed.
-        input_force:
-          fr: répulsion
-          en: repulsion
-        input_distance_max:
-          fr: distance max
-          en: max distance
-        input_vertical:
-          fr: attraction verticale
-          en: vertical attraction
-        input_horizontal:
-          fr: attraction horizontale
-          en: horizontal attraction
-
-      form_text:
-        title:
-          fr: Étiquettes
-          en: Labels
-        input_size:
-          fr: taille du texte
-          en: font size
-
-    footer:
-      btn_data:
-        fr: Données
-        en: Data
-      btn_help:
-        fr: Aide
-        en: Help
-      btn_about:
-        fr: À propos
-        en: About
-      publish_mark:
-        fr: Fabriqué avec Cosma –
-        en: Made with Cosma –
+  footer:
+    btn_data:
+      fr: Données
+      en: Data
+    btn_help:
+      fr: Aide
+      en: Help
+    btn_about:
+      fr: À propos
+      en: About
+    publish_mark:
+      fr: Fabriqué avec Cosma –
+      en: Made with Cosma –
 
 right_panel:
-
   record:
-
     header:
       btn_close:
         fr: Fermer (Echap)
@@ -156,7 +153,7 @@ right_panel:
     documentation_link_href:
       fr: https://cosma.graphlab.fr/docs/
       en: https://cosma.graphlab.fr/en/docs/
-    documentation_link_placeholder: 
+    documentation_link_placeholder:
       fr: Cliquez ici pour accéder à la documentation de Cosma
       en: Click here to access Cosma's documentation
 
@@ -891,7 +888,7 @@ config:
       fr: Le niveau maximum de focus est invalide
       en: Invalid maximum focus level
     graph_text_size:
-      fr: La taille du texte des étiquettes doit être supérieure ou égale à $1 
+      fr: La taille du texte des étiquettes doit être supérieure ou égale à $1
       en: Labels font size must be $1 or higher
     attraction_force:
       fr: La force de répulsion doit être supérieure ou égale à $1
@@ -977,15 +974,15 @@ config:
 graph_report:
   ignored_files:
     head_message:
-      fr: "Les fichiers suivants ont été ignorés :"
-      en: "The following files have been ignored:"
+      fr: 'Les fichiers suivants ont été ignorés :'
+      en: 'The following files have been ignored:'
     item_message:
-      fr: "$1 : $2 invalide"
-      en: "$1: $2 invalid"
+      fr: '$1 : $2 invalide'
+      en: '$1: $2 invalid'
   duplicates:
     head_message:
       fr: "Des doublons d'identifiants ont été trouvés dans les fichiers suivants :"
-      en: "Duplicate identifiers were found in the following files:"
+      en: 'Duplicate identifiers were found in the following files:'
     item_message:
       fr: "id '$1' depuis $2"
       en: "id '$1' from $2"
@@ -994,33 +991,33 @@ graph_report:
       fr: "Les fichiers suivants ont un type de fiche inconnu qui a été interprété comme 'undefined' :"
       en: "The following records' type is unknown and has been interpreted as 'undefined':"
     item_message:
-      fr: "$1"
-      en: "$1"
+      fr: '$1'
+      en: '$1'
   type_link_change:
     head_message:
       fr: "Les fichiers suivants comportent un type de lien inconnu qui a été interprété comme 'undefined' :"
       en: "The following records contain an unknown link type which has been interpreted as 'undefined':"
     item_message:
-      fr: "$1"
-      en: "$1"
+      fr: '$1'
+      en: '$1'
   link_invalid:
     head_message:
-      fr: "Les liens suivants sont invalides :"
-      en: "The following links are invalid:"
+      fr: 'Les liens suivants sont invalides :'
+      en: 'The following links are invalid:'
     item_message:
       fr: "'$1' depuis $2"
       en: "'$1' from $2"
   link_no_target:
     head_message:
       fr: "Les liens suivants n'ont pas de cible :"
-      en: "The following links do not have a target:"
+      en: 'The following links do not have a target:'
     item_message:
       fr: "'$1' depuis $2"
       en: "'$1' from $2"
   quotes_without_reference:
     head_message:
       fr: "Les clés de citations suivantes n'ont pas été trouvées dans les données bibliographiques :"
-      en: "The following citation keys are not present in the bibliographical data:"
+      en: 'The following citation keys are not present in the bibliographical data:'
     item_message:
       fr: "'$1' depuis $2"
       en: "'$1' from $2"
