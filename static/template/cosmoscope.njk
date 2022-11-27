@@ -549,7 +549,7 @@
     {# Cosma data #}
 
     <script>
-        const data = {{ graph.data | safe }};
+        const data = {{ graph.data | dump | safe }};
         const graphProperties = {{ graph.config | dump | safe }};
         const tagList = {{ tags | dump | safe }};
         const filterList = {{ filters | dump | safe }};
