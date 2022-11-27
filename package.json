@@ -20,7 +20,7 @@
   "author": "Guillaume Brioudes (https://myllaume.fr/)",
   "scripts": {
     "start": "node index.js",
-    "format": "./node_modules/.bin/prettier --write",
+    "format": "./node_modules/.bin/prettier --write .",
     "test:unit": "./node_modules/.bin/mocha --timeout 30000",
     "test:e2e": "./node_modules/.bin/cypress open --config-file ./utils/cypress.config.js",
     "build": "./node_modules/.bin/webpack-cli build --config ./utils/webpack.config.js"

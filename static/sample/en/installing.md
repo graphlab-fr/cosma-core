@@ -21,4 +21,3 @@ The CLI version of Cosma is available on macOS, Windows and Linux. The installat
 ```
 npm i @graphlab-fr/cosma -g
 ```
-

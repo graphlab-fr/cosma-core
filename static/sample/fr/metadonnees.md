@@ -45,8 +45,8 @@ Conformément à la spécification YAML, la liste des mots-clés peut être insc
 
 ```yaml
 tags:
-- mot-clé 1
-- mot-clé 2
+  - mot-clé 1
+  - mot-clé 2
 ```
 
 Ou bien en mode *flow* :
@@ -65,4 +65,4 @@ Certains logiciels identifier les métadonnées d'un fichier de manière heurist
 
 L'inconvénient de ce fonctionnement est qu'il n'est pas interopérable : chaque logiciel a ses propres conventions, ce qui limite la capacité de l'utilisateur à changer d'outil.
 
-Utiliser un en-tête en YAML permet de déclarer des métadonnées comme le titre et l'identifiant unique d'une fiche de manière explicite. Ceci présente l'avantage de rendre triviale la détection et la manipulation de ces métadonnées, aussi bien par une machine que par un humain. L'utilisation d'un format commun (comme YAML) augmente le nombre d'outils compatibles avec un même ensemble de fichiers. Et des outils informatiques très répandus comme les expressions régulières et les scripts *shell* permettent aux utilisateurs de convertir eux-mêmes leurs données de manière relativement simple si besoin.
+Utiliser un en-tête en YAML permet de déclarer des métadonnées comme le titre et l'identifiant unique d'une fiche de manière explicite. Ceci présente l'avantage de rendre triviale la détection et la manipulation de ces métadonnées, aussi bien par une machine que par un humain. L'utilisation d'un format commun (comme YAML) augmente le nombre d'outils compatibles avec un même ensemble de fichiers. Et des outils informatiques très répandus comme les expressions régulières et les scripts _shell_ permettent aux utilisateurs de convertir eux-mêmes leurs données de manière relativement simple si besoin.

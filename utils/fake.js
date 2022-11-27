@@ -5,12 +5,12 @@
  */
 
 const path = require('path');
-const { faker } = require('@faker-js/faker')
-    , nunjucks = require('nunjucks');
+const { faker } = require('@faker-js/faker'),
+  nunjucks = require('nunjucks');
 
-const Config = require('../models/config')
-    , Cosmoscope = require('../models/cosmoscope')
-    , Record = require('../models/record');
+const Config = require('../models/config'),
+  Cosmoscope = require('../models/cosmoscope'),
+  Record = require('../models/record');
 
 const bib = require('../static/fake/bib.json');
 const tempDirPath = path.join(__dirname, '../temp');
@@ -25,93 +25,90 @@ let config = Config.get(path.join(__dirname, '../static/fake/config.yml'));
 config = new Config(config);
 const { record_types: recordTypes } = config.opts;
 config.opts['images_origin'] = tempDirPath;
-config.opts['csl'] = path.join(tempDirPath, 'iso690.csl')
-config.opts['csl_locale'] = path.join(tempDirPath, 'locales-fr-FR.xml')
+config.opts['csl'] = path.join(tempDirPath, 'iso690.csl');
+config.opts['csl_locale'] = path.join(tempDirPath, 'locales-fr-FR.xml');
 config.opts['css_custom'] = path.join(__dirname, '../static/fake/style.css');
 config.opts['bibliography'] = path.join(__dirname, '../static/fake/bib.json');
 config.opts['views'] = {
-    [faker.word.verb()]: fakeView(),
-    [faker.word.verb()]: fakeView(),
-    [faker.word.verb()]: fakeView()
-}
+  [faker.word.verb()]: fakeView(),
+  [faker.word.verb()]: fakeView(),
+  [faker.word.verb()]: fakeView(),
+};
 const nodeThumbnails = Array.from(config.getTypesRecords())
-    .filter(type => config.getFormatOfTypeRecord(type) === 'image')
-    .map(type => recordTypes[type]['fill']);
+  .filter((type) => config.getFormatOfTypeRecord(type) === 'image')
+  .map((type) => recordTypes[type]['fill']);
 const images = ['exemple-image.jpeg'];
 
 for (let i = 0; i < 5; i++) {
-    tags.push(faker.random.word());
+  tags.push(faker.random.word());
 }
 for (let i = 0; i < nodesNb; i++) {
-    ids.push(Record.generateOutDailyId() + i);
+  ids.push(Record.generateOutDailyId() + i);
 }
 
 for (const fileId of ids) {
-    const templateEngine = new nunjucks.Environment(
-        new nunjucks.FileSystemLoader(path.join(__dirname, '../static'))
-    );
-    const content = templateEngine.render('fake/record.njk', {
-        ids,
-        imgSrc: images[0],
-        bibKeys
-    });
+  const templateEngine = new nunjucks.Environment(
+    new nunjucks.FileSystemLoader(path.join(__dirname, '../static'))
+  );
+  const content = templateEngine.render('fake/record.njk', {
+    ids,
+    imgSrc: images[0],
+    bibKeys,
+  });
 
-    const thumbnail = `${fileId}.jpg`;
-    nodeThumbnails.push(thumbnail);
+  const thumbnail = `${fileId}.jpg`;
+  nodeThumbnails.push(thumbnail);
 
-    const { begin, end } = fakeExtremeDates();
+  const { begin, end } = fakeExtremeDates();
 
-    files.push({
-        path: undefined,
-        name: faker.system.commonFileName('md'),
-        lastEditDate: faker.date.past(),
-        content,
-        metas: {
-            id: fileId,
-            title: faker.name.jobTitle(),
-            type: faker.helpers.arrayElement(Object.keys(recordTypes)),
-            tags: [
-                faker.helpers.arrayElement(tags),
-                faker.helpers.arrayElement(tags)
-            ],
-            thumbnail: thumbnail,
-            references: ['Masure_2014'],
-            ['phone number']: faker.phone.number('06 ## ## ## ##'),
-            begin,
-            end
-        }
-    })
+  files.push({
+    path: undefined,
+    name: faker.system.commonFileName('md'),
+    lastEditDate: faker.date.past(),
+    content,
+    metas: {
+      id: fileId,
+      title: faker.name.jobTitle(),
+      type: faker.helpers.arrayElement(Object.keys(recordTypes)),
+      tags: [faker.helpers.arrayElement(tags), faker.helpers.arrayElement(tags)],
+      thumbnail: thumbnail,
+      references: ['Masure_2014'],
+      ['phone number']: faker.phone.number('06 ## ## ## ##'),
+      begin,
+      end,
+    },
+  });
 }
 
 const records = Cosmoscope.getRecordsFromFiles(files, config.opts);
 
 module.exports = {
-    config,
-    records,
-    bib,
-    nodeThumbnails,
-    images
-}
+  config,
+  records,
+  bib,
+  nodeThumbnails,
+  images,
+};
 
 function fakeView() {
-    const id = faker.helpers.arrayElement(ids);
+  const id = faker.helpers.arrayElement(ids);
 
-    const viewJson = {
-        recordId: id,
-        filters: [
-            faker.helpers.arrayElement(Object.keys(recordTypes)),
-            faker.helpers.arrayElement(Object.keys(recordTypes))
-        ],
-        focus: {
-            fromRecordId: id,
-            level: 1
-        }
-    }
+  const viewJson = {
+    recordId: id,
+    filters: [
+      faker.helpers.arrayElement(Object.keys(recordTypes)),
+      faker.helpers.arrayElement(Object.keys(recordTypes)),
+    ],
+    focus: {
+      fromRecordId: id,
+      level: 1,
+    },
+  };
 
-    const viewDecodeKey = JSON.stringify(viewJson);
-    const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64');
+  const viewDecodeKey = JSON.stringify(viewJson);
+  const viewEncodeKey = Buffer.from(viewDecodeKey, 'utf-8').toString('base64');
 
-    return viewEncodeKey;
+  return viewEncodeKey;
 }
 
 /**
@@ -123,27 +120,27 @@ function fakeView() {
  */
 
 function fakeExtremeDates() {
-    let begin = faker.datatype.datetime({
-        min: new Date('2000-01-01'),
-        max: new Date('2010-01-01')
-    });
-    begin = new Date(begin);
-    begin = [
-        begin.getFullYear().toString().padStart(4, "0"),
-        (begin.getMonth() + 1).toString().padStart(2, "0"),
-        begin.getDate().toString().padStart(2, "0")
-    ].join('-');
-    
-    let end = faker.datatype.datetime({
-        min: new Date('2010-01-01'),
-        max: new Date('2020-01-01')
-    });
-    end = new Date(end);
-    end = [
-        end.getFullYear().toString().padStart(4, "0"),
-        (end.getMonth() + 1).toString().padStart(2, "0"),
-        end.getDate().toString().padStart(2, "0")
-    ].join('-');
+  let begin = faker.datatype.datetime({
+    min: new Date('2000-01-01'),
+    max: new Date('2010-01-01'),
+  });
+  begin = new Date(begin);
+  begin = [
+    begin.getFullYear().toString().padStart(4, '0'),
+    (begin.getMonth() + 1).toString().padStart(2, '0'),
+    begin.getDate().toString().padStart(2, '0'),
+  ].join('-');
 
-    return { begin, end };
+  let end = faker.datatype.datetime({
+    min: new Date('2010-01-01'),
+    max: new Date('2020-01-01'),
+  });
+  end = new Date(end);
+  end = [
+    end.getFullYear().toString().padStart(4, '0'),
+    (end.getMonth() + 1).toString().padStart(2, '0'),
+    end.getDate().toString().padStart(2, '0'),
+  ].join('-');
+
+  return { begin, end };
 }
