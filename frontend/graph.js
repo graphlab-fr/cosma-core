@@ -534,14 +534,14 @@ window.chronosAction = function (timestamp) {
 
     const toHide = [], toDisplay = [];
 
-    for (const node of data.nodes) {
-        if (node.end === undefined) { node.end = chronos.end }
-        if (node.begin === undefined) { node.begin = chronos.begin }
+    for (const { begin, end, id } of data.nodes) {
+        if (end === undefined) { end = chronos.end }
+        if (begin === undefined) { begin = chronos.begin }
 
-        if (timestamp >= node.begin && timestamp <= node.end) {
-            toDisplay.push(node.id);
+        if (timestamp >= begin && timestamp <= end) {
+            toDisplay.push(id);
         } else {
-            toHide.push(node.id);
+            toHide.push(id);
         }
     }
 
