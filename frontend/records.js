@@ -91,7 +91,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let i = 0; i < indexElements.length; i++) {
       const order = recordsSorting[i][sortingKey];
-      console.log(order);
       const elt = indexElements[i];
       elt.style.order = order;
     }
