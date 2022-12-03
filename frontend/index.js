@@ -5,6 +5,7 @@ import './zoom';
 import './bibliography';
 import './timeline';
 import './filter';
+import './keywords';
 
 // const number = [1, 2, 3, 4];
 // console.log([...number]);

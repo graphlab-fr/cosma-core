@@ -99,11 +99,15 @@
             <button class="menu-tags-btn sort-btn">A-Z</button>
 
             <div class="menu-tags-container menu-tags-container-prim sort-box active">
-                {% for tag in tags %}
-                <button class="btn" data-tag="{{ loop.index }}" data-active="false" onclick="tag(this)">
-                    {{ tag.name }} <span class="badge">{{ tag.nodes | length }}</span>
-                </button>
-                {% endfor %}
+                <form>
+                    {% for tag in tags %}
+                    <label class="btn" data-tag="{{ loop.index }}" data-active="false">
+                        {{ tag.name }}
+                        <input type="checkbox" name="tag_{{ tag }}">
+                        <span class="badge">{{ tag.nodes | length }}</span>
+                    </label>
+                    {% endfor %}
+                </form>
             </div>
 
             <div class="menu-tags-container sort-box">
