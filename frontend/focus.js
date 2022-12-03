@@ -1,0 +1,68 @@
+import GraphEngine from "graphology";
+import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs';
+import { displayNodes, hideNodesAll, displayNodesAll } from "./graph";
+import View from "./view";
+
+window.addEventListener("DOMContentLoaded", () => {
+    /** @type {HTMLInputElement} */
+    const checkbox = document.getElementById('focus-check');
+    /** @type {HTMLInputElement} */
+    const input = document.getElementById('focus-input');
+
+    if (!checkbox && !input) { return; }
+
+    let graph;
+
+    checkbox.addEventListener('change', () => {
+        if (View.openedRecordId === undefined) {
+            checkbox.checked = false;
+            return;
+        }
+
+        if (checkbox.checked) {
+            if (graph === undefined) {
+                graph = getGraphEngine();
+            }
+
+            action();
+            input.classList.add('active');
+            input.addEventListener('input', action);
+        } else {
+            input.classList.remove('active');
+            input.removeEventListener('input', action);
+            displayNodesAll();
+        }
+    });
+
+    function action() {
+        const nodeIdOrigin = View.openedRecordId;
+        const neighborsNodeIds = [];
+
+        neighborsExtend(graph, nodeIdOrigin, (nodeId, attr, depth) => {
+            neighborsNodeIds.push(Number(nodeId));
+            return depth >= input.valueAsNumber;
+        });
+
+        hideNodesAll();
+        displayNodes(neighborsNodeIds);
+    }
+});
+
+/**
+ * @returns {GraphEngine}
+ */
+
+function getGraphEngine() {
+    const graph = new GraphEngine();
+
+    for (const { id, label } of data.nodes) {
+        graph.addNode(id, {
+            label
+        });
+    }
+    for (const { source, target } of data.links) {
+        graph.addEdge(source.id, target.id);
+    }
+
+    return graph;
+}
