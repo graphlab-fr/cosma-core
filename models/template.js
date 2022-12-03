@@ -188,16 +188,27 @@ module.exports = class Template {
         active: true,
       };
     });
+
+    /** @type {{name: string, nodes: string[]}[]} */
     const tagsFromGraph = [];
     graph.getTagsFromRecords().forEach((nodes, name) => {
       nodes = Array.from(nodes);
       tagsFromGraph.push({ name, nodes });
     });
 
-    const recordsListAlphabetical = graph.records
+    const tagsListAlphabetical = tagsFromGraph
+      .map(({ name }) => name)
+      .sort((a, b) => a.localeCompare(b));
+    const tagsListIncreasing = tagsFromGraph
       .sort((a, b) => {
-        return a.title.localeCompare(b.title);
+        if (a.nodes.length < b.nodes.length) return -1;
+        if (a.nodes.length > b.nodes.length) return 1;
+        return 0;
       })
+      .map(({ name }) => name);
+
+    const recordsListAlphabetical = graph.records
+      .sort((a, b) => a.title.localeCompare(b.title))
       .map(({ title }) => title);
     const recordsListChronological = graph.records
       .sort((a, b) => {
@@ -330,6 +341,12 @@ module.exports = class Template {
           chronological: recordsListChronological.indexOf(title),
           'reverse-chronological':
             recordsListChronological.length - recordsListChronological.indexOf(title),
+        })),
+        tags: tagsFromGraph.map(({ name }) => ({
+          'a-z': tagsListAlphabetical.indexOf(name),
+          'z-a': tagsListAlphabetical.length - tagsListAlphabetical.indexOf(name),
+          increasing: tagsListIncreasing.indexOf(name),
+          decreasing: tagsListIncreasing.length - tagsListIncreasing.indexOf(name),
         })),
       },
 

@@ -136,6 +136,11 @@ summary + button {
   font-weight: bold;
 }
 
+.menu-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .menu-index-list {
   display: flex;
   flex-direction: column;
