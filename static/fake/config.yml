@@ -44,6 +44,7 @@ keywords:
   - 'test'
   - 'sample'
 lang: 'en'
+focus_max: 3
 node_size: 10
 record_metas:
   - phone number
