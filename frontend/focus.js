@@ -1,5 +1,6 @@
 import GraphEngine from "graphology";
 import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs';
+import hotkeys from "hotkeys-js";
 import { displayNodes, hideNodesAll, displayNodesAll } from "./graph";
 import View from "./view";
 
@@ -10,29 +11,42 @@ window.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById('focus-input');
 
     if (!checkbox && !input) { return; }
+    
+    checkbox.checked = false;
 
     let graph;
 
+    hotkeys('f', (e) => {
+        e.preventDefault();
+        checkbox.checked = true;
+        active();
+    });
+
     checkbox.addEventListener('change', () => {
-        if (View.openedRecordId === undefined) {
-            checkbox.checked = false;
-            return;
-        }
-
         if (checkbox.checked) {
-            if (graph === undefined) {
-                graph = getGraphEngine();
-            }
-
-            action();
-            input.classList.add('active');
-            input.addEventListener('input', action);
+            active();
         } else {
             input.classList.remove('active');
             input.removeEventListener('input', action);
             displayNodesAll();
         }
     });
+
+    function active() {
+        if (View.openedRecordId === undefined) {
+            checkbox.checked = false;
+            return;
+        }
+
+        if (graph === undefined) {
+            graph = getGraphEngine();
+        }
+
+        action();
+        input.classList.add('active');
+        input.addEventListener('input', action);
+        input.focus();
+    }
 
     function action() {
         const nodeIdOrigin = View.openedRecordId;
