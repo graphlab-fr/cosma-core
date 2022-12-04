@@ -136,6 +136,15 @@ summary + button {
   font-weight: bold;
 }
 
+.menu-index-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-index-list.reverse {
+  flex-direction: column-reverse;
+}
+
 /* ---
 - Inputs
 --- */
