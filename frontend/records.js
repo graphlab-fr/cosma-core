@@ -74,31 +74,16 @@ window.onpopstate = function (e) {
   openRecord(recordId, false);
 };
 
-const sortContainer = document.querySelectorAll('[data-sort]');
-for (const container of sortContainer) {
-  const box = container.querySelectorAll('.sort-box'),
-    increasing = box[0],
-    decreasing = box[1],
-    btn = container.querySelector('.sort-btn');
-
-  let isIncreasing = true;
-
-  btn.addEventListener('click', () => {
-    if (isIncreasing) {
-      btn.textContent = 'Z-A';
-      increasing.classList.remove('active');
-      decreasing.classList.add('active');
-      isIncreasing = false;
-    } else {
-      btn.textContent = 'A-Z';
-      increasing.classList.add('active');
-      decreasing.classList.remove('active');
-      isIncreasing = true;
-    }
-  });
-}
-
 const indexContainer = document.getElementById('index');
+
+window.addEventListener('DOMContentLoaded', () => {
+  const sortBtn = indexContainer.querySelector('.menu-index-btn');
+  const list = indexContainer.querySelector('.menu-index-list');
+
+  sortBtn.addEventListener('click', () => {
+    list.classList.toggle('reverse');
+  });
+});
 
 /**
  * Hide items from the index list that correspond to the nodes ids
