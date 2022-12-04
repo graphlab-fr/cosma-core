@@ -77,12 +77,25 @@ window.onpopstate = function (e) {
 const indexContainer = document.getElementById('index');
 
 window.addEventListener('DOMContentLoaded', () => {
-  const sortBtn = indexContainer.querySelector('.menu-index-btn');
-  const list = indexContainer.querySelector('.menu-index-list');
+  /** @type {HTMLSelectElement} */
+  const sortSelect = indexContainer.querySelector('.sorting-select');
+  const recordsSorting = sorting.records;
 
-  sortBtn.addEventListener('click', () => {
-    list.classList.toggle('reverse');
-  });
+  queryAndSortIndexElements();
+  sortSelect.addEventListener('change', queryAndSortIndexElements);
+
+  function queryAndSortIndexElements() {
+    /** @type {HTMLLIElement[]} */
+    const indexElements = indexContainer.querySelectorAll('li');
+    const sortingKey = sortSelect.value;
+
+    for (let i = 0; i < indexElements.length; i++) {
+      const order = recordsSorting[i][sortingKey];
+      console.log(order);
+      const elt = indexElements[i];
+      elt.style.order = order;
+    }
+  }
 });
 
 /**
