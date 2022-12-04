@@ -194,6 +194,19 @@ module.exports = class Template {
       tagsFromGraph.push({ name, nodes });
     });
 
+    const recordsListAlphabetical = graph.records
+      .sort((a, b) => {
+        return a.title.localeCompare(b.title);
+      })
+      .map(({ title }) => title);
+    const recordsListChronological = graph.records
+      .sort((a, b) => {
+        if (a.begin < b.begin) return -1;
+        if (a.begin > b.begin) return 1;
+        return 0;
+      })
+      .map(({ title }) => title);
+
     if (this.params.has('citeproc')) {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(this.config);
       const bibliography = new Bibliography(bib, cslStyle, xmlLocal);
@@ -256,16 +269,10 @@ module.exports = class Template {
       publishMode: this.params.has('publish') === true,
       devMode: this.params.has('dev') === true,
 
-      records: graph.records
-        .map(({ thumbnail, ...rest }) => {
-          return {
-            ...rest,
-            thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
-          };
-        })
-        .sort(function (a, b) {
-          return a.title.localeCompare(b.title);
-        }),
+      records: graph.records.map(({ thumbnail, ...rest }) => ({
+        ...rest,
+        thumbnail: !!thumbnail ? path.join(imagesPath, thumbnail) : undefined,
+      })),
 
       graph: {
         config: this.config.opts,
@@ -315,6 +322,16 @@ module.exports = class Template {
         minute: 'numeric',
         second: 'numeric',
       }),
+
+      sorting: {
+        records: graph.records.map(({ title }) => ({
+          'a-z': recordsListAlphabetical.indexOf(title),
+          'z-a': recordsListAlphabetical.length - recordsListAlphabetical.indexOf(title),
+          chronological: recordsListChronological.indexOf(title),
+          'reverse-chronological':
+            recordsListChronological.length - recordsListChronological.indexOf(title),
+        })),
+      },
 
       app: app, // app version, description, license…
     });
