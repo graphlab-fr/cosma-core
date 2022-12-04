@@ -122,11 +122,16 @@
                 <span id="index-counter" class="badge">{{ records | length }}</span>
             </summary>
 
-            <button class="menu-index-btn">A-Z</button>
+            <select class="sorting-select" name="index_sorting">
+                <option value="a-z">A-Z</option>
+                <option value="z-a">Z-A</option>
+                <option value="chronological">Chronologique</option>
+                <option value="reverse-chronological">Antéchronologique</option>
+            </select>
 
             <ul class="menu-index-list">
                 {% for record in records %}
-                <li data-index="{{ record.id }}" onclick="openRecord({{ record.id }})">
+                <li data-index="{{ record.id }}" onclick="openRecord({{ record.id }})" style="order: {{ loop.index }}">
                     <span class="record-type-point" style="color: var(--n_{{ record.type[0] | slugify }});">⬤</span>
                     <span>{{ record.title }}</span>
                 </li>
@@ -542,6 +547,7 @@
         const tagList = {{ tags | dump | safe }};
         const filterList = {{ filters | dump | safe }};
         const timeline = {{ timeline | dump | safe }};
+        const sorting = {{ sorting | dump | safe }};
     </script>
 
     {# Cosma functions #}
