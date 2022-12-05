@@ -29,13 +29,11 @@ data.nodes = data.nodes.map((node) => {
 ------------------------------------------------------------*/
 
 const svg = d3.select('#graph-canvas');
+const svgSub = svg.append('svg');
 
-let svgSize = svg.node().getBoundingClientRect();
+const { width, height } = svg.node().getBoundingClientRect();
 
-const width = svgSize.width;
-const height = svgSize.height;
-
-svg.attr('viewBox', [0, 0, width, height]).attr('preserveAspectRatio', 'xMinYMin meet');
+svgSub.attr('viewBox', [0, 0, width, height]).attr('preserveAspectRatio', 'xMinYMin meet');
 
 /** Force simulation
 ------------------------------------------------------------*/
@@ -87,12 +85,7 @@ simulation.on('tick', function () {
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y);
 
-  elts.nodes.attr('transform', function (d) {
-    d.x = Math.max(d.size, Math.min(width - d.size, d.x));
-    d.y = Math.max(d.size, Math.min(height - d.size, d.y));
-
-    return 'translate(' + d.x + ',' + d.y + ')';
-  });
+  elts.nodes.attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
 
   d3.select('#load-bar-value').style('flex-basis', simulation.alpha() * 100 + '%');
 });
@@ -103,7 +96,7 @@ simulation.on('tick', function () {
 const elts = {};
 
 /** @type {d3.Selection<SVGLineElement, Link, SVGElement, any>} */
-elts.links = svg
+elts.links = svgSub
   .append('g')
   .selectAll('line')
   .data(data.links)
@@ -131,7 +124,7 @@ if (graphProperties.graph_arrows === true) {
 }
 
 /** @type {d3.Selection<SVGGElement, Node, SVGElement, any>} */
-elts.nodes = svg
+elts.nodes = svgSub
   .append('g')
   .selectAll('g')
   .data(data.nodes)
@@ -368,6 +361,7 @@ function displayNodesAll() {
  */
 
 window.zoomToNode = function (nodeId) {
+  return;
   const nodeToZoomMetas = elts.nodes.filter((node) => node.id === nodeId).datum(),
     zoom = 2,
     recordWidth = recordContainer.offsetWidth;
@@ -567,4 +561,4 @@ function translate() {
   svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
 }
 
-export { svg, hideNodes, displayNodes, displayNodesAll, highlightNodes, unlightNodes };
+export { svg, svgSub, hideNodes, displayNodes, displayNodesAll, highlightNodes, unlightNodes };
