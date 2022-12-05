@@ -1,57 +1,47 @@
 import * as d3 from 'd3';
 
 import View from './view';
-import { svg } from './graph';
+import { svg, svgSub } from './graph';
 
-const zoomInterval = 0.3, // interval between two (de)zoom
-  zoomMax = 3,
-  zoomMin = 1;
+const { width, height } = svg.node().getBoundingClientRect();
 
-svg.call(
-  d3.zoom().on('zoom', function () {
-    if (d3.event.sourceEvent === null) {
-      zoomMore();
-      return;
-    }
+const zoomMax = 10,
+  zoomMin = 1,
+  zoomInterval = 0.2;
 
-    switch (d3.event.sourceEvent.type) {
-      case 'wheel':
-        if (d3.event.sourceEvent.deltaY >= 0) {
-          zoomLess();
-        } else {
-          zoomMore();
-        }
-        break;
+const zoom = d3
+  .zoom()
+  .extent([
+    [0, 0],
+    [width, height],
+  ])
+  .scaleExtent([zoomMin, zoomMax])
+  .on('zoom', () => {
+    const { x, y, k } = d3.event.transform;
+    View.position.x = x / k || 0;
+    View.position.y = y / k || 0;
+    View.position.zoom = k || 1;
+    translate();
+  });
 
-      case 'mousemove': // by drag and move with mouse
-        View.position.x += d3.event.sourceEvent.movementX;
-        View.position.y += d3.event.sourceEvent.movementY;
-        translate();
-        break;
-    }
-  })
-);
+svg.call(zoom);
 
 function zoomMore() {
-  View.position.zoom += zoomInterval;
-  if (View.position.zoom >= zoomMax) {
-    View.position.zoom = zoomMax;
-  }
-  translate();
+  zoom.scaleTo(svg, View.position.zoom + zoomInterval);
 }
 
 function zoomLess() {
-  View.position.zoom -= zoomInterval;
-  if (View.position.zoom <= zoomMin) {
-    View.position.zoom = zoomMin;
-  }
-  translate();
+  zoom.scaleTo(svg, View.position.zoom - zoomInterval);
 }
 
 function zoomReset() {
   View.position.zoom = 1;
   View.position.x = 0;
   View.position.y = 0;
+  svg.call(
+    zoom.transform,
+    d3.zoomIdentity.translate(View.position.y, View.position.x).scale(View.position.zoom)
+  );
   translate();
 }
 
@@ -59,12 +49,8 @@ window.zoomMore = zoomMore;
 window.zoomLess = zoomLess;
 window.zoomReset = zoomReset;
 
-hotkeys('r', (e) => {
-  e.preventDefault();
-  zoomReset();
-});
-
 function translate() {
   const { x, y, zoom } = View.position;
-  svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
+  const viewBox = [-x, -y, width / zoom, height / zoom].join(' ');
+  svgSub.attr('viewBox', viewBox);
 }
