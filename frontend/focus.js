@@ -4,6 +4,8 @@ import hotkeys from "hotkeys-js";
 import { displayNodes, hideNodesAll, displayNodesAll } from "./graph";
 import View from "./view";
 
+window.focusMode = 'inbound';
+
 window.addEventListener("DOMContentLoaded", () => {
     /** @type {HTMLInputElement} */
     const checkbox = document.getElementById('focus-check');
@@ -55,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
         neighborsExtend(graph, nodeIdOrigin, (nodeId, attr, depth) => {
             neighborsNodeIds.push(Number(nodeId));
             return depth >= input.valueAsNumber;
-        });
+        }, { mode: window.focusMode});
 
         hideNodesAll();
         displayNodes(neighborsNodeIds);
