@@ -96,27 +96,22 @@
                 <span id="tag-counter" class="badge">{{ tags | length }}</span>
             </summary>
 
-            <button class="menu-tags-btn sort-btn">A-Z</button>
+            <select class="sorting-select" name="index_sorting">
+                <option value="a-z">A-Z</option>
+                <option value="z-a">Z-A</option>
+                <option value="increasing">Croissant</option>
+                <option value="decreasing">Décroissant</option>
+            </select>
 
-            <div class="menu-tags-container menu-tags-container-prim sort-box active">
-                <form>
-                    {% for tag in tags %}
-                    <label class="btn" data-tag="{{ loop.index }}" data-active="false">
-                        {{ tag.name }}
-                        <input type="checkbox" name="tag_{{ tag }}">
-                        <span class="badge">{{ tag.nodes | length }}</span>
-                    </label>
-                    {% endfor %}
-                </form>
-            </div>
-
-            <div class="menu-tags-container sort-box">
-                {% for tag in tags | reverse %}
-                <button class="btn" data-tag="{{ loop.length - loop.index0 }}" data-active="false" onclick="tag(this)">
-                    {{ tag.name }} <span class="badge">{{ tag.nodes | length }}</span>
-                </button>
+            <form id="tags-form" class="menu-tags-container menu-tags-container-prim sort-box active">
+                {% for tag in tags %}
+                <label class="btn" style="order: {{ loop.index }}">
+                    <input type="checkbox" name="{{ tag.name }}">
+                    {{ tag.name }}
+                    <span class="badge">{{ tag.nodes | length }}</span>
+                </label>
                 {% endfor %}
-            </div>
+            </form>
         </details>
         {% endif %}
 
