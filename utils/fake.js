@@ -46,38 +46,42 @@ for (let i = 0; i < nodesNb; i++) {
   ids.push(Record.generateOutDailyId() + i);
 }
 
-for (const fileId of ids) {
-  const templateEngine = new nunjucks.Environment(
-    new nunjucks.FileSystemLoader(path.join(__dirname, '../static'))
-  );
-  const content = templateEngine.render('fake/record.njk', {
-    ids,
-    imgSrc: images[0],
-    bibKeys,
-  });
+if (config.opts['files_origin']) {
+  files.push(...Cosmoscope.getFromPathFiles(config.opts['files_origin'], config.opts));
+} else {
+  for (const fileId of ids) {
+    const templateEngine = new nunjucks.Environment(
+      new nunjucks.FileSystemLoader(path.join(__dirname, '../static'))
+    );
+    const content = templateEngine.render('fake/record.njk', {
+      ids,
+      imgSrc: images[0],
+      bibKeys,
+    });
 
-  const thumbnail = `${fileId}.jpg`;
-  nodeThumbnails.push(thumbnail);
+    const thumbnail = `${fileId}.jpg`;
+    nodeThumbnails.push(thumbnail);
 
-  const { begin, end } = fakeExtremeDates();
+    const { begin, end } = fakeExtremeDates();
 
-  files.push({
-    path: undefined,
-    name: faker.system.commonFileName('md'),
-    lastEditDate: faker.date.past(),
-    content,
-    metas: {
-      id: fileId,
-      title: faker.name.jobTitle(),
-      type: faker.helpers.arrayElement(Object.keys(recordTypes)),
-      tags: [faker.helpers.arrayElement(tags), faker.helpers.arrayElement(tags)],
-      thumbnail: thumbnail,
-      references: ['Masure_2014'],
-      ['phone number']: faker.phone.number('06 ## ## ## ##'),
-      begin,
-      end,
-    },
-  });
+    files.push({
+      path: undefined,
+      name: faker.system.commonFileName('md'),
+      lastEditDate: faker.date.past(),
+      content,
+      metas: {
+        id: fileId,
+        title: faker.name.jobTitle(),
+        type: faker.helpers.arrayElement(Object.keys(recordTypes)),
+        tags: [faker.helpers.arrayElement(tags), faker.helpers.arrayElement(tags)],
+        thumbnail: thumbnail,
+        references: ['Masure_2014'],
+        ['phone number']: faker.phone.number('06 ## ## ## ##'),
+        begin,
+        end,
+      },
+    });
+  }
 }
 
 const records = Cosmoscope.getRecordsFromFiles(files, config.opts);
