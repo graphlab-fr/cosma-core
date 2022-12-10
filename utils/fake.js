@@ -15,7 +15,7 @@ const Config = require('../models/config'),
 const bib = require('../static/fake/bib.json');
 const tempDirPath = path.join(__dirname, '../temp');
 
-const nodesNb = 10;
+const nodesNb = 500;
 const tags = [];
 const ids = [];
 const files = [];
@@ -60,7 +60,7 @@ if (config.opts['files_origin']) {
     });
 
     const thumbnail = `${fileId}.jpg`;
-    nodeThumbnails.push(thumbnail);
+    // nodeThumbnails.push(thumbnail);
 
     const { begin, end } = fakeExtremeDates();
 
@@ -74,7 +74,7 @@ if (config.opts['files_origin']) {
         title: faker.name.jobTitle(),
         type: faker.helpers.arrayElement(Object.keys(recordTypes)),
         tags: [faker.helpers.arrayElement(tags), faker.helpers.arrayElement(tags)],
-        thumbnail: thumbnail,
+        thumbnail: undefined,
         references: ['Masure_2014'],
         ['phone number']: faker.phone.number('06 ## ## ## ##'),
         begin,
