@@ -15,7 +15,7 @@ const Config = require('../models/config'),
 const bib = require('../static/fake/bib.json');
 const tempDirPath = path.join(__dirname, '../temp');
 
-const nodesNb = 500;
+const nodesNb = 40;
 const tags = [];
 const ids = [];
 const files = [];
