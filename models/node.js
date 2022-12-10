@@ -180,7 +180,6 @@ module.exports = class Node {
         highlight,
         size,
         2,
-        Node.evalConnectionLevels(id, records),
         begin,
         end
       );
@@ -210,7 +209,6 @@ module.exports = class Node {
     highlight,
     size,
     strokeWidth,
-    focus,
     begin,
     end
   ) {
@@ -222,7 +220,6 @@ module.exports = class Node {
     this.highlight = highlight;
     this.size = Number(size);
     this.strokeWidth = strokeWidth;
-    this.focus = focus;
     this.begin = begin;
     this.end = end;
   }
