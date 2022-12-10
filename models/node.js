@@ -180,14 +180,12 @@ module.exports = class Node {
         highlight,
         size,
         2,
-        Node.evalConnectionLevels(id, records),
         begin,
         end
       );
     });
   }
 
-<<<<<<< HEAD
   /**
    * @param {number} id
    * @param {string} label
@@ -211,7 +209,6 @@ module.exports = class Node {
     highlight,
     size,
     strokeWidth,
-    focus,
     begin,
     end
   ) {
@@ -223,26 +220,10 @@ module.exports = class Node {
     this.highlight = highlight;
     this.size = Number(size);
     this.strokeWidth = strokeWidth;
-    this.focus = focus;
     this.begin = begin;
     this.end = end;
   }
 };
-=======
-    constructor(id, label, type = 'undefined', fill, colorStroke, highlight, size, strokeWidth, begin, end) {
-        this.id = Number(id);
-        this.label = label;
-        this.type = type;
-        this.fill = fill;
-        this.colorStroke = colorStroke;
-        this.highlight = highlight;
-        this.size = Number(size);
-        this.strokeWidth = strokeWidth;
-        this.begin = begin;
-        this.end = end;
-    }
-}
->>>>>>> 0f65baf (del focus compute from back)
 
 /**
  * Delete duplicated elements from an array
