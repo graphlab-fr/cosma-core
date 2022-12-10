@@ -6,3 +6,4 @@ import './bibliography';
 import './timeline';
 import './filter';
 import './tags';
+import './focus';
