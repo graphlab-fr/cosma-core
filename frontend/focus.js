@@ -1,67 +1,74 @@
-import GraphEngine from "graphology";
+import GraphEngine from 'graphology';
 import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs';
-import hotkeys from "hotkeys-js";
-import { displayNodes, hideNodesAll, displayNodesAll } from "./graph";
-import View from "./view";
+import hotkeys from 'hotkeys-js';
+import { displayNodes, hideNodesAll, displayNodesAll } from './graph';
+import View from './view';
 
 window.focusMode = 'inbound';
 
-window.addEventListener("DOMContentLoaded", () => {
-    /** @type {HTMLInputElement} */
-    const checkbox = document.getElementById('focus-check');
-    /** @type {HTMLInputElement} */
-    const input = document.getElementById('focus-input');
+window.addEventListener('DOMContentLoaded', () => {
+  /** @type {HTMLInputElement} */
+  const checkbox = document.getElementById('focus-check');
+  /** @type {HTMLInputElement} */
+  const input = document.getElementById('focus-input');
 
-    if (!checkbox && !input) { return; }
-    
-    checkbox.checked = false;
+  if (!checkbox && !input) {
+    return;
+  }
 
-    let graph;
+  checkbox.checked = false;
 
-    hotkeys('f', (e) => {
-        e.preventDefault();
-        checkbox.checked = true;
-        active();
-    });
+  let graph;
 
-    checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-            active();
-        } else {
-            input.classList.remove('active');
-            input.removeEventListener('input', action);
-            displayNodesAll();
-        }
-    });
+  hotkeys('f', (e) => {
+    e.preventDefault();
+    checkbox.checked = true;
+    active();
+  });
 
-    function active() {
-        if (View.openedRecordId === undefined) {
-            checkbox.checked = false;
-            return;
-        }
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      active();
+    } else {
+      input.classList.remove('active');
+      input.removeEventListener('input', action);
+      displayNodesAll();
+    }
+  });
 
-        if (graph === undefined) {
-            graph = getGraphEngine();
-        }
-
-        action();
-        input.classList.add('active');
-        input.addEventListener('input', action);
-        input.focus();
+  function active() {
+    if (View.openedRecordId === undefined) {
+      checkbox.checked = false;
+      return;
     }
 
-    function action() {
-        const nodeIdOrigin = View.openedRecordId;
-        const neighborsNodeIds = [];
-
-        neighborsExtend(graph, nodeIdOrigin, (nodeId, attr, depth) => {
-            neighborsNodeIds.push(Number(nodeId));
-            return depth >= input.valueAsNumber;
-        }, { mode: window.focusMode});
-
-        hideNodesAll();
-        displayNodes(neighborsNodeIds);
+    if (graph === undefined) {
+      graph = getGraphEngine();
     }
+
+    action();
+    input.classList.add('active');
+    input.addEventListener('input', action);
+    input.focus();
+  }
+
+  function action() {
+    const nodeIdOrigin = View.openedRecordId;
+    const neighborsNodeIds = [];
+
+    neighborsExtend(
+      graph,
+      nodeIdOrigin,
+      (nodeId, attr, depth) => {
+        neighborsNodeIds.push(Number(nodeId));
+        return depth >= input.valueAsNumber;
+      },
+      { mode: window.focusMode }
+    );
+
+    hideNodesAll();
+    displayNodes(neighborsNodeIds);
+  }
 });
 
 /**
@@ -69,16 +76,16 @@ window.addEventListener("DOMContentLoaded", () => {
  */
 
 function getGraphEngine() {
-    const graph = new GraphEngine();
+  const graph = new GraphEngine();
 
-    for (const { id, label } of data.nodes) {
-        graph.addNode(id, {
-            label
-        });
-    }
-    for (const { source, target } of data.links) {
-        graph.addEdge(source.id, target.id);
-    }
+  for (const { id, label } of data.nodes) {
+    graph.addNode(id, {
+      label,
+    });
+  }
+  for (const { source, target } of data.links) {
+    graph.addEdge(source.id, target.id);
+  }
 
-    return graph;
+  return graph;
 }

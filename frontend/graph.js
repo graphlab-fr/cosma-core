@@ -355,8 +355,8 @@ function displayNodesAll() {
   displayNodes(nodeIds);
 }
 
-function hideNodesAll () {
-    hideNodes(nodeIds);
+function hideNodesAll() {
+  hideNodes(nodeIds);
 }
 
 /**
@@ -565,4 +565,13 @@ function translate() {
   svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
 }
 
-export { svg, svgSub, hideNodes, hideNodesAll, displayNodes, displayNodesAll, highlightNodes, unlightNodes };
+export {
+  svg,
+  svgSub,
+  hideNodes,
+  hideNodesAll,
+  displayNodes,
+  displayNodesAll,
+  highlightNodes,
+  unlightNodes,
+};
