@@ -355,6 +355,10 @@ function displayNodesAll() {
   displayNodes(nodeIds);
 }
 
+function hideNodesAll() {
+  hideNodes(nodeIds);
+}
+
 /**
  * Zoom to a node from its coordinates
  * @param {string|number} nodeId
@@ -561,4 +565,13 @@ function translate() {
   svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
 }
 
-export { svg, svgSub, hideNodes, displayNodes, displayNodesAll, highlightNodes, unlightNodes };
+export {
+  svg,
+  svgSub,
+  hideNodes,
+  hideNodesAll,
+  displayNodes,
+  displayNodesAll,
+  highlightNodes,
+  unlightNodes,
+};
