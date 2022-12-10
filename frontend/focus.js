@@ -4,21 +4,22 @@ import hotkeys from 'hotkeys-js';
 import { displayNodes, hideNodesAll, displayNodesAll } from './graph';
 import View from './view';
 
-window.focusMode = 'inbound';
-
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLInputElement} */
   const checkbox = document.getElementById('focus-check');
+  /** @type {HTMLSelectElement} */
+  const modeSelect = document.getElementById('focus-mode-select');
   /** @type {HTMLInputElement} */
   const input = document.getElementById('focus-input');
 
-  if (!checkbox && !input) {
+  if (focusIsActive === false) {
     return;
   }
 
   checkbox.checked = false;
 
-  let graph;
+  let focusMode;
+  let graph = getGraphEngine();
 
   hotkeys('f', (e) => {
     e.preventDefault();
@@ -31,7 +32,8 @@ window.addEventListener('DOMContentLoaded', () => {
       active();
     } else {
       input.classList.remove('active');
-      input.removeEventListener('input', action);
+      input.removeEventListener('input', display);
+      modeSelect.removeEventListener('change', changeMode);
       displayNodesAll();
     }
   });
@@ -42,19 +44,20 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (graph === undefined) {
-      graph = getGraphEngine();
-    }
+    changeMode();
+    modeSelect.addEventListener('change', changeMode);
 
-    action();
+    display();
     input.classList.add('active');
-    input.addEventListener('input', action);
+    input.addEventListener('input', display);
     input.focus();
   }
 
-  function action() {
+  function display() {
     const nodeIdOrigin = View.openedRecordId;
     const neighborsNodeIds = [];
+
+    console.log(focusMode);
 
     neighborsExtend(
       graph,
@@ -63,11 +66,16 @@ window.addEventListener('DOMContentLoaded', () => {
         neighborsNodeIds.push(Number(nodeId));
         return depth >= input.valueAsNumber;
       },
-      { mode: window.focusMode }
+      { mode: focusMode }
     );
 
     hideNodesAll();
     displayNodes(neighborsNodeIds);
+  }
+
+  function changeMode() {
+    focusMode = modeSelect.value;
+    display();
   }
 });
 

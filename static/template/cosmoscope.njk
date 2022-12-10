@@ -221,19 +221,16 @@
                 {{ inputRange(translation.left_panel.menu_controls.form_text.input_size[lang], 'text_size', 'updateFontsize()', graph.config.graph_text_size, graph.minValues.graph_text_size, 15, 0.5) }}
             </article>
 
+            {% if focusIsActive %}
             <article class="menu-controls-container">
-                <form oninput="window.focusMode = focus_mode.value">
-                    <p class="menu-controls-title">Mode de focus</p>
-                    <select name="focus_mode">
-                        <option value="directed">Dirigé</option>
-                        <option value="in">Interne</option>
-                        <option value="out">Externe</option>
-                        <option value="inbound">Entrant</option>
-                        <option value="outbound">Sortant</option>
-                        <option value="undirected">Non dirigé</option>
-                    </select>
-                </form>
+                <p class="menu-controls-title">Mode de focus</p>
+                <select name="focus_mode" id="focus-mode-select">
+                    <option value="directed">Tous</option>
+                    <option value="inbound">Entrant</option>
+                    <option value="outbound">Sortant</option>
+                </select>
             </article>
+            {% endif %}
         </details>
 
         <footer class="menu-footer">
@@ -561,6 +558,8 @@
         const filterList = {{ filters | dump | safe }};
         const timeline = {{ timeline | dump | safe }};
         const sorting = {{ sorting | dump | safe }};
+
+        const focusIsActive = {{ focusIsActive }};
     </script>
 
     {# Cosma functions #}
