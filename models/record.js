@@ -220,7 +220,7 @@ module.exports = class Record {
         if (!config || config instanceof Config === false) {
             throw new Error('Need instance of Config to process');
         }
-        const { record_types: recordTypes } = config.opts;
+        const recordTypes = { ...config.opts['record_types'] };
 
         const nodes = data.map(({ id, title, ...rest }) => {
             let type;
@@ -273,7 +273,10 @@ module.exports = class Record {
                 end,
                 bibliographicRecords,
                 thumbnail,
-                config.opts
+                {
+                    ...config.opts,
+                    record_types: recordTypes
+                }
             );
 
             return record;
