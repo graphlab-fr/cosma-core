@@ -100,24 +100,7 @@ module.exports = class Cosmocope extends Graph {
         /** @type {File[]} */
         let files =  filesPath.map((filePath) => {
             const fileContain = fs.readFileSync(filePath, 'utf8');
-            const { __content: content, ...metas} = ymlFM.loadFront(fileContain);
-
-            /** @type {File} */
-            const file = {
-                path: filePath,
-                name: path.basename(filePath),
-                content,
-                metas
-            };
-
-            if (Array.isArray(file.metas.type) === false) {
-                file.metas.type = [file.metas.type || 'undefined'];
-            }
-            file.metas.tags =  file.metas['tags'] || file.metas['keywords'] || [];
-            file.metas.id = file.metas.id;
-            file.metas.references = file.metas.references || [];
-            file.metas.begin = undefined;
-            file.metas.end = undefined;
+            const file = Cosmocope.getDataFromYamlFrontMatter(fileContain, filePath);
 
             switch (opts['chronological_record_meta']) {
                 case 'last_open':
@@ -157,6 +140,42 @@ module.exports = class Cosmocope extends Graph {
             });
         }
         return files;
+    }
+
+    /**
+     * @param {string} fileContain
+     * @param {string} filePath
+     * @returns {File}
+     */
+
+    static getDataFromYamlFrontMatter(fileContain, filePath) {
+        const { __content: content, ...metas} = ymlFM.loadFront(fileContain);
+
+        /** @type {File} */
+        const file = {
+            path: filePath,
+            name: path.basename(filePath),
+            content,
+            metas
+        };
+
+        if (file.metas.title instanceof Date) {
+            file.metas.title = file.metas.title.toISOString().split('T')[0]
+        }
+
+        file.metas.title = String(file.metas.title);
+        if (Array.isArray(file.metas.type) === false) {
+            file.metas.type = [file.metas.type || 'undefined'];
+        }
+        if (file.metas.type.length === 0) {
+            file.metas.type = ['undefined'];
+        }
+        file.metas.tags = file.metas['tags'] || file.metas['keywords'] || [];
+        file.metas.references = file.metas.references || [];
+        file.metas.begin = undefined;
+        file.metas.end = undefined;
+
+        return file;
     }
 
     /**
