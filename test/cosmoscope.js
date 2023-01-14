@@ -2,7 +2,7 @@ const assert = require('assert')
 
 const Cosmocope = require('../models/cosmoscope');
 
-describe.only('Cosmoscope', () => {
+describe('Cosmoscope', () => {
     describe('data from Yaml FrontMatter', () => {
         describe('content', () => {
             it('should get string', () => {
@@ -140,6 +140,19 @@ type: []
                     ['undefined']
                 )
             });
+
+            it('should skip falsy values from array', () => {
+                const result = Cosmocope.getDataFromYamlFrontMatter(
+`---
+type: [false]
+---`,
+                    'path'
+                )
+                assert.deepStrictEqual(
+                    result.metas.type,
+                    ['undefined']
+                )
+            });
         })
 
         describe('tags', () => {
@@ -179,6 +192,75 @@ keywords: ['toto', 'tata']
                 assert.deepStrictEqual(
                     result.metas.tags,
                     ['toto', 'tata']
+                )
+            });
+        })
+
+        describe('references', () => {
+            it('should keep array', () => {
+                const result = Cosmocope.getDataFromYamlFrontMatter(
+`---
+references: ['toto', 'tata']
+---`,
+                    'path'
+                )
+                assert.deepStrictEqual(
+                    result.metas.references,
+                    ['toto', 'tata']
+                )
+            });
+
+            it('should stringify falsy values from array', () => {
+                const result = Cosmocope.getDataFromYamlFrontMatter(
+`---
+references: [false]
+---`,
+                    'path'
+                )
+                assert.deepStrictEqual(
+                    result.metas.references,
+                    ['false']
+                )
+            });
+
+            it('should get array from string', () => {
+                const result = Cosmocope.getDataFromYamlFrontMatter(
+`---
+references: tata
+---`,
+                    'path'
+                )
+                assert.deepStrictEqual(
+                    result.metas.references,
+                    ['tata']
+                )
+            });
+
+            it('should get empty array from empty string', () => {
+                const result = Cosmocope.getDataFromYamlFrontMatter(
+`---
+references:
+---`,
+                    'path'
+                )
+                assert.deepStrictEqual(
+                    result.metas.references,
+                    []
+                )
+            });
+        })
+
+        describe('other metas', () => {
+            it('should keep "toto" key and value', () => {
+                const result = Cosmocope.getDataFromYamlFrontMatter(
+`---
+toto: tata
+---`,
+                    'path'
+                )
+                assert.deepStrictEqual(
+                    result.metas['toto'],
+                    'tata'
                 )
             });
         })

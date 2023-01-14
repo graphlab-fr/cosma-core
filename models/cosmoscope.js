@@ -162,16 +162,23 @@ module.exports = class Cosmocope extends Graph {
         if (file.metas.title instanceof Date) {
             file.metas.title = file.metas.title.toISOString().split('T')[0]
         }
-
         file.metas.title = String(file.metas.title);
+
         if (Array.isArray(file.metas.type) === false) {
-            file.metas.type = [file.metas.type || 'undefined'];
+            file.metas.type = [file.metas.type || 'undefined'];
         }
+        file.metas.type = file.metas.type.filter(Boolean);
         if (file.metas.type.length === 0) {
             file.metas.type = ['undefined'];
         }
+
         file.metas.tags = file.metas['tags'] || file.metas['keywords'] || [];
-        file.metas.references = file.metas.references || [];
+
+        if (Array.isArray(file.metas.references) === false) {
+            file.metas.references = [file.metas.references].filter(Boolean);
+        }
+        file.metas.references = file.metas.references.map(String);
+
         file.metas.begin = undefined;
         file.metas.end = undefined;
 
