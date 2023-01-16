@@ -705,6 +705,10 @@ windows:
       select:
         fr: Sélectionner
         en: Select
+  app_preferences:
+    title:
+      fr: Paramètres de l'application
+      en: App preferences
 
 dialog:
   file_filter:
@@ -1048,6 +1052,12 @@ app_menu:
   preferences:
     fr: Préférences…
     en: Preferences…
+  app_options:
+    fr: Paramètres de l'application
+    en: App preferences…
+  project_options:
+    fr: Paramètres du projet…
+    en: Project preferences…
   services:
     fr: Services
     en: Services
