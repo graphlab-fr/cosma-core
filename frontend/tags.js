@@ -1,3 +1,5 @@
+import { displayNodes, hideNodesAll, displayNodesAll } from './graph';
+
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
   const form = document.getElementById('tags-form');
@@ -29,8 +31,20 @@ window.addEventListener('DOMContentLoaded', () => {
     let formState = new FormData(form);
     formState = Object.fromEntries(formState);
 
-    tagsState = tagList.map(({ name }) => {
-      return [name, !!formState[name]];
-    });
+    const nodeIdsToDisplay = new Set();
+
+    tagsState = tagList
+      .filter(({ name }) => !!formState[name])
+      .forEach(({ nodes }) => {
+        nodes.forEach((id) => nodeIdsToDisplay.add(id));
+      });
+
+    if (nodeIdsToDisplay.size === 0) {
+      displayNodesAll();
+      return;
+    }
+
+    hideNodesAll();
+    displayNodes(Array.from(nodeIdsToDisplay));
   }
 });
