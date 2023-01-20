@@ -288,7 +288,9 @@
                 {% if record.tags %}
                 <div class="record-tags">
                     <span>{{ translation.right_panel.record.metadata.keywords[lang] }} :</span>
-                    <span>{{ record.tags | join(", ") }}</span>
+                    {% for tag in record.tags %}
+                    <button class="btn" onclick="activeTag('{{tag}}');">{{ tag }}</button>
+                    {% endfor %}
                 </div>
                 {% endif %}
 
