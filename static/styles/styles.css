@@ -50,6 +50,7 @@ body {
 article {
   padding: 0.8rem 0;
 }
+
 article + article:not(.record) {
   border-top: 1px solid var(--border-light-color);
 }
@@ -72,6 +73,7 @@ button {
   border: 1px solid var(--border-color);
   border-radius: 2px;
 }
+
 .btn.active,
 .btn[data-active='true'] {
   border: 1px solid black;
@@ -79,6 +81,35 @@ button {
 
 [onclick] {
   cursor: pointer;
+}
+
+/* ---
+- Inputs
+--- */
+
+.outline {
+  outline: var(--cosma-blue) solid 1px;
+}
+
+label {
+  cursor: pointer;
+}
+
+input {
+  font-size: 1.3rem;
+}
+
+input[type='checkbox'] {
+  cursor: pointer;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0 0.8rem 0 0;
+}
+
+input[type='range'] {
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.3rem;
 }
 
 /* ---
@@ -139,6 +170,25 @@ summary + button {
 .menu-tags-container {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 1em;
+}
+
+.menu-tags-container label {
+  display: flex;
+  align-items: center;
+  margin: 0.15em 0.15em 0.15em 0;
+}
+
+.menu-tags-container .label {
+  margin: 0 0.2em;
+}
+
+.menu-tags-container .badge {
+  margin: 0.15em 0.15em 0.15em 0;
+}
+
+.menu-tags-container input[type='checkbox'] {
+  margin: 0.2em;
 }
 
 .menu-index-list {
@@ -148,35 +198,6 @@ summary + button {
 
 .menu-index-list.reverse {
   flex-direction: column-reverse;
-}
-
-/* ---
-- Inputs
---- */
-
-.outline {
-  outline: var(--cosma-blue) solid 1px;
-}
-
-label {
-  cursor: pointer;
-}
-
-input {
-  font-size: 1.3rem;
-}
-
-input[type='checkbox'] {
-  cursor: pointer;
-  width: 1.2rem;
-  height: 1.2rem;
-  margin: 0 0.8rem 0 0;
-}
-
-input[type='range'] {
-  cursor: pointer;
-  width: 100%;
-  margin-top: 0.3rem;
 }
 
 /* ---
@@ -314,6 +335,7 @@ aside.menu {
   margin: 1rem 0;
   background-color: var(--indicator-background-color);
 }
+
 .load-bar #load-bar-value {
   background-color: var(--cosma-blue);
   flex-basis: 100%;
@@ -331,6 +353,7 @@ aside.menu {
 #search-result-list {
   margin-bottom: 0.8rem;
 }
+
 #search-result-list li {
   cursor: pointer;
 }
@@ -465,12 +488,15 @@ h6 {
   font-family: var(--sans);
   margin: 3rem 0 0 0;
 }
+
 .record main h1 {
   font-size: 1.8rem;
 }
+
 .record main h2 {
   font-size: 1.6rem;
 }
+
 .record main h3 {
   font-size: 1.4rem;
 }
@@ -478,6 +504,7 @@ h6 {
 .record main a {
   word-wrap: break-word;
 }
+
 .record main a.record-link {
   color: #337ab7;
 }
@@ -487,10 +514,12 @@ h6 {
   padding: 0;
   list-style-position: inside;
 }
+
 .record main ul ul,
 .record main ol ol {
   padding-left: 2rem;
 }
+
 .record main ul li,
 .record ol li {
   margin: 0.5rem 0 0 0;
@@ -513,9 +542,11 @@ h6 {
   text-align: left;
   width: 100%;
 }
+
 .record main tr {
   border-bottom: 1px solid var(--border-color);
 }
+
 .record main th,
 .record main td {
   padding: 0.5rem;
@@ -629,14 +660,17 @@ circle,
 text {
   cursor: pointer;
 }
+
 g.focus circle {
   stroke: var(--highlight);
 }
+
 /* labels */
 text {
   font-family: var(--condensed);
   fill: gray;
 }
+
 /* arrows */
 marker {
   /* set into config.yml file by 'undefined' link type */
@@ -710,6 +744,7 @@ marker {
 .graph-controls #reset-isolate {
   display: none;
 }
+
 .graph-controls #reset-highlight {
   display: none;
 }
@@ -802,6 +837,7 @@ article#credits h1.metas-title {
 .logo {
   cursor: pointer;
 }
+
 .logo svg {
   display: block;
   margin: 0 auto;
@@ -812,9 +848,11 @@ article#credits h1.metas-title {
   0% {
     transform: rotate(0deg);
   }
+
   50% {
     transform: rotate(270deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -823,6 +861,7 @@ article#credits h1.metas-title {
 #cosma-roll {
   transform-origin: 96px 42px;
 }
+
 #cosma-roll.anim {
   animation: 3s cubic-bezier(0.2, -0.2, 0.8, 1) 1 rotate-center;
 }
