@@ -47,4 +47,11 @@ window.addEventListener('DOMContentLoaded', () => {
     hideNodesAll();
     displayNodes(Array.from(nodeIdsToDisplay));
   }
+
+  window.activeTag = function (name) {
+    /** @type {HTMLInputElement} */
+    const input = form.querySelector(`input[name="${name}"]`);
+    input.checked = !input.checked;
+    form.dispatchEvent(new Event('change'));
+  };
 });
