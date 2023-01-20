@@ -172,48 +172,48 @@ module.exports = class Cosmocope extends Graph {
     return files;
   }
 
-    /**
-     * @param {string} fileContain
-     * @param {string} filePath
-     * @returns {File}
-     */
+  /**
+   * @param {string} fileContain
+   * @param {string} filePath
+   * @returns {File}
+   */
 
-    static getDataFromYamlFrontMatter(fileContain, filePath) {
-        const { __content: content, ...metas} = ymlFM.loadFront(fileContain);
+  static getDataFromYamlFrontMatter(fileContain, filePath) {
+    const { __content: content, ...metas } = ymlFM.loadFront(fileContain);
 
-        /** @type {File} */
-        const file = {
-            path: filePath,
-            name: path.basename(filePath),
-            content,
-            metas
-        };
+    /** @type {File} */
+    const file = {
+      path: filePath,
+      name: path.basename(filePath),
+      content,
+      metas,
+    };
 
-        if (file.metas.title instanceof Date) {
-            file.metas.title = file.metas.title.toISOString().split('T')[0]
-        }
-        file.metas.title = String(file.metas.title);
-
-        if (Array.isArray(file.metas.type) === false) {
-            file.metas.type = [file.metas.type || 'undefined'];
-        }
-        file.metas.type = file.metas.type.filter(Boolean);
-        if (file.metas.type.length === 0) {
-            file.metas.type = ['undefined'];
-        }
-
-        file.metas.tags = file.metas['tags'] || file.metas['keywords'] || [];
-
-        if (Array.isArray(file.metas.references) === false) {
-            file.metas.references = [file.metas.references].filter(Boolean);
-        }
-        file.metas.references = file.metas.references.map(String);
-
-        file.metas.begin = undefined;
-        file.metas.end = undefined;
-
-        return file;
+    if (file.metas.title instanceof Date) {
+      file.metas.title = file.metas.title.toISOString().split('T')[0];
     }
+    file.metas.title = String(file.metas.title);
+
+    if (Array.isArray(file.metas.type) === false) {
+      file.metas.type = [file.metas.type || 'undefined'];
+    }
+    file.metas.type = file.metas.type.filter(Boolean);
+    if (file.metas.type.length === 0) {
+      file.metas.type = ['undefined'];
+    }
+
+    file.metas.tags = file.metas['tags'] || file.metas['keywords'] || [];
+
+    if (Array.isArray(file.metas.references) === false) {
+      file.metas.references = [file.metas.references].filter(Boolean);
+    }
+    file.metas.references = file.metas.references.map(String);
+
+    file.metas.begin = undefined;
+    file.metas.end = undefined;
+
+    return file;
+  }
 
   /**
    * Get formated data for links and nodes
