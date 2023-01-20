@@ -57,8 +57,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const nodeIdOrigin = View.openedRecordId;
     const neighborsNodeIds = [];
 
-    console.log(focusMode);
-
     neighborsExtend(
       graph,
       nodeIdOrigin,

@@ -107,7 +107,7 @@
                 {% for tag in tags %}
                 <label class="btn" style="order: {{ loop.index }}">
                     <input type="checkbox" name="{{ tag.name }}">
-                    {{ tag.name }}
+                    <span class="label">{{ tag.name }}</span>
                     <span class="badge">{{ tag.nodes | length }}</span>
                 </label>
                 {% endfor %}
