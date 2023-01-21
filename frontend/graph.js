@@ -281,36 +281,16 @@ function getNodeNetwork(nodeIds) {
  */
 
 function hideNodes(nodeIds) {
-  let nodesToHideIds;
+  hideNodeNetwork(nodeIds);
+  hideFromIndex(nodeIds);
 
-  nodesToHideIds = data.nodes.filter(function (item) {
-    if (nodeIds.includes(item.id) && item.hidden === false) {
-      return true;
+  elts.nodes.data().map((node) => {
+    const { id, hidden } = node;
+    if (nodeIds.includes(id) && hidden === false) {
+      node.hidden = true;
     }
+    return node;
   });
-
-  if (View.focusMode) {
-    nodesToHideIds = nodesToHideIds.filter(function (item) {
-      if (item.isolated === true) {
-        return true;
-      }
-    });
-  }
-
-  nodesToHideIds = nodesToHideIds.map((node) => node.id);
-
-  hideNodeNetwork(nodesToHideIds);
-  hideFromIndex(nodesToHideIds);
-
-  elts.nodes.data(
-    elts.nodes.data().map(function (node) {
-      if (nodesToHideIds.includes(node.id)) {
-        node.hidden = true;
-      }
-
-      return node;
-    })
-  );
 }
 
 /**
@@ -319,33 +299,16 @@ function hideNodes(nodeIds) {
  */
 
 function displayNodes(nodeIds) {
-  let nodesToDisplayIds;
+  const nodesToDisplayIds = [];
 
-  nodesToDisplayIds = data.nodes.filter(function (item) {
-    if (nodeIds.includes(item.id) && item.hidden === true) {
-      return true;
+  elts.nodes.data().map((node) => {
+    const { id, hidden } = node;
+    if (nodeIds.includes(id) && hidden) {
+      nodesToDisplayIds.push(id);
+      node.hidden = false;
     }
+    return node;
   });
-
-  if (View.focusMode) {
-    nodesToDisplayIds = nodesToDisplayIds.filter(function (item) {
-      if (item.isolated === true) {
-        return true;
-      }
-    });
-  }
-
-  nodesToDisplayIds = nodesToDisplayIds.map((node) => node.id);
-
-  elts.nodes.data(
-    elts.nodes.data().map(function (node) {
-      if (nodesToDisplayIds.includes(node.id)) {
-        node.hidden = false;
-      }
-
-      return node;
-    })
-  );
 
   displayNodeNetwork(nodesToDisplayIds);
   displayFromIndex(nodesToDisplayIds);
