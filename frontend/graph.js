@@ -7,7 +7,7 @@
 
 import * as d3 from 'd3';
 
-import View from './view';
+import view from './view';
 import { hideFromIndex, displayFromIndex } from './records';
 import { setCounters } from './counter';
 import hotkeys from 'hotkeys-js';
@@ -289,7 +289,7 @@ function hideNodes(nodeIds) {
     }
   });
 
-  if (View.focusMode) {
+  if (view.focusMode) {
     nodesToHideIds = nodesToHideIds.filter(function (item) {
       if (item.isolated === true) {
         return true;
@@ -327,7 +327,7 @@ function displayNodes(nodeIds) {
     }
   });
 
-  if (View.focusMode) {
+  if (view.focusMode) {
     nodesToDisplayIds = nodesToDisplayIds.filter(function (item) {
       if (item.isolated === true) {
         return true;
@@ -381,7 +381,7 @@ window.zoomToNode = function (nodeId) {
   x += (window.innerWidth - recordWidth) / 2;
   y += window.innerHeight / 2;
 
-  View.position = {
+  view.position = {
     zoom: zoom,
     x: x,
     y: y,
@@ -425,7 +425,7 @@ function highlightNodes(nodeIds) {
   nodes.selectAll('circle').style('stroke', 'var(--highlight)');
   links.style('stroke', 'var(--highlight)');
 
-  View.highlightedNodes = View.highlightedNodes.concat(nodeIds);
+  view.highlightedNodes = view.highlightedNodes.concat(nodeIds);
 }
 
 /**
@@ -433,16 +433,16 @@ function highlightNodes(nodeIds) {
  */
 
 function unlightNodes() {
-  if (View.highlightedNodes.length === 0) {
+  if (view.highlightedNodes.length === 0) {
     return;
   }
 
-  const { nodes, links } = getNodeNetwork(View.highlightedNodes);
+  const { nodes, links } = getNodeNetwork(view.highlightedNodes);
 
   nodes.selectAll('circle').style('stroke', null);
   links.style('stroke', null);
 
-  View.highlightedNodes = [];
+  view.highlightedNodes = [];
 }
 
 /**
@@ -561,7 +561,7 @@ window.chronosAction = function (timestamp) {
 };
 
 function translate() {
-  const { x, y, zoom } = View.position;
+  const { x, y, zoom } = view.position;
   svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
 }
 

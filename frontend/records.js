@@ -1,5 +1,5 @@
-import View from './view';
-import historique from './history';
+import view from './view';
+// import historique from './history';
 import { highlightNodes, unlightNodes } from './graph';
 import hotkeys from 'hotkeys-js';
 
@@ -12,9 +12,9 @@ window.openRecord = function (id, history = true) {
     return;
   }
 
-  if (View.openedRecordId !== undefined) {
+  if (view.openedRecordId !== undefined) {
     // hide last record
-    document.getElementById(View.openedRecordId).classList.remove('active');
+    document.getElementById(view.openedRecordId).classList.remove('active');
   }
 
   // open records container
@@ -25,7 +25,7 @@ window.openRecord = function (id, history = true) {
   // show record
   recordContent.classList.add('active');
 
-  View.openedRecordId = id;
+  view.openedRecordId = id;
 
   // reset nodes highlighting
   unlightNodes();
@@ -34,7 +34,7 @@ window.openRecord = function (id, history = true) {
   if (history) {
     // page's <title> become record's name
     const recordTitle = recordContent.querySelector('h1').textContent;
-    historique.actualiser(id, recordTitle);
+    // historique.actualiser(id, recordTitle);
   }
 };
 
@@ -44,15 +44,23 @@ window.openRecord = function (id, history = true) {
 
 window.closeRecord = function () {
   recordContainer.classList.remove('active');
-  document.getElementById(View.openedRecordId).classList.remove('active');
-  View.openedRecordId = undefined;
-  unlightNodes();
+  document.getElementById(view.openedRecordId).classList.remove('active');
+  view.openedRecordId = undefined;
 };
 
 hotkeys('escape', (e) => {
   e.preventDefault();
   closeRecord();
 });
+
+document.body.addEventListener('recordChange', ({detail}) => {
+  console.log(detail.openedRecordId);
+})
+
+document.body.addEventListener('recordClose', ({detail}) => {
+  console.log(detail);
+  unlightNodes();
+})
 
 window.addEventListener('DOMContentLoaded', () => {
   const hash = window.location.hash;
