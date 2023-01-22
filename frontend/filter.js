@@ -13,6 +13,7 @@
 
 import { displayNodes, hideNodes } from './graph';
 import { setCounters } from './counter';
+import filterPriority from './filterPriority';
 
 /** @type {string[]} */
 const filtersName = Object.keys(filterList);
@@ -31,12 +32,12 @@ function toggleFilter(filterName) {
   /** @type {Filter} */
   const { active, nodes } = filterList[filterName];
   if (active) {
-    hideNodes(nodes);
+    hideNodes(nodes, filterPriority.filteredByType);
 
     filterList[filterName].active = false;
     input.checked = false;
   } else {
-    displayNodes(nodes);
+    displayNodes(nodes, filterPriority.filteredByType);
 
     filterList[filterName].active = true;
     input.checked = true;
@@ -115,7 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
       input.checked = false;
     }
 
-    hideNodes(nodesToHide);
+    hideNodes(nodesToHide, filterPriority.filteredByType);
 
     /**
      * Display one
@@ -123,7 +124,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (filterList[oneFilterName].active === false) {
       /** @type {Filter} */
       const { nodes } = filterList[oneFilterName];
-      displayNodes(nodes);
+      displayNodes(nodes, filterPriority.filteredByType);
 
       filterList[oneFilterName].active = true;
       oneFilterInput.checked = true;
@@ -152,7 +153,7 @@ window.addEventListener('DOMContentLoaded', () => {
       input.checked = true;
     }
 
-    displayNodes(nodesToDisplay);
+    displayNodes(nodesToDisplay, filterPriority.filteredByType);
 
     setCounters();
   }

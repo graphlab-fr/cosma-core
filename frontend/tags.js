@@ -1,4 +1,5 @@
-import { displayNodes, hideNodesAll, displayNodesAll } from './graph';
+import { displayNodesAll, setNodesDisplaying } from './graph';
+import filterPriority from './filterPriority';
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
@@ -40,12 +41,11 @@ window.addEventListener('DOMContentLoaded', () => {
       });
 
     if (nodeIdsToDisplay.size === 0) {
-      displayNodesAll();
+      displayNodesAll(filterPriority.filteredByTag);
       return;
     }
 
-    hideNodesAll();
-    displayNodes(Array.from(nodeIdsToDisplay));
+    setNodesDisplaying(Array.from(nodeIdsToDisplay), filterPriority.filteredByTag);
   }
 
   window.activeTag = function (name) {
