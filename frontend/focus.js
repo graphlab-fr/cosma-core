@@ -1,8 +1,9 @@
 import GraphEngine from 'graphology';
 import { bfsFromNode as neighborsExtend } from 'graphology-traversal/bfs';
 import hotkeys from 'hotkeys-js';
-import { displayNodes, hideNodesAll, displayNodesAll } from './graph';
+import { displayNodesAll, setNodesDisplaying } from './graph';
 import View from './view';
+import filterPriority from './filterPriority';
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLInputElement} */
@@ -34,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
       input.classList.remove('active');
       input.removeEventListener('input', display);
       modeSelect.removeEventListener('change', changeMode);
-      displayNodesAll();
+      displayNodesAll(filterPriority.filteredByFocus);
     }
   });
 
@@ -67,8 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
       { mode: focusMode }
     );
 
-    hideNodesAll();
-    displayNodes(neighborsNodeIds);
+    setNodesDisplaying(neighborsNodeIds, filterPriority.filteredByFocus);
   }
 
   function changeMode() {
