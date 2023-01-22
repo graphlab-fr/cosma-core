@@ -351,30 +351,23 @@ function hideNodesAll(priority = 0) {
  */
 
 window.zoomToNode = function (nodeId) {
-  return;
-  const nodeToZoomMetas = elts.nodes.filter((node) => node.id === nodeId).datum(),
-    zoom = 2,
-    recordWidth = recordContainer.offsetWidth;
+  let { x, y } = elts.nodes.filter((node) => node.id === nodeId).datum(),
+    zoom = 2;
 
-  let x = nodeToZoomMetas.x,
-    y = nodeToZoomMetas.y;
+  x = -Math.abs(x - 200);
+  y = -Math.abs(y - 300);
 
-  // coordonates to put the node at the graph top-left corner
-  x = width / 2 - zoom * x;
-  y = height / 2 - zoom * y;
-
-  // add px to put the node to the graph center
-  x += (window.innerWidth - recordWidth) / 2;
-  y += window.innerHeight / 2;
-
-  View.position = {
-    zoom: zoom,
-    x: x,
-    y: y,
-  };
+  View.position = { x, y, zoom };
 
   translate();
 };
+
+hotkeys('c', (e) => {
+  e.preventDefault();
+  if (View.openedRecordId) {
+    zoomToNode(Number(View.openedRecordId));
+  }
+});
 
 /**
  * Display none nodes and their link
@@ -546,7 +539,8 @@ window.chronosAction = function (timestamp) {
 
 function translate() {
   const { x, y, zoom } = View.position;
-  svg.attr('style', `transform:translate(${x}px, ${y}px) scale(${zoom});`);
+  const viewBox = [-x, -y, width / zoom, height / zoom].join(' ');
+  svgSub.attr('viewBox', viewBox);
 }
 
 export {
@@ -559,4 +553,5 @@ export {
   setNodesDisplaying,
   highlightNodes,
   unlightNodes,
+  translate,
 };

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import View from './view';
-import { svg, svgSub } from './graph';
+import { svg, translate } from './graph';
 import hotkeys from 'hotkeys-js';
 
 const { width, height } = svg.node().getBoundingClientRect();
@@ -54,9 +54,3 @@ hotkeys('e,alt+e', (e) => {
 window.zoomMore = zoomMore;
 window.zoomLess = zoomLess;
 window.zoomReset = zoomReset;
-
-function translate() {
-  const { x, y, zoom } = View.position;
-  const viewBox = [-x, -y, width / zoom, height / zoom].join(' ');
-  svgSub.attr('viewBox', viewBox);
-}
