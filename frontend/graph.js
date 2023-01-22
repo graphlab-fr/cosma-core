@@ -11,15 +11,16 @@ import View from './view';
 import { hideFromIndex, displayFromIndex } from './records';
 import { setCounters } from './counter';
 import hotkeys from 'hotkeys-js';
+import filterPriority from './filterPriority';
 
 /** Data serialization
 ------------------------------------------------------------*/
 
-const nodeIds = [];
+const allNodeIds = [];
 
 data.nodes = data.nodes.map((node) => {
-  nodeIds.push(node.id);
-  node.hidden = false;
+  allNodeIds.push(node.id);
+  node.hidden = 0;
   node.isolated = false;
   node.highlighted = false;
   return node;
@@ -131,6 +132,7 @@ elts.nodes = svgSub
   .enter()
   .append('g')
   .attr('data-node', (d) => d.id)
+  .attr('data-toto', (d) => d.superToto)
   .on('click', function (d) {
     openRecord(d.id);
   });
@@ -252,7 +254,7 @@ elts.labels = elts.nodes
 
 function getNodeNetwork(nodeIds) {
   const diplayedNodes = elts.nodes
-    .filter((item) => item.hidden === false)
+    .filter((item) => item.hidden === 0)
     .data()
     .map((item) => item.id);
 
@@ -275,19 +277,35 @@ function getNodeNetwork(nodeIds) {
   };
 }
 
+function setNodesDisplaying(nodeIds, priority) {
+  const toHide = [],
+    toDisplay = [];
+
+  allNodeIds.forEach((id) => {
+    if (nodeIds.includes(id)) {
+      toDisplay.push(id);
+    } else {
+      toHide.push(id);
+    }
+  });
+
+  hideNodes(toHide, priority);
+  displayNodes(toDisplay, priority);
+}
+
 /**
  * Hide some nodes & their links, by their id
  * @param {array} nodeIds - List of nodes ids
  */
 
-function hideNodes(nodeIds) {
+function hideNodes(nodeIds, priority = 0) {
   hideNodeNetwork(nodeIds);
   hideFromIndex(nodeIds);
 
   elts.nodes.data().map((node) => {
     const { id, hidden } = node;
-    if (nodeIds.includes(id) && hidden === false) {
-      node.hidden = true;
+    if (nodeIds.includes(id) && hidden === 0) {
+      node.hidden = priority;
     }
     return node;
   });
@@ -298,14 +316,14 @@ function hideNodes(nodeIds) {
  * @param {array} nodeIds - List of nodes ids
  */
 
-function displayNodes(nodeIds) {
+function displayNodes(nodeIds, priority = 0) {
   const nodesToDisplayIds = [];
 
   elts.nodes.data().map((node) => {
     const { id, hidden } = node;
-    if (nodeIds.includes(id) && hidden) {
+    if (nodeIds.includes(id) && hidden <= priority) {
       nodesToDisplayIds.push(id);
-      node.hidden = false;
+      node.hidden = 0;
     }
     return node;
   });
@@ -314,12 +332,12 @@ function displayNodes(nodeIds) {
   displayFromIndex(nodesToDisplayIds);
 }
 
-function displayNodesAll() {
-  displayNodes(nodeIds);
+function displayNodesAll(priority = 0) {
+  displayNodes(allNodeIds, priority);
 }
 
-function hideNodesAll() {
-  hideNodes(nodeIds);
+function hideNodesAll(priority = 0) {
+  hideNodes(allNodeIds, priority);
 }
 
 /**
@@ -440,16 +458,17 @@ window.labelDisplayToggle = function (isChecked) {
  */
 
 window.labelHighlight = function (nodeIds) {
-  const labelsToHighlight = elts.nodes.filter((node) => nodeIds.includes(node.id)).select('text');
-
-  data.nodes = data.nodes.map(function (node) {
+  elts.nodes.data().map((node) => {
     if (nodeIds.includes(node.id)) {
       node.highlighted = true;
     }
     return node;
   });
 
-  labelsToHighlight.style('fill', 'var(--highlight)');
+  elts.nodes
+    .filter((node) => nodeIds.includes(node.id))
+    .select('text')
+    .style('fill', 'var(--highlight)');
 };
 
 /**
@@ -466,16 +485,17 @@ window.updateFontsize = function () {
  */
 
 window.labelUnlight = function (nodeIds) {
-  const labelsToHighlight = elts.nodes.filter((node) => nodeIds.includes(node.id)).select('text');
-
-  data.nodes = data.nodes.map(function (node) {
+  elts.nodes.data().map((node) => {
     if (nodeIds.includes(node.id)) {
       node.highlighted = false;
     }
     return node;
   });
 
-  labelsToHighlight.style('fill', null);
+  elts.nodes
+    .filter((node) => nodeIds.includes(node.id))
+    .select('text')
+    .style('fill', null);
 };
 
 /**
@@ -500,8 +520,7 @@ window.chronosAction = function (timestamp) {
     return;
   }
 
-  const toHide = [],
-    toDisplay = [];
+  const nodesId = [];
 
   for (const { begin, end, id } of data.nodes) {
     if (end === undefined) {
@@ -512,14 +531,11 @@ window.chronosAction = function (timestamp) {
     }
 
     if (timestamp >= begin && timestamp <= end) {
-      toDisplay.push(id);
-    } else {
-      toHide.push(id);
+      nodesId.push(id);
     }
   }
 
-  hideNodes(toHide);
-  displayNodes(toDisplay);
+  setNodesDisplaying(nodesId, filterPriority.filteredByTimeline);
   setCounters();
 };
 
@@ -535,6 +551,7 @@ export {
   hideNodesAll,
   displayNodes,
   displayNodesAll,
+  setNodesDisplaying,
   highlightNodes,
   unlightNodes,
 };
