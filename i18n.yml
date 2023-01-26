@@ -639,33 +639,30 @@ windows:
         en: Sort projects
     options:
       first_last:
-        fr: Date de création
-        en: Creation date
+        fr: Du plus récent au plus ancien
+        en: Newest to oldest
       last_first:
-        fr: Date de création
-        en: Creation date
+        fr: Du plus ancien au plus récent
+        en: Oldest to newest
       new_old:
-        fr: Date de dernière ouverture
-        en: Last opened date
+        fr: Du premier ouvert au dernier
+        en: First open to last
       old_new:
-        fr: Date de dernière ouverture
-        en: Last opened date
+        fr: Du dernier ouvert au premier
+        en: Last open to first
       a_z:
-        fr: Nom
-        en: Name
+        fr: De A à Z
+        en: From A to Z
       z_a:
-        fr: Nom
-        en: Name
+        fr: De Z à A
+        en: From Z to A
     btns:
       new:
         fr: Ajouter un projet
         en: Add a project
-      edit_end:
-        fr: Enregistrer
-        en: Save
-      edit_start:
-        fr: Modifier
-        en: Edit
+      open:
+        fr: Ouvrir
+        en: Open
       delete:
         fr: Supprimer
         en: Delete
