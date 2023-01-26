@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 
 import View from './view';
 import { svg, svgSub } from './graph';
+import hotkeys from 'hotkeys-js';
 
 const { width, height } = svg.node().getBoundingClientRect();
 
@@ -44,6 +45,11 @@ function zoomReset() {
   );
   translate();
 }
+
+hotkeys('e,alt+e', (e) => {
+  e.preventDefault();
+  zoomReset();
+});
 
 window.zoomMore = zoomMore;
 window.zoomLess = zoomLess;
