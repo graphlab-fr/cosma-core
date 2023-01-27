@@ -47,7 +47,7 @@ module.exports = class Link {
     static regexParagraph = new RegExp(/[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*/, 'g');
 
     /** @exemple `"[[a:20210424214230|link text]]"` */
-    static regexWikilink = new RegExp(/\[\[((?<type>[\w ]+):)?(?<id>[\w ]+)(\|(?<text>[\w ]+))?\]\]/, 'g');
+    static regexWikilink = new RegExp(/\[\[((?<type>[\w ]+):)?(?<id>[\w ]+)(\|(?<text>.+?))?\]\]/, 'g');
 
     /**
      * @param {File.metas.id} fileId
