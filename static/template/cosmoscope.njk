@@ -75,20 +75,15 @@
                 <span id="types-counter" class="badge">{{ types | length }}</span>
             </summary>
 
-            <ul class="menu-types-list">
+            <form id="types-form" class="menu-types-container">
                 {% for filterName, filterMetas in filters %}
-                <li class="filter" style="color: var(--n_{{ filterName | slugify }});">
-                    <label>
-                        <input
-                            id="filter-{{ filterName }}" name="{{ filterName }}" type="checkbox"
-                            {% if filterMetas.active === true %}checked{% endif %}
-                        >
-                        {{ filterName }}
-                        <span class="badge">{{ filterMetas.nodes | length }}</span>
-                    </label>
-                </li>
+                <label class="filter">
+                    <input type="checkbox" name="{{ filterName }}">
+                    <span class="label" style="color: var(--n_{{ filterName | slugify }});">{{ filterName }}</span>
+                    <span class="badge">{{ filterMetas.nodes | length }}</span>
+                </label>
                 {% endfor %}
-            </ul>
+            </form>
         </details>
 
         {% if tags.length !== 0 %}
@@ -559,7 +554,7 @@
         const data = {{ graph.data | dump | safe }};
         const graphProperties = {{ graph.config | dump | safe }};
         const tagList = {{ tags | dump | safe }};
-        const filterList = {{ filters | dump | safe }};
+        const typeList = {{ filters | dump | safe }};
         const timeline = {{ timeline | dump | safe }};
         const sorting = {{ sorting | dump | safe }};
 
