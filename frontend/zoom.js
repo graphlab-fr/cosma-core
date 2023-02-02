@@ -46,7 +46,7 @@ function zoomReset() {
   translate();
 }
 
-hotkeys('e,alt+e', (e) => {
+hotkeys('e,alt+r', (e) => {
   e.preventDefault();
   zoomReset();
 });

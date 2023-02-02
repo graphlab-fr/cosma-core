@@ -1,5 +1,6 @@
 import { displayNodesAll, setNodesDisplaying } from './graph';
 import filterPriority from './filterPriority';
+import hotkeys from 'hotkeys-js';
 
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLFormElement} */
@@ -47,6 +48,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setNodesDisplaying(Array.from(nodeIdsToDisplay), filterPriority.filteredByTag);
   }
+
+  hotkeys('alt+r', (e) => {
+    e.preventDefault();
+    form
+      .querySelectorAll(`input:checked`)
+      .forEach((checkedInput) => (checkedInput.checked = false));
+    form.dispatchEvent(new Event('change'));
+  });
 
   window.activeTag = function (name) {
     /** @type {HTMLInputElement} */
