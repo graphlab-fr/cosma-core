@@ -336,11 +336,6 @@ function displayNodesAll(priority = 0) {
   displayNodes(allNodeIds, priority);
 }
 
-hotkeys('alt+e', (e) => {
-  e.preventDefault();
-  displayNodes(allNodeIds, Infinity);
-});
-
 function hideNodesAll(priority = 0) {
   hideNodes(allNodeIds, priority);
 }

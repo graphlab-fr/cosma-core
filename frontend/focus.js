@@ -24,8 +24,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   hotkeys('f', (e) => {
     e.preventDefault();
-    checkbox.checked = true;
-    active();
+    checkbox.checked = !checkbox.checked;
+    checkbox.dispatchEvent(new Event('change'));
+  });
+
+  hotkeys('alt+r', (e) => {
+    e.preventDefault();
+    checkbox.checked = false;
+    checkbox.dispatchEvent(new Event('change'));
   });
 
   checkbox.addEventListener('change', () => {
