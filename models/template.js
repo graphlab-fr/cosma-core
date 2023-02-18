@@ -297,6 +297,8 @@ module.exports = class Template {
 
             guiContext: (Config.getContext() === 'electron' && this.params.has('publish') === false),
 
+            canSaveRecords: this.config.canSaveRecords(),
+
             faviconPath: path.join(__dirname, '../icons/cosmafavicon.png'),
 
             // stats

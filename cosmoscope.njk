@@ -49,7 +49,9 @@
         <header role="banner">
             {% if guiContext === true %}
             <div id="menu-electron" hidden>
+                {% if canSaveRecords === true %}
                 <button id="electron-record-new" title="Nouvelle fiche">{% include "icons/add.svg" %}</button>
+                {% endif %}
                 <button id="electron-back" title="Précédent" class="icon-chevron">{% include "icons/back.svg" %}</button>
                 <button id="electron-forward" title="Suivant" class="icon-chevron">{% include "icons/forward.svg" %}</button>
                 <button id="electron-page-reload" title="Recharger la page">{% include "icons/reload.svg" %}</button>
