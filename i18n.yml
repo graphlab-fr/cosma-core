@@ -1052,7 +1052,7 @@ app_menu:
   app_options:
     fr: Paramètres de l'application
     en: App preferences…
-  project_options:
+  project_config:
     fr: Paramètres du projet…
     en: Project preferences…
   services:
@@ -1183,9 +1183,6 @@ report:
   section_error:
     fr: Erreurs ($1 fiches)
     en: Errors ($1 records)
-  csv_error:
-    fr: Lecture fichiers CSV
-    en: CSV files reading
   section_warning:
     fr: Avertissements ($1 fiches)
     en: Warnings ($1 records)
@@ -1219,6 +1216,3 @@ report:
   unknown_bibliographic_reference:
     fr: Clé de citation "$2" dans la fiche "$1" non trouvée dans les données bibliographiques
     en: Citation key "$2" in record "$1" not found in bibliographic data
-  ignored_csv_line:
-    fr: "Ligne CSV n°$3 pour les $2 ignorée : colonne(s) $4 manquante(s)"
-    en: "Ignored CSV line number $3 for $2: col(s) $4 left"
