@@ -210,4 +210,16 @@ module.exports = class Report {
         this.about = 'unknown_bibliographic_reference';
         this.args = { recordTitle, bibliographicReference };
     }
+
+    /**
+     * A CSV line is ignores during parsing
+     * @param {string} filePath
+     * @param {'nodes'|'links'} type
+     * @param {number} lineNb For first CSV line, `lineNb === 1`
+     */
+
+    aboutIgnoredCsvLine(filePath, type, lineNb, missingCols) {
+        this.about = 'ignored_csv_line';
+        this.args = { filePath, type, lineNb, missing: missingCols.join(', ') };
+    }
 }

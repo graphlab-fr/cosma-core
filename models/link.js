@@ -229,9 +229,7 @@ module.exports = class Link {
      * @return {FormatedLinkData}
      */
 
-    static getFormatedDataFromCsvLine({ source, target, label }) {
-        if (!source || isNaN(Number(source))) { throw "'source' is a required meta for a link"; }
-        if (!target || isNaN(Number(target))) { throw "'target' is a required meta for a link"; }
+    static getFormatedDataFromCsvLine({ source, target, label = '' }) {
         return { source, target, label };
     }
 

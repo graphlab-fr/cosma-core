@@ -40,6 +40,12 @@ const fs = require('fs')
     , { parse } = require('csv-parse')
     , ymlFM = require('yaml-front-matter');
 
+const {
+    ReadCsvFileNodesError,
+    ReadCsvFileLinksError,
+    ReadCsvLinesLinksError
+} = require('./errors');
+
 const Graph = require('./graph')
     , Config = require('./config')
     , Node = require('./node')
@@ -195,16 +201,27 @@ module.exports = class Cosmocope extends Graph {
     static getFromPathCsv(recordsFilePath, linksFilePath) {
         const recordsPromise = new Promise((resolve, reject) => {
             fs.readFile(recordsFilePath, 'utf-8', (err, data) => {
-                if (err) { reject(err); return; }
+                if (err) {
+                    reject(new ReadCsvFileNodesError({ filePath: err.path }));
+                    return;
+                }
                 const records = [];
                 parse(data, {
                     columns: true,
                     skip_empty_lines: true
                 })
                 .on('readable', function() {
-                    let line;
+                    let line, i = 1;
                     while ((line = this.read()) !== null) {
-                        records.push(Record.getFormatedDataFromCsvLine(line));
+                        i++;
+                        if (!!line['id'] && !!line['title']) {
+                            records.push(Record.getFormatedDataFromCsvLine(line));
+                            continue;
+                        }
+                        new Report('ignored_csv_line', '', 'error').aboutIgnoredCsvLine(recordsFilePath, '"nodes"', i, [
+                            ...(!line['id'] ? ['"id"'] : []),
+                            ...(!line['title'] ? ['"title"'] : []),
+                        ]);
                     }
                 })
                 .on('error', reject)
@@ -212,21 +229,34 @@ module.exports = class Cosmocope extends Graph {
             })
         });
 
+        // const ignoreLinesLinks = [];
+
         const linksPromise = new Promise((resolve, reject) => {
             fs.readFile(linksFilePath, 'utf-8', (err, data) => {
-                if (err) { reject(err); return; }
+                if (err) {
+                    reject(new ReadCsvFileLinksError({ filePath: err.path }));
+                    return;
+                }
                 const links = [];
                 parse(data, {
                     columns: true,
                     skip_empty_lines: true
                 })
                 .on('readable', function() {
-                    let line;
+                    let line, i = 1;
                     while ((line = this.read()) !== null) {
-                        links.push(Link.getFormatedDataFromCsvLine(line));
+                        i++;
+                        if (!!line['source'] && !!line['target']) {
+                            links.push(Link.getFormatedDataFromCsvLine(line));
+                            continue;
+                        }
+                        new Report('ignored_csv_line', '', 'error').aboutIgnoredCsvLine(linksFilePath, '"links"', i, [
+                            ...(!line['source'] ? ['"source"'] : []),
+                            ...(!line['target'] ? ['"target"'] : []),
+                        ]);
                     }
                 })
-                .on('error', reject)
+                .on('error', (err) => reject(new ReadCsvLinesLinksError(err)))
                 .on('end', () => resolve(links));
             })
         });

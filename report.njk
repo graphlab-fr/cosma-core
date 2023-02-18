@@ -58,26 +58,32 @@
         <section>
             <h2>{{ 'section_error' | translate({ length: errorsLength }) }}</h2>
             {% for recordId, lines in listErrors %}
-            {% set title = lines[0].recordTitle %}
-            <h3>{{ title }}</h3>
-            <ul>
-                {% for line in lines %}
-                <li>{{line.about | translate(line.args) | safe }}</li>
-                {% endfor %}
-            </ul>
+                {% set title = lines[0].recordTitle %}
+
+                {% if recordId == "ignored_csv_line" %}
+                <h3>{{ 'csv_error' | translate }}</h3>
+                {% else %}
+                <h3>{{ title }}</h3>
+                {% endif %}
+                
+                <ul>
+                    {% for line in lines %}
+                    <li>{{line.about | translate(line.args) | safe }}</li>
+                    {% endfor %}
+                </ul>
             {% endfor %}
         </section>
 
         <section>
             <h2>{{ 'section_warning' | translate({ length: warningsLength }) }}</h2>
             {% for recordId, lines in listWarnings %}
-            {% set title = lines[0].recordTitle %}
-            <h3>{{ title }}</h3>
-            <ul>
-                {% for line in lines %}
-                <li>{{line.about | translate(line.args) | safe}}</li>
-                {% endfor %}
-            </ul>
+                {% set title = lines[0].recordTitle %}
+                <h3>{{ title }}</h3>
+                <ul>
+                    {% for line in lines %}
+                    <li>{{line.about | translate(line.args) | safe}}</li>
+                    {% endfor %}
+                </ul>
             {% endfor %}
         </section>
     </main>
