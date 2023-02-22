@@ -538,6 +538,9 @@ function translate() {
   svgSub.attr('viewBox', viewBox);
 }
 
+const nodes = elts.nodes.data();
+const links = elts.links.data();
+
 export {
   svg,
   svgSub,
@@ -549,4 +552,6 @@ export {
   highlightNodes,
   unlightNodes,
   translate,
+  nodes,
+  links,
 };

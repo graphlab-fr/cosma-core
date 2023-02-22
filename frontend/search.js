@@ -1,110 +1,111 @@
 import Fuse from 'fuse.js/dist/fuse.basic';
 import hotkeys from 'hotkeys-js';
+import { nodes } from './graph';
 
-let searchInput = document.getElementById('search');
-let resultContainer = document.getElementById('search-result-list');
+const fuse = new Fuse([], {
+  includeScore: false,
+  keys: ['label'],
+});
 
-let maxResultNb = 5,
-  resultList = [],
-  selectedResult = 0;
+window.addEventListener('DOMContentLoaded', () => {
+  let maxResultNb = 5,
+    resultList = [],
+    selectedResult = 0;
 
-searchInput.value = '';
+  const input = document.getElementById('search');
+  const resultContainer = document.getElementById('search-result-list');
 
-searchInput.addEventListener('focus', () => {
-  const fuse = new Fuse(data.nodes, {
-    includeScore: false,
-    keys: ['label'], // search field from nodes metas
+  input.addEventListener('focus', () => {
+    fuse.setCollection(nodes.filter(({ hidden }) => hidden === 0));
+
+    console.log(fuse);
+
+    input.addEventListener('input', () => {
+      resultContainer.innerHTML = '';
+      selectedResult = 0;
+      resultList = [];
+
+      if (input.value === '') {
+        return;
+      }
+
+      resultList = fuse.search(input.value);
+
+      for (let i = 0; i < Math.min(maxResultNb, resultList.length); i++) {
+        let {
+          item: { id, label, type },
+        } = resultList[i];
+
+        const resultElement = document.createElement('li');
+        resultElement.classList.add('search-result-item');
+        resultElement.innerHTML = `<span
+          class="record-type-point"
+          style="color:var(--n_${type})"
+        >⬤</span>
+        <span>${label}</span>`;
+
+        resultElement.addEventListener('click', () => {
+          window.openRecord(id);
+        });
+
+        resultContainer.appendChild(resultElement);
+      }
+    });
   });
 
-  searchInput.addEventListener('input', () => {
-    resultContainer.innerHTML = '';
-    selectedResult = 0;
-    resultList = [];
+  hotkeys('s', (e) => {
+    e.preventDefault();
+    input.focus();
+  });
 
-    if (searchInput.value === '') {
+  document.addEventListener('keydown', (e) => {
+    if (resultList.length === 0) {
       return;
     }
 
-    resultList = fuse.search(searchInput.value);
+    switch (e.key) {
+      case 'ArrowUp':
+        e.preventDefault();
 
-    for (let i = 0; i < maxResultNb; i++) {
-      let result = resultList[i];
+        if (selectedResult === 0) {
+          input.focus();
+          return;
+        }
 
-      if (result === undefined) {
+        removeOutlineElt();
+        selectedResult--;
+        activeOutline();
+
         break;
-      }
-      // include search result element on DOM
-      var resultElement = document.createElement('li');
-      resultElement.classList.add('search-result-item');
-      resultElement.innerHTML = `<span class="record-type-point" style="color:var(--n_${result.item.type})">⬤</span>
-            <span>${result.item.label}</span>`;
-      resultContainer.appendChild(resultElement);
+      case 'ArrowDown':
+        e.preventDefault();
 
-      if (i === 0) {
-        activeOutline(resultElement);
-      }
+        if (selectedResult === maxResultNb - 1 || selectedResult === resultList.length - 1) {
+          return;
+        }
 
-      resultElement.addEventListener('click', () => {
-        openRecord(result.item.id);
-      });
+        removeOutlineElt();
+        selectedResult++;
+        activeOutline();
+
+        if (selectedResult === 1) {
+          input.blur();
+        }
+
+        break;
+      case 'Enter':
+        e.preventDefault();
+        openRecord(resultList[selectedResult].item.id);
+        input.blur();
+        break;
     }
   });
-});
 
-hotkeys('s', (e) => {
-  e.preventDefault();
-  searchInput.focus();
-});
-
-document.addEventListener('keydown', keyboardResultNavigation);
-
-function keyboardResultNavigation(e) {
-  if (resultList.length === 0) {
-    return;
+  function activeOutline() {
+    resultContainer.childNodes[selectedResult].classList.add('outline');
   }
 
-  switch (e.key) {
-    case 'ArrowUp':
-      e.preventDefault();
-
-      if (selectedResult === 0) {
-        searchInput.focus();
-        return;
-      }
-
-      removeOutlineElt();
-      selectedResult--;
-      activeOutline();
-
-      break;
-    case 'ArrowDown':
-      e.preventDefault();
-
-      if (selectedResult === maxResultNb - 1 || selectedResult === resultList.length - 1) {
-        return;
-      }
-
-      removeOutlineElt();
-      selectedResult++;
-      activeOutline();
-
-      if (selectedResult === 1) {
-        searchInput.blur();
-      }
-
-      break;
-    case 'Enter':
-      e.preventDefault();
-      openRecord(resultList[selectedResult].item.id);
-      searchInput.blur();
-      break;
+  function removeOutlineElt() {
+    resultContainer.childNodes[selectedResult].classList.remove('outline');
   }
-}
-
-function activeOutline() {
-  resultContainer.childNodes[selectedResult].classList.add('outline');
-}
-
-function removeOutlineElt() {
-  resultContainer.childNodes[selectedResult].classList.remove('outline');
-}
+});
