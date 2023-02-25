@@ -706,6 +706,14 @@ windows:
     title:
       fr: Paramètres de l'application
       en: App preferences
+    fields:
+      lang:
+        fr: Choisissez la langue d'affichage de l'application
+        en: Choose app displaying langage
+      devtools:
+        fr: Activer les outils de développement dans le menu "Affichage"
+        en: Activate developer tools from "View" menu
+    
 
 dialog:
   file_filter:
