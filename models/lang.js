@@ -22,7 +22,7 @@ module.exports = {
      * @type string
      */
 
-    flag: config.opts.lang,
+    flag: 'en',
 
     /**
      * Get the translate for a multilingual object
@@ -38,7 +38,7 @@ module.exports = {
      */
 
     getFor (i) {
-        return i[config.opts.lang];
+        return i[this.flag];
     },
 
     /**
@@ -54,7 +54,7 @@ module.exports = {
      */
 
     getWith (i, substitutes) {
-        let str = i[config.opts.lang];
+        let str = i[this.flag];
 
         for (let y = 0; y < substitutes.length; y++) {
             const subst = substitutes[y];
