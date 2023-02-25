@@ -408,8 +408,8 @@ windows:
         fr: Afficher les outils de développement
         en: Show development tools
       lang:
-        fr: Sélectionner une langue d'affichage
-        en: Select a display language
+        fr: Sélectionner une langue pour le cosmoscope
+        en: Select a language for the cosmoscope
       name:
         fr: Nom
         en: Name
