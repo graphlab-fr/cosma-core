@@ -20,7 +20,7 @@ const allNodeIds = [];
 
 data.nodes = data.nodes.map((node) => {
   allNodeIds.push(node.id);
-  node.hidden = 0;
+  node.hidden = filterPriority.notFiltered;
   node.isolated = false;
   node.highlighted = false;
   return node;
@@ -254,7 +254,7 @@ elts.labels = elts.nodes
 
 function getNodeNetwork(nodeIds) {
   const diplayedNodes = elts.nodes
-    .filter((item) => item.hidden === 0)
+    .filter((item) => item.hidden === filterPriority.notFiltered)
     .data()
     .map((item) => item.id);
 
@@ -298,13 +298,17 @@ function setNodesDisplaying(nodeIds, priority) {
  * @param {array} nodeIds - List of nodes ids
  */
 
-function hideNodes(nodeIds, priority = 0) {
+function hideNodes(nodeIds, priority) {
   hideNodeNetwork(nodeIds);
   hideFromIndex(nodeIds);
 
+  if (priority === undefined) {
+    throw new Error('Need priority');
+  }
+
   elts.nodes.data().map((node) => {
     const { id, hidden } = node;
-    if (nodeIds.includes(id) && hidden === 0) {
+    if (nodeIds.includes(id) && hidden <= priority) {
       node.hidden = priority;
     }
     return node;
@@ -316,14 +320,14 @@ function hideNodes(nodeIds, priority = 0) {
  * @param {array} nodeIds - List of nodes ids
  */
 
-function displayNodes(nodeIds, priority = 0) {
+function displayNodes(nodeIds, priority = filterPriority.notFiltered) {
   const nodesToDisplayIds = [];
 
   elts.nodes.data().map((node) => {
     const { id, hidden } = node;
     if (nodeIds.includes(id) && hidden <= priority) {
       nodesToDisplayIds.push(id);
-      node.hidden = 0;
+      node.hidden = filterPriority.notFiltered;
     }
     return node;
   });
@@ -332,11 +336,11 @@ function displayNodes(nodeIds, priority = 0) {
   displayFromIndex(nodesToDisplayIds);
 }
 
-function displayNodesAll(priority = 0) {
+function displayNodesAll(priority = filterPriority.notFiltered) {
   displayNodes(allNodeIds, priority);
 }
 
-function hideNodesAll(priority = 0) {
+function hideNodesAll(priority = filterPriority.notFiltered) {
   hideNodes(allNodeIds, priority);
 }
 
@@ -502,34 +506,6 @@ window.labelUnlightAll = function () {
   });
 
   elts.labels.style('fill', null);
-};
-
-/**
- * @param {number} timestamp
- */
-
-window.chronosAction = function (timestamp) {
-  if (chronos.begin === undefined || chronos.end === undefined) {
-    return;
-  }
-
-  const nodesId = [];
-
-  for (const { begin, end, id } of data.nodes) {
-    if (end === undefined) {
-      end = chronos.end;
-    }
-    if (begin === undefined) {
-      begin = chronos.begin;
-    }
-
-    if (timestamp >= begin && timestamp <= end) {
-      nodesId.push(id);
-    }
-  }
-
-  setNodesDisplaying(nodesId, filterPriority.filteredByTimeline);
-  setCounters();
 };
 
 function translate() {
