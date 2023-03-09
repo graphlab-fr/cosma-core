@@ -1,5 +1,6 @@
 import { setCounters } from './counter';
-import { hideNodes, displayNodes, displayNodesAll } from './graph';
+import { setNodesDisplaying, displayNodesAll } from './graph';
+import filterPriority from './filterPriority';
 
 const { begin, end } = timeline;
 
@@ -55,13 +56,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (timestamp >= nodeBegin && timestamp <= nodeEnd) {
         toDisplay.push(id);
-      } else {
-        toHide.push(id);
       }
     }
 
-    hideNodes(toHide);
-    displayNodes(toDisplay);
+    setNodesDisplaying(toDisplay, filterPriority.filteredByTimeline);
     setCounters();
   }
 
