@@ -141,7 +141,9 @@
                 <span class="badge">{{ views | length }}</span>
             </summary>
 
-            <button onclick="resetView()">{{ translation.left_panel.menu_views.btn_reset[lang] }} (Alt + R)</button>
+            <button onclick="window.location.replace(window.location.pathname)">
+                {{ translation.left_panel.menu_views.btn_reset[lang] }}
+            </button>
 
             {% if guiContext === true %}
             <button id="view-save" onclick="saveView()">{{ translation.left_panel.menu_views.btn_save[lang] }}</button>
@@ -154,7 +156,7 @@
             <div class="menu-view-container" id="views-container">
             {% if views.length !== 0 %}
                 {% for viewName, viewString in views %}
-                <button class="btn" data-view="{{ viewString }}" data-active="false" onclick="changeView(this)">
+                <button class="btn" onclick="window.location.replace('{{viewString}}')">
                     {{ viewName }}
                 </button>
                 {% endfor %}
