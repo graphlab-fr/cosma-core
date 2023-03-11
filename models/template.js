@@ -336,17 +336,12 @@ module.exports = class Template {
 
       sorting: {
         records: graph.records.map(({ title }) => ({
-          'a-z': recordsListAlphabetical.indexOf(title),
-          'z-a': recordsListAlphabetical.length - recordsListAlphabetical.indexOf(title),
+          alphabetical: recordsListAlphabetical.indexOf(title),
           chronological: recordsListChronological.indexOf(title),
-          'reverse-chronological':
-            recordsListChronological.length - recordsListChronological.indexOf(title),
         })),
         tags: tagsFromGraph.map(({ name }) => ({
-          'a-z': tagsListAlphabetical.indexOf(name),
-          'z-a': tagsListAlphabetical.length - tagsListAlphabetical.indexOf(name),
-          increasing: tagsListIncreasing.indexOf(name),
-          decreasing: tagsListIncreasing.length - tagsListIncreasing.indexOf(name),
+          alphabetical: tagsListAlphabetical.indexOf(name),
+          digital: tagsListIncreasing.indexOf(name),
         })),
       },
 
