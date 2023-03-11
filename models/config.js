@@ -210,13 +210,9 @@ module.exports = class Config {
     if (typeof views !== 'object') {
       return false;
     }
-    for (const key of Object.values(views)) {
-      const viewKeyDecode = Buffer.from(key, 'base64').toString();
-      let keyJson;
 
-      try {
-        keyJson = JSON.parse(viewKeyDecode);
-      } catch (err) {
+    for (const key of Object.values(views)) {
+      if (typeof key !== 'string') {
         return false;
       }
     }

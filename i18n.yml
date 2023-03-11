@@ -37,8 +37,8 @@ left_panel:
       fr: Vues
       en: Views
     btn_reset:
-      fr: Réinitialiser la vue actuelle
-      en: Reset current view
+      fr: Retour à la vue par défaut
+      en: Back to default view
     btn_save:
       fr: Sauvegarder la vue actuelle
       en: Save current view
