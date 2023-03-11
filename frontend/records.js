@@ -88,11 +88,16 @@ window.addEventListener('DOMContentLoaded', () => {
   function queryAndSortIndexElements() {
     /** @type {HTMLLIElement[]} */
     const indexElements = indexContainer.querySelectorAll('li');
-    const sortingKey = sortSelect.value;
+    const [sortingKey, direction] = sortSelect.value.split(':');
 
     for (let i = 0; i < indexElements.length; i++) {
-      const order = recordsSorting[i][sortingKey];
+      let order = recordsSorting[i][sortingKey];
       const elt = indexElements[i];
+
+      if (direction === 'reverse') {
+        order = indexElements.length - 1 - order;
+      }
+
       elt.style.order = order;
     }
   }
