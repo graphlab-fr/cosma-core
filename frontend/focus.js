@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const { searchParams } = new URL(window.location);
   const focusFromSearch = Number(searchParams.get('focus'));
-  if (isNaN(focusFromSearch) === false) {
+  if (isNaN(focusFromSearch) === false && focusFromSearch > 0) {
     input.value = focusFromSearch;
     active();
   }
