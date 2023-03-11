@@ -43,11 +43,16 @@ window.addEventListener('DOMContentLoaded', () => {
   function sortTags() {
     /** @type {HTMLLIElement[]} */
     const labelElements = form.querySelectorAll('label');
-    const sortingKey = sortSelect.value;
+    const [sortingKey, direction] = sortSelect.value.split(':');
 
     for (let i = 0; i < labelElements.length; i++) {
-      const order = tagsSorting[i][sortingKey];
+      let order = tagsSorting[i][sortingKey];
       const elt = labelElements[i];
+
+      if (direction === 'reverse') {
+        order = labelElements.length - 1 - order;
+      }
+
       elt.style.order = order;
     }
   }
