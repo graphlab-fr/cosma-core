@@ -13,10 +13,32 @@ window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLInputElement[]} */
   const inputs = form.querySelectorAll('input');
 
+  /**
+   * Default state
+   */
+
   for (const [name, { active }] of Object.entries(typeList)) {
     form.querySelector(`[name="${name}"]`).checked = active;
   }
   changeTypesState();
+
+  /**
+   * Search params state
+   */
+
+  const { searchParams } = new URL(window.location);
+  const filtersFromSearch = searchParams.get('filters')?.split(',');
+
+  if (filtersFromSearch?.length) {
+    for (const [name] of Object.entries(typeList)) {
+      form.querySelector(`[name="${name}"]`).checked = filtersFromSearch.includes(name);
+    }
+    changeTypesState();
+  }
+
+  /**
+   * User actions state
+   */
 
   form.addEventListener('change', changeTypesState);
 

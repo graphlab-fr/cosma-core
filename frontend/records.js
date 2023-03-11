@@ -1,7 +1,8 @@
 import View from './view';
 import historique from './history';
-import { highlightNodes, unlightNodes } from './graph';
+import { nodes, highlightNodes, unlightNodes } from './graph';
 import hotkeys from 'hotkeys-js';
+import filterPriority from './filterPriority';
 
 const recordContainer = document.getElementById('record-container');
 
@@ -55,7 +56,7 @@ hotkeys('escape', (e) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  const hash = window.location.hash;
+  const { hash } = new URL(window.location);
   if (hash) {
     const recordId = hash.substring(1);
     openRecord(recordId);
@@ -129,8 +130,8 @@ function hideAllFromIndex() {
 function displayFromIndex(nodesIds) {
   nodesIds = nodesIds.filter(function (nodeId) {
     // hidden nodes can not be displayed
-    const nodeIsHidden = data.nodes.find((i) => i.id === nodeId).hidden;
-    if (nodeIsHidden === false) {
+    const nodeIsHidden = nodes.find((i) => i.id === nodeId).hidden;
+    if (nodeIsHidden === filterPriority.notFiltered) {
       return true;
     }
   });

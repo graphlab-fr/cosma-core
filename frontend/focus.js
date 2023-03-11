@@ -22,6 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
   let focusMode;
   let graph = getGraphEngine();
 
+  const { searchParams } = new URL(window.location);
+  const focusFromSearch = Number(searchParams.get('focus'));
+  if (isNaN(focusFromSearch) === false) {
+    input.value = focusFromSearch;
+    active();
+  }
+
   hotkeys('f', (e) => {
     e.preventDefault();
     checkbox.checked = !checkbox.checked;

@@ -11,11 +11,34 @@ window.addEventListener('DOMContentLoaded', () => {
   const tagsSorting = sorting.tags;
   let tagsState;
 
-  sortTags();
-  sortSelect.addEventListener('change', sortTags);
+  /**
+   * Default state
+   */
 
+  sortTags();
   changeTagsState();
+
+  /**
+   * User actions state
+   */
+
+  sortSelect.addEventListener('change', sortTags);
   form.addEventListener('change', changeTagsState);
+
+  /**
+   * Search params state
+   */
+
+  const { searchParams } = new URL(window.location);
+  const tagsFromSearch = searchParams.get('tags')?.split(',');
+
+  if (tagsFromSearch?.length) {
+    for (const tagName of tagsFromSearch) {
+      const input = form.querySelector(`input[name="${tagName}"]`);
+      input.checked = true;
+    }
+    form.dispatchEvent(new Event('change'));
+  }
 
   function sortTags() {
     /** @type {HTMLLIElement[]} */
