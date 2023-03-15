@@ -256,8 +256,8 @@ right_panel:
 windows:
   config:
     title:
-      fr: Préférences
-      en: Preferences
+      fr: Configuration
+      en: Configuration
     nav:
       general:
         fr: Général
@@ -321,8 +321,8 @@ windows:
         fr: Répertoire des images
         en: Images directory
       record_metas:
-        fr: Métadonnées des fiches
-        en: Records metadata
+        fr: Métadonnées supplémentaires
+        en: User-defined metadata
       history:
         fr: Enregistrer automatiquement les cosmoscopes dans l’historique
         en: Automatically save cosmoscopes in the history
@@ -1061,8 +1061,8 @@ app_menu:
     fr: Paramètres de l'application
     en: App preferences…
   project_config:
-    fr: Paramètres du projet…
-    en: Project preferences…
+    fr: Configuration du projet…
+    en: Project configuration…
   services:
     fr: Services
     en: Services
@@ -1127,8 +1127,8 @@ app_menu:
     fr: Tout sélectionner
     en: Select all
   projects:
-    fr: Liste des projets…
-    en: Projects list
+    fr: Projets…
+    en: Projects…
   speech:
     fr: Parole
     en: Speech
