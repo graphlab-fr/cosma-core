@@ -27,7 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
    */
 
   const { searchParams } = new URL(window.location);
-  const filtersFromSearch = searchParams.get('filters')?.split(',');
+  const filtersFromSearch = searchParams.get('filters')?.split('-');
 
   if (filtersFromSearch?.length) {
     for (const [name] of Object.entries(typeList)) {

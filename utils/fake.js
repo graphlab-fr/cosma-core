@@ -13,6 +13,8 @@
  * @property {boolean} withRecord
  */
 
+const { devServer } = require('./webpack.config');
+
 const path = require('path');
 const { faker } = require('@faker-js/faker'),
   nunjucks = require('nunjucks');
@@ -46,8 +48,7 @@ config.opts['csl_locale'] = path.join(tempDirPath, 'locales-fr-FR.xml');
 config.opts['css_custom'] = path.join(__dirname, '../static/fake/style.css');
 config.opts['bibliography'] = path.join(__dirname, '../static/fake/bib.json');
 config.opts['views'] = {
-  [faker.word.verb()]: fakeView({ withTags: 1, withFocus: 1 }),
-  [faker.word.verb()]: fakeView({ withFilters: 2, withFocus: 2 }),
+  [faker.word.verb()]: fakeView({ withFilters: 2, withFocus: 2, withRecord: true }),
   [faker.word.verb()]: fakeView({ withFilters: 3, withTags: 1 }),
   withFilters: fakeView({ withFilters: 2 }),
   withTags: fakeView({ withTags: 1 }),
@@ -118,11 +119,11 @@ function fakeView({ withFilters, withTags, withFocus, withRecord }) {
   if (withFilters) {
     url.searchParams.set(
       'filters',
-      faker.helpers.arrayElements(Object.keys(recordTypes), withFilters).join(',')
+      faker.helpers.arrayElements(Object.keys(recordTypes), withFilters).join('-')
     );
   }
   if (withTags) {
-    url.searchParams.set('tags', faker.helpers.arrayElements(tags, withTags).join(','));
+    url.searchParams.set('tags', faker.helpers.arrayElements(tags, withTags).join('-'));
   }
   if (withFocus) {
     url.searchParams.set('focus', withFocus);

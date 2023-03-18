@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
    */
 
   const { searchParams } = new URL(window.location);
-  const tagsFromSearch = searchParams.get('tags')?.split(',');
+  const tagsFromSearch = searchParams.get('tags')?.split('-');
 
   if (tagsFromSearch?.length) {
     for (const tagName of tagsFromSearch) {
