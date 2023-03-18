@@ -40,8 +40,8 @@ left_panel:
       fr: Retour à la vue par défaut
       en: Back to default view
     btn_save:
-      fr: Sauvegarder la vue actuelle
-      en: Save current view
+      fr: Appliquer cette vue à l'URL
+      en: Set the view to URL
     tooltip:
       fr: >
         Enregistre l'état actuel de l'interface
