@@ -279,6 +279,7 @@ module.exports = class Template {
     this.html = templateEngine.render('template/cosmoscope.njk', {
       publishMode: this.params.has('publish') === true,
       devMode: this.params.has('dev') === true,
+      canSaveRecords: this.config.canSaveRecords(),
 
       records: graph.records.map(({ thumbnail, ...rest }) => ({
         ...rest,
