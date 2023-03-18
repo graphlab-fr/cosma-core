@@ -162,7 +162,7 @@ module.exports = class Template {
     this.config = new Config(graph.config.opts);
 
     if (this.config.isValid() === false) {
-      throw 'Can not template : config invalid';
+      throw new Error('Can not template : config invalid');
     }
 
     const {

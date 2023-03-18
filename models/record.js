@@ -203,6 +203,9 @@ module.exports = class Record {
       }
     }
 
+    if (type.length === 0) {
+      type = ['undefined'];
+    }
     if (typeof references === 'string') {
       references = references.split(',');
     }
@@ -240,7 +243,6 @@ module.exports = class Record {
     if (!config || config instanceof Config === false) {
       throw new Error('Need instance of Config to process');
     }
-    const { record_types: recordTypes } = config.opts;
 
     const nodes = data.map(({ id, title, ...rest }) => {
       let type;
@@ -248,10 +250,7 @@ module.exports = class Record {
         const [field, label] = key.split(':', 2);
         switch (field) {
           case 'type':
-            if (type === undefined) {
-              type = value;
-            }
-            recordTypes[value] = recordTypes[value] || recordTypes['undefined'];
+            type = value;
             break;
         }
       }
