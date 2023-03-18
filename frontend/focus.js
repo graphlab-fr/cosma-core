@@ -5,6 +5,8 @@ import { displayNodesAll, setNodesDisplaying } from './graph';
 import View from './view';
 import filterPriority from './filterPriority';
 
+let graph = getGraphEngine();
+
 window.addEventListener('DOMContentLoaded', () => {
   /** @type {HTMLInputElement} */
   const checkbox = document.getElementById('focus-check');
@@ -20,7 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
   checkbox.checked = false;
 
   let focusMode;
-  let graph = getGraphEngine();
 
   const { searchParams } = new URL(window.location);
   const focusFromSearch = Number(searchParams.get('focus'));
@@ -98,11 +99,19 @@ function getGraphEngine() {
   const graph = new GraphEngine();
 
   for (const { id, label } of data.nodes) {
+    if (graph.hasNode(id)) {
+      continue;
+    }
+
     graph.addNode(id, {
       label,
     });
   }
   for (const { source, target } of data.links) {
+    if (graph.hasEdge(source.id, target.id)) {
+      continue;
+    }
+
     graph.addEdge(source.id, target.id);
   }
 
