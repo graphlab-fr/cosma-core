@@ -604,11 +604,9 @@ module.exports = class Config {
     ];
     for (const { filePath, extension } of options) {
       if (Config.isValidPath(filePath) === false) {
-        console.log(111, filePath, 111);
         return false;
       }
       if (path.extname(filePath) !== extension) {
-        console.log('ext', filePath);
         return false;
       }
     }
