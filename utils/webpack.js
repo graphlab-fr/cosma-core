@@ -8,10 +8,13 @@ const webpackConfig = require('./webpack.config');
 
 module.exports = {
   execute: function (mode) {
-    const configWebpackProd = { ...webpackConfig, mode };
+    const configWebpack = { ...webpackConfig, mode };
 
     return new Promise((resolve, reject) => {
-      webpack(configWebpackProd, (err, stats) => {
+      webpack(configWebpack, (err, stats) => {
+        if (err) {
+          return reject(err);
+        }
         if (!stats) {
           return reject('Err. no infos');
         }
@@ -28,9 +31,9 @@ module.exports = {
       });
     });
   },
-  startServer: function () {
+  startServer: function (mode) {
     return new Promise(async (resolve, reject) => {
-      const compiler = await webpack({ ...webpackConfig, mode: 'development' }),
+      const compiler = await webpack({ ...webpackConfig, mode }),
         server = new webpackDevServer(webpackConfig.devServer, compiler);
 
       try {
