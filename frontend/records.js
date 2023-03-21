@@ -103,6 +103,15 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+window.addEventListener('DOMContentLoaded', () => {
+  /** @type {HTMLButtonElement} */
+  const openBtn = document.getElementById('extend-btn');
+
+  openBtn.addEventListener('click', () => {
+    recordContainer.classList.toggle('extended');
+  });
+});
+
 /**
  * Hide items from the index list that correspond to the nodes ids
  * @param {array} nodeIds - List of nodes ids

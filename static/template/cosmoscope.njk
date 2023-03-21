@@ -263,6 +263,8 @@
             {{ translation.right_panel.record.header.btn_close[lang] }}
         </button>
 
+        <button id="extend-btn">Étendre</button>
+
         {% for record in records %}
         <article id="{{ record.id }}" class="record">
             <header>
@@ -298,6 +300,19 @@
                 </div>
                 {% endfor %}
             </header>
+
+            <section class="record-summary">
+                <span>Sommaire</span>
+
+                <ul>
+                    <li>Titre 1</li>
+                    <ul>
+                        <li>Titre 2</li>
+                        <li>Titre 2</li>
+                    </ul>
+                    <li>Titre 2</li>
+                </ul>
+            </section>
 
             <main class="record-content">
                 {{ record.content | markdown | safe }}

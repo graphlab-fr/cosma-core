@@ -405,7 +405,21 @@ aside.menu footer span:not(:first-of-type)::before {
 /** Record container (right side board)
 ------------------------------------------------------------*/
 
-main.record-container {
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  75% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.record-container {
   position: absolute;
   z-index: 100;
   top: 0;
@@ -417,13 +431,36 @@ main.record-container {
   background-color: var(--offwhite);
   color: var(--offblack);
   box-shadow: var(--shadow);
-  transition: transform 0.6s;
+  transition: transform 0.6s, width 0.6s;
   transition-timing-function: cubic-bezier(0.02, 1.18, 0, 0.98);
 }
 
-main.record-container:not(.active) {
+.record-container:not(.active) {
   /* hide on right when class 'active' removed */
   transform: translate(100%);
+}
+
+.record-container.extended {
+  width: calc(100vw - 30rem);
+}
+
+.record {
+  margin: 0 auto;
+  max-width: 80rem;
+  display: grid;
+  grid-template-areas:
+    'head   head'
+    'b1     b1'
+    'footer footer';
+}
+
+.record-container.extended .record {
+  animation-duration: 0.8s;
+  grid-template-areas:
+    'head head'
+    'b1   b2'
+    'b1   footer';
+  column-gap: 5rem;
 }
 
 .record:not(.active) {
@@ -435,9 +472,18 @@ main.record-container:not(.active) {
 --- */
 
 .record header {
+  grid-area: head;
   padding-bottom: 1.5rem;
   margin-bottom: 3rem;
   border-bottom: 1px solid var(--gray);
+}
+
+.record .record-summary {
+  grid-area: b2;
+}
+
+.record-container:not(.extended) .record-summary {
+  display: none;
 }
 
 .record header div + div,
@@ -483,6 +529,7 @@ main.record-container:not(.active) {
 /* From Typesafe.css, by Bradley Taunt */
 
 .record main {
+  grid-area: b1;
   font-size: 1.6rem;
   line-height: 1.5;
   font-family: var(--serif);
@@ -593,6 +640,7 @@ h6 {
 --- */
 
 .record footer {
+  grid-area: footer;
   margin-top: 3rem;
   border-top: 1px solid var(--gray);
 }
