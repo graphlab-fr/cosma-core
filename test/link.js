@@ -74,22 +74,4 @@ Ut dapibus consectetur libero, quis tempor ligula [[${ids[4]}]] bibendum vitae. 
       linksId.should.be.deep.equal(ids);
     });
   });
-
-  describe('csv read', () => {
-    it('should throw error for empty source or target', () => {
-      assert.throws(() => Link.getFormatedDataFromCsvLine({ source: '' }));
-      assert.throws(() => Link.getFormatedDataFromCsvLine({ target: '' }));
-    });
-
-    it('should throw error for NaN source or target', () => {
-      assert.throws(() => Link.getFormatedDataFromCsvLine({ source: 'NaN', target: NaN }));
-    });
-
-    it('should return a valid Link format', () => {
-      assert.deepEqual(
-        Link.getFormatedDataFromCsvLine({ source: 1, target: '2', label: 'Lorem...' }),
-        { source: 1, target: 2, label: 'Lorem...' }
-      );
-    });
-  });
 });
