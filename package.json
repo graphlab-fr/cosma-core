@@ -43,8 +43,7 @@
     "markdown-it": "^13.0.1",
     "markdown-it-attrs": "^4.1.4",
     "nunjucks": "^3.2.3",
-    "slugify": "^1.6.5",
-    "yaml-front-matter": "^4.1.1"
+    "slugify": "^1.6.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
