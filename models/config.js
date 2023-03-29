@@ -334,8 +334,8 @@ module.exports = class Config {
             break;
 
           case '.yml':
-            const yml = require('js-yaml');
-            opts = yml.load(fileContent);
+            const yml = require('yaml');
+            opts = yml.parse(fileContent);
             break;
         }
       } catch (error) {
@@ -413,8 +413,8 @@ module.exports = class Config {
           break;
 
         case '.yml':
-          const yml = require('js-yaml');
-          fs.writeFileSync(this.path, yml.dump(this.opts));
+          const yml = require('yaml');
+          fs.writeFileSync(this.path, yml.stringify(this.opts));
           break;
       }
     } catch (error) {

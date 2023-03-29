@@ -6,13 +6,13 @@
 
 const path = require('path'),
   fs = require('fs'),
-  yml = require('js-yaml');
+  yml = require('yaml');
 
 const Config = require('./config');
 
 const config = new Config();
-const file = fs.readFileSync(path.join(__dirname, '../i18n.yml'));
-const content = yml.load(file);
+const file = fs.readFileSync(path.join(__dirname, '../i18n.yml'), 'utf-8');
+const content = yml.parse(file);
 
 module.exports = {
   i: content,

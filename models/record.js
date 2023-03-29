@@ -52,7 +52,7 @@
 
 const path = require('path'),
   fs = require('fs'),
-  yml = require('js-yaml'),
+  yml = require('yaml'),
   slugify = require('slugify');
 
 const Config = require('./config'),
@@ -610,7 +610,7 @@ module.exports = class Record {
 
   getYamlFrontMatter() {
     const bibliographicIds = this.bibliographicRecords.map(({ ids }) => Array.from(ids)).flat();
-    const ymlContent = yml.dump({
+    const ymlContent = yml.stringify({
       title: this.title,
       id: this.id,
       type: this.type.length === 1 ? this.type[0] : this.type,

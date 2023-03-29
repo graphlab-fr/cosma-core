@@ -3,7 +3,7 @@ const assert = require('assert'),
 
 const fs = require('fs'),
   path = require('path'),
-  yml = require('js-yaml');
+  yml = require('yaml');
 
 const Config = require('../models/config'),
   { config: fakeConfig } = require('../utils/fake'),
@@ -157,7 +157,7 @@ describe('Config', () => {
     before(() => {
       return new Promise((resolve) => {
         fs.readFile(fakeConfigPath, 'utf8', (err, data) => {
-          data = yml.load(data);
+          data = yml.parse(data);
           fakeConfigOpts = data;
           resolve();
         });
