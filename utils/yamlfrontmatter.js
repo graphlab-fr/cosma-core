@@ -1,4 +1,4 @@
-const yml = require('js-yaml');
+const yml = require('yaml');
 
 // Thanks to https://github.com/dworthen/js-yaml-front-matter/blob/master/src/index.js
 const regex = /^(-{3}(?:\n|\r)([\w\W]+?)(?:\n|\r)-{3})?([\w\W]*)*/;
@@ -8,7 +8,7 @@ module.exports = {
    * Read head of markdown files as YAML content
    * Get result as JSON
    * @param {string} fileContent
-   * @param {object} options https://github.com/nodeca/js-yaml#load-string---options-
+   * @param {object} options https://eemeli.org/yaml/#options
    * @returns {{head: object, content: string}} JSON
    */
 
@@ -18,7 +18,7 @@ module.exports = {
     let ymlResult = {};
 
     if (!!fileContent) {
-      ymlResult = yml.load(withoutDash, options);
+      ymlResult = yml.parse(withoutDash, options);
     }
 
     return {

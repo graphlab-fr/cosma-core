@@ -39,11 +39,11 @@
     "graphology": "^0.25.1",
     "graphology-traversal": "^0.3.1",
     "hotkeys-js": "^3.10.0",
-    "js-yaml": "^4.1.0",
     "markdown-it": "^13.0.1",
     "markdown-it-attrs": "^4.1.4",
     "nunjucks": "^3.2.3",
-    "slugify": "^1.6.5"
+    "slugify": "^1.6.5",
+    "yaml": "^2.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
