@@ -8,21 +8,28 @@ const assert = require('assert');
 
 describe('YAML Front Matter parser', () => {
   it('should find all properties from YAML file head', async () => {
-    const file = await fs.readFile(path.join(__dirname, './fixture', 'Paul Otlet.md'), 'utf-8');
-    const { head } = readYmlFm(file);
+    const fileContent = await fs.readFile(
+      path.join(__dirname, './fixture', 'Paul Otlet.md'),
+      'utf-8'
+    );
+    const { head } = readYmlFm(fileContent);
 
     assert.deepEqual(head, {
       title: 'Paul Otlet',
       id: 20210901132906,
-      type: 'Personne',
+      types: ['Personne', 'Chercheur'],
       subtitle: 'Fondateur du Mundaneum et juriste',
       keywords: ['CDU'],
+      references: ['Otlet1930', 'Otlet1934'],
     });
   });
 
   it('should separate markdown content from YAML head', async () => {
-    const file = await fs.readFile(path.join(__dirname, './fixture', 'Paul Otlet.md'), 'utf-8');
-    const { content } = readYmlFm(file);
+    const fileContent = await fs.readFile(
+      path.join(__dirname, './fixture', 'Paul Otlet.md'),
+      'utf-8'
+    );
+    const { content } = readYmlFm(fileContent);
 
     expect(content).contain('\n\nPaul Otlet est la tête pensante du Mundaneum');
     expect(content).contain("personnalités et d'institutions qui l'entourent.\n");

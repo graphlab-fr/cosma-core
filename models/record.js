@@ -162,7 +162,7 @@ module.exports = class Record {
     }
 
     let contents = [],
-      type = [],
+      types = [],
       metas = {},
       tags = [],
       begin,
@@ -178,10 +178,11 @@ module.exports = class Record {
           }
           break;
         case 'type':
-          type.push(value);
+          value && types.push(value);
           break;
+        case 'keyword':
         case 'tag':
-          tags.push(value);
+          value && tags.push(value);
           break;
         case 'time':
           if (label === 'begin') {
@@ -196,15 +197,15 @@ module.exports = class Record {
           break;
         case 'meta':
         default:
-          if (!!label && !!value) {
-            metas[label] = value;
+          if (value) {
+            metas[label || key] = value;
           }
           break;
       }
     }
 
-    if (type.length === 0) {
-      type = ['undefined'];
+    if (types.length === 0) {
+      types = ['undefined'];
     }
     if (typeof references === 'string') {
       references = references.split(',');
@@ -222,13 +223,13 @@ module.exports = class Record {
       id,
       title,
       content,
-      type,
+      types,
       metas,
       tags,
       references,
       begin,
       end,
-      thumbnail: thumbnail,
+      thumbnail,
     };
   }
 

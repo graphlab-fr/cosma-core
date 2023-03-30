@@ -419,7 +419,7 @@ isDead: false
       assert.deepStrictEqual(Record.getFormatedDataFromCsvLine(line), {
         id: undefined,
         title: 'Paul Otlet',
-        type: ['documentation', 'ami'],
+        types: ['documentation', 'ami'],
         metas: {
           prenom: 'Paul',
           nom: 'Otlet',
@@ -442,7 +442,7 @@ isDead: false
         tag: 'tag 2',
       });
 
-      line.should.property('type').deep.equal(['type 1', 'type 2']);
+      line.should.property('types').deep.equal(['type 1', 'type 2']);
       line.should.property('tags').deep.equal(['tag 2']);
     });
 
