@@ -4,6 +4,38 @@ const Cosmocope = require('../models/cosmoscope');
 
 describe('Cosmoscope', () => {
   describe('data from Yaml FrontMatter', () => {
+    describe('id', () => {
+      it('should get string from number', () => {
+        const result = Cosmocope.getDataFromYamlFrontMatter(
+          `---
+id: 20210901132906
+---`,
+          'path'
+        );
+        assert.strictEqual(result.metas.id, '20210901132906');
+      });
+
+      it('should get string from string', () => {
+        const result = Cosmocope.getDataFromYamlFrontMatter(
+          `---
+id: 'toto'
+---`,
+          'path'
+        );
+        assert.strictEqual(result.metas.id, 'toto');
+      });
+
+      it('should get string from date', () => {
+        const result = Cosmocope.getDataFromYamlFrontMatter(
+          `---
+id: 2012-05-12
+---`,
+          'path'
+        );
+        assert.strictEqual(result.metas.id, '2012-05-12');
+      });
+    });
+
     describe('content', () => {
       it('should get string', () => {
         const result = Cosmocope.getDataFromYamlFrontMatter(
@@ -78,7 +110,7 @@ type: ['toto', 'tata']
 ---`,
           'path'
         );
-        assert.deepStrictEqual(result.metas.type, ['toto', 'tata']);
+        assert.deepStrictEqual(result.metas.types, ['toto', 'tata']);
       });
 
       it('should get array from string', () => {
@@ -88,7 +120,7 @@ type: toto
 ---`,
           'path'
         );
-        assert.deepStrictEqual(result.metas.type, ['toto']);
+        assert.deepStrictEqual(result.metas.types, ['toto']);
       });
 
       it('should get array contains "undefined" from empty string', () => {
@@ -98,7 +130,7 @@ type:
 ---`,
           'path'
         );
-        assert.deepStrictEqual(result.metas.type, ['undefined']);
+        assert.deepStrictEqual(result.metas.types, ['undefined']);
       });
 
       it('should get array contains "undefined" from empty array', () => {
@@ -108,7 +140,7 @@ type: []
 ---`,
           'path'
         );
-        assert.deepStrictEqual(result.metas.type, ['undefined']);
+        assert.deepStrictEqual(result.metas.types, ['undefined']);
       });
 
       it('should skip falsy values from array', () => {
@@ -118,21 +150,11 @@ type: [false]
 ---`,
           'path'
         );
-        assert.deepStrictEqual(result.metas.type, ['undefined']);
+        assert.deepStrictEqual(result.metas.types, ['false']);
       });
     });
 
     describe('tags', () => {
-      it('should keep string', () => {
-        const result = Cosmocope.getDataFromYamlFrontMatter(
-          `---
-tags: toto
----`,
-          'path'
-        );
-        assert.strictEqual(result.metas.tags, 'toto');
-      });
-
       it('should keep array', () => {
         const result = Cosmocope.getDataFromYamlFrontMatter(
           `---

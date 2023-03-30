@@ -16,14 +16,24 @@
 /**
  * @typedef FileMetas
  * @type {object}
- * @property {number} id
+ * @property {string} id
  * @property {string} title
- * @property {string[]} type
+ * @property {string[]} types
  * @property {string[]} tags
  * @property {string[]} references
  * @property {string | undefined} thumbnail
  * @property {string | undefined} begin
  * @property {string | undefined} end
+ * @property {FileDates} dates
+ */
+
+/**
+ * @typedef FileDates
+ * @type {object}
+ * @property {Date} lastOpen
+ * @property {Date} lastEdit
+ * @property {Date} created
+ * @property {Date} timestamp
  */
 
 /**
@@ -54,7 +64,7 @@ const Graph = require('./graph'),
   Bibliography = require('./bibliography'),
   Report = require('./report');
 
-module.exports = class Cosmocope extends Graph {
+module.exports = class Cosmoscope extends Graph {
   /**
    * @param {fs.PathLike} pathToFiles
    * @returns {File[]}
@@ -101,11 +111,10 @@ module.exports = class Cosmocope extends Graph {
 
   /**
    * @param {fs.PathLike} pathToFiles
-   * @param {Config.opts} opts
    * @returns {File[]}
    */
 
-  static getFromPathFiles(pathToFiles, opts = {}) {
+  static getFromPathFiles(pathToFiles) {
     const filesPath = glob
       .sync('**/*.md', {
         cwd: pathToFiles,
@@ -116,25 +125,23 @@ module.exports = class Cosmocope extends Graph {
     let files = filesPath
       .map((filePath) => {
         const fileContain = fs.readFileSync(filePath, 'utf8');
+
+        /** @type {File} */
         const file = Cosmoscope.getDataFromYamlFrontMatter(fileContain, filePath);
 
-        switch (opts['chronological_record_meta']) {
-          case 'last_open':
-            file.metas.begin = fs.statSync(filePath).atime;
-            break;
-          case 'last_edit':
-            file.metas.begin = fs.statSync(filePath).mtime;
-            break;
-          case 'created':
-            file.metas.begin = fs.statSync(filePath).birthtime;
-            break;
-          case 'timestamp':
-            const date = Record.getDateFromId(file.metas.id);
-            if (date) {
-              file.metas.begin = date;
-            }
-            break;
+        const { atime, mtime, birthtime } = fs.statSync(filePath);
+
+        file.metas.dates = {
+          created: atime,
+          lastOpen: birthtime,
+          lastEdit: mtime,
+        };
+
+        const idAsNumber = Number(file.metas.id);
+        if (file.metas.id.length === 14 && isNaN(idAsNumber) === false) {
+          file.metas.dates.timestamp = Record.getDateFromId(idAsNumber);
         }
+
         return file;
       })
       .filter(({ name, metas }) => {
@@ -145,19 +152,6 @@ module.exports = class Cosmocope extends Graph {
         return true;
       });
 
-    if (opts['record_filters'] && opts['record_filters'].length > 0) {
-      files = files.filter((file) => {
-        for (const { meta, value } of opts['record_filters']) {
-          if (typeof file.metas[meta] === 'string' && file.metas[meta] == value) {
-            return true;
-          }
-          if (Array.isArray(file.metas[meta]) && file.metas[meta].includes(value)) {
-            return true;
-          }
-        }
-        return false;
-      });
-    }
     return files;
   }
 
@@ -168,7 +162,7 @@ module.exports = class Cosmocope extends Graph {
    */
 
   static getDataFromYamlFrontMatter(fileContain, filePath) {
-    const { head: metas, content } = readYmlFm(fileContain);
+    const { head: metas, content } = readYmlFm(fileContain, { schema: 'failsafe' });
 
     /** @type {File} */
     const file = {
@@ -178,25 +172,32 @@ module.exports = class Cosmocope extends Graph {
       metas,
     };
 
-    if (file.metas.title instanceof Date) {
-      file.metas.title = file.metas.title.toISOString().split('T')[0];
-    }
-    file.metas.title = String(file.metas.title);
+    file.metas.id = String(file.metas['id']);
+    file.metas.title = String(file.metas['title']);
+    file.metas.thumbnail = String(file.metas['thumbnail']);
 
-    if (Array.isArray(file.metas.type) === false) {
-      file.metas.type = [file.metas.type || 'undefined'];
+    file.metas.types = file.metas['types'] || file.metas['type'] || [];
+    if (Array.isArray(file.metas.types) === false) {
+      file.metas.types = [file.metas.types];
     }
-    file.metas.type = file.metas.type.filter(Boolean);
-    if (file.metas.type.length === 0) {
-      file.metas.type = ['undefined'];
+    if (file.metas.types.length === 0) {
+      file.metas.types = ['undefined'];
     }
 
-    file.metas.tags = file.metas['tags'] || file.metas['keywords'] || [];
+    file.metas.tags =
+      file.metas['tags'] ||
+      file.metas['tag'] ||
+      file.metas['keywords'] ||
+      file.metas['keyword'] ||
+      [];
+    if (Array.isArray(file.metas.tags) === false) {
+      file.metas.tags = [file.metas.tags];
+    }
 
+    file.metas.references = file.metas['references'] || file.metas['reference'] || [];
     if (Array.isArray(file.metas.references) === false) {
-      file.metas.references = [file.metas.references].filter(Boolean);
+      file.metas.references = [file.metas.references];
     }
-    file.metas.references = file.metas.references.map(String);
 
     file.metas.begin = undefined;
     file.metas.end = undefined;
@@ -344,7 +345,7 @@ module.exports = class Cosmocope extends Graph {
    */
 
   static getIndexToMassSave(filesPath) {
-    const todayMassSavedRecordIds = Cosmocope.getFromPathFiles(filesPath) // get graph analyse
+    const todayMassSavedRecordIds = Cosmoscope.getFromPathFiles(filesPath) // get graph analyse
       .map((file) => file.metas.id)
       .filter(Record.isTodayOutDailyId) // ignore not today mass saved records id
       .sort();
