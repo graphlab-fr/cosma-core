@@ -85,7 +85,7 @@ if (config.opts['files_origin']) {
       metas: {
         id: fileId,
         title: faker.name.jobTitle(),
-        type: faker.helpers.arrayElement(Object.keys(recordTypes)),
+        types: faker.helpers.arrayElements(Object.keys(recordTypes), 2),
         tags: [faker.helpers.arrayElement(tags), faker.helpers.arrayElement(tags)],
         thumbnail: undefined,
         references: ['Masure_2014'],

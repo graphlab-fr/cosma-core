@@ -99,7 +99,7 @@ module.exports = class Graph {
 
   getTypesFromRecords() {
     const typesList = new Map();
-    for (const { type: types, id } of this.records) {
+    for (const { types, id } of this.records) {
       for (const type of types) {
         if (typesList.has(type)) {
           typesList.get(type).add(id);

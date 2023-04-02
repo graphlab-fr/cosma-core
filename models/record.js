@@ -482,7 +482,7 @@ module.exports = class Record {
    * a named dataset, with references to others, validated from a configuration
    * @param {string} id - Unique identifier of the record.
    * @param {string} title - Title of the record.
-   * @param {string | string[]} [type='undefined'] - Type of the record, registred into the config.
+   * @param {string[]} [type=['undefined']] - Type of the record, registred into the config.
    * @param {string | string[]} tags - List of tags of the record.
    * @param {object} metas - Metas to add to Front Matter.
    * @param {string} content - Text content if the record.
@@ -498,7 +498,7 @@ module.exports = class Record {
   constructor(
     id = Record.generateId(),
     title,
-    type = 'undefined',
+    types = ['undefined'],
     tags = [],
     metas = {},
     content = '',
@@ -512,7 +512,7 @@ module.exports = class Record {
   ) {
     this.id = Number(id);
     this.title = title;
-    this.type = type;
+    this.types = types;
     this.tags = tags;
     this.content = content;
     this.bibliographicRecords = bibliographicRecords;
@@ -533,19 +533,19 @@ module.exports = class Record {
     const typesLinks = config.getTypesLinks();
     const recordMetas = config.getRecordMetas();
 
-    if (typeof this.type === 'string') {
-      /** @type {string[]} */
-      this.type = [this.type];
-    }
-    this.type = this.type.filter((type) => !!type);
-    this.type = this.type.map((type) => {
+    this.types = this.types.map((type) => {
       if (typesRecords.has(type)) {
         return type;
       }
       new Report(this.id, this.title, 'warning').aboutRecordTypeChange(this.title, type);
       return 'undefined';
     });
-    this.type = Array.from(new Set(this.type));
+    if (this.types.length === 0) {
+      this.types = ['undefined'];
+    } else {
+      this.types = Array.from(new Set(this.types));
+    }
+
     metas = Object.entries(metas)
       .filter(([key, value]) => {
         if (recordMetas.has(key)) {
@@ -614,7 +614,7 @@ module.exports = class Record {
     const ymlContent = yml.stringify({
       title: this.title,
       id: this.id,
-      type: this.type.length === 1 ? this.type[0] : this.type,
+      types: this.types,
       tags: this.tags.length === 0 ? undefined : this.tags,
       references: bibliographicIds.length === 0 ? undefined : bibliographicIds,
       thumbnail: this.thumbnail,

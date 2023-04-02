@@ -128,7 +128,7 @@
             <ul class="menu-index-list">
                 {% for record in records %}
                 <li data-index="{{ record.id }}" onclick="openRecord({{ record.id }})" style="order: {{ loop.index }}">
-                    <span class="record-type-point" style="color: var(--n_{{ record.type[0] | slugify }});">⬤</span>
+                    <span class="record-type-point" style="color: var(--n_{{ record.types[0] | slugify }});">⬤</span>
                     <span>{{ record.title }}</span>
                 </li>
                 {% endfor %}
@@ -277,7 +277,7 @@
 
                 <div class="record-type">
                     <span>{{ translation.right_panel.record.metadata.type[lang] }} :</span>
-                    <span>{{ record.type | join(", ") }}</span>
+                    <span>{{ record.types | join(", ") }}</span>
                 </div>
 
                 {% if record.tags %}
