@@ -3,10 +3,10 @@ const path = require('path');
 const assert = require('assert'),
   should = require('chai').should();
 
-const { isAnImagePath } = require('../utils/misc');
-const { fetchFakeImages } = require('../utils/generate');
-
 describe('misc', () => {
+  const { isAnImagePath } = require('../utils/misc');
+  const { fetchFakeImages } = require('../utils/generate');
+
   const tempFolderPath = path.join(__dirname, '../temp');
 
   describe('image test', () => {

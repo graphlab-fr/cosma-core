@@ -6,8 +6,7 @@ const fs = require('fs'),
   yml = require('yaml');
 
 const Config = require('../models/config'),
-  { config: fakeConfig } = require('../utils/fake'),
-  { fetchBibliographyFiles, fetchSpreadsheets } = require('../utils/generate');
+  { fetchBibliographyFiles } = require('../utils/generate');
 
 describe('Config', () => {
   const tempFolderPath = path.join(__dirname, '../temp');
@@ -228,30 +227,22 @@ describe('Config', () => {
   });
 
   describe('can modelize', () => {
+    const fixtureDirPath = path.join(__dirname, './fixture');
+
     describe('from directory', () => {
       it('should be true with fake path', () => {
         const config = new Config({
-          files_origin: tempFolderPath,
+          files_origin: fixtureDirPath,
         });
         config.canModelizeFromDirectory().should.be.true;
       });
     });
 
     describe('from csv files', () => {
-      let csvFiles;
-      before(() => {
-        return new Promise(async (resolve) => {
-          csvFiles = await fetchSpreadsheets();
-          csvFiles = csvFiles.map(([url, fileName]) => path.join(tempFolderPath, fileName));
-          resolve();
-        });
-      });
-
       it('should be true with fake path', () => {
-        const [nodes_origin, links_origin] = csvFiles;
         const config = new Config({
-          nodes_origin,
-          links_origin,
+          nodes_origin: path.join(fixtureDirPath, 'nodes.csv'),
+          links_origin: path.join(fixtureDirPath, 'links.csv'),
         });
         config.canModelizeFromCsvFiles().should.be.true;
       });

@@ -1,14 +1,14 @@
 const assert = require('assert'),
   should = require('chai').should();
 
-const { fetchBibliographyFiles } = require('../utils/generate'),
-  { config: configFake } = require('../utils/fake');
-
 const Bibliography = require('../models/bibliography');
 
 let bibliography;
 
 before(() => {
+  const { fetchBibliographyFiles } = require('../utils/generate'),
+    { config: configFake } = require('../utils/fake');
+
   return new Promise((resolve) => {
     fetchBibliographyFiles().then(() => {
       const { bib, cslStyle, xmlLocal } = Bibliography.getBibliographicFilesFromConfig(configFake);

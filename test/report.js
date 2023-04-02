@@ -1,9 +1,6 @@
 const assert = require('assert'),
   should = require('chai').should();
 
-const { fetchBibliographyFiles } = require('../utils/generate'),
-  { config: configFake, bib } = require('../utils/fake');
-
 const Report = require('../models/report'),
   Config = require('../models/config'),
   Bibliography = require('../models/bibliography'),
@@ -13,6 +10,9 @@ const Report = require('../models/report'),
   Node = require('../models/node');
 
 describe('Report', () => {
+  const { fetchBibliographyFiles } = require('../utils/generate'),
+    { config: configFake, bib } = require('../utils/fake');
+
   before('reset report list', () => {
     Report.listErrors.clear();
     Report.listWarnings.clear();
