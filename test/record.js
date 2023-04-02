@@ -15,6 +15,8 @@ const Record = require('../models/record'),
   Config = require('../models/config'),
   Bibliography = require('../models/bibliography');
 
+const { getTimestampTuple } = require('../utils/misc');
+
 const tempFolderPath = path.join(__dirname, '../temp');
 
 describe('Record', () => {
@@ -168,6 +170,7 @@ describe('Record', () => {
 
       let recordYmlFrontMatterExpected = `---
 title: the title
+id: "${recordId}"
 types:
   - undefined
 tags:
@@ -214,7 +217,7 @@ thumbnail: image.jpg
 
       recordYmlFrontMatterExpected = `---
 title: the title
-id: ${recordId}
+id: "${recordId}"
 types:
   - type 1
   - type 2
@@ -510,22 +513,50 @@ isDead: false
     });
   });
 
-  describe('record id as date', () => {
-    it('should return a valid date for a 14 caracters number identifier', () => {
-      const id = 20210619091954;
-      const date = Record.getDateFromId(id);
-      const year = date.getFullYear().toString().padStart(4, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hour = date.getHours().toString().padStart(2, '0');
-      const minute = date.getMinutes().toString().padStart(2, '0');
-      const second = date.getSeconds().toString().padStart(2, '0');
-      assert.strictEqual(id.toString(), [year, month, day, hour, minute, second].join(''));
+  describe('record id generation', () => {
+    it('should generate 14 caracters string', () => {
+      assert.strictEqual(Record.generateId().length, 14);
     });
 
-    it('should return undefined for 14 caracters string identifier', () => {
-      const date = Record.getDateFromId('string_identifer');
-      assert.strictEqual(date, undefined);
+    describe('timestamp to date', () => {
+      it('should return a valid date for a 14 caracters number identifier', () => {
+        const id = '20210619091954';
+        const date = Record.getDateFromId(id);
+        assert.strictEqual(id, getTimestampTuple(date).join(''));
+      });
+
+      it('should return undefined for 14 caracters string identifier', () => {
+        const date = Record.getDateFromId('string_identifer');
+        assert.strictEqual(date, undefined);
+      });
+    });
+
+    describe('out daily', () => {
+      it('should generate id with increment', () => {
+        assert.strictEqual(Record.generateOutDailyId().length, 14);
+
+        const [year, month, day] = getTimestampTuple();
+
+        assert.strictEqual(Record.generateOutDailyId(), year + month + day + '24' + '60' + '60');
+        assert.strictEqual(Record.generateOutDailyId(-1), year + month + day + '24' + '60' + '60');
+
+        const increment = 10;
+        assert.strictEqual(
+          Record.generateOutDailyId(increment),
+          year + month + day + (246060 + increment).toString()
+        );
+
+        const maxIncrement = 753939;
+        assert.strictEqual(
+          Record.generateOutDailyId(maxIncrement),
+          year + month + day + (246060 + maxIncrement).toString()
+        );
+
+        const errorIncrement = maxIncrement + 1;
+        (function () {
+          Record.generateOutDailyId(errorIncrement);
+        }.should.throw(Error));
+      });
     });
   });
 });

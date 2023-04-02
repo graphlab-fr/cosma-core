@@ -41,4 +41,9 @@ module.exports = {
       );
     }
   },
+  RecordMaxOutDailyIdError: class extends CoreError {
+    constructor() {
+      super('Can not generate more fake timestamp today.', '', 'record-max-out-daily-id', true);
+    }
+  },
 };

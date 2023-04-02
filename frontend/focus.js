@@ -76,7 +76,7 @@ window.addEventListener('DOMContentLoaded', () => {
       graph,
       nodeIdOrigin,
       (nodeId, attr, depth) => {
-        neighborsNodeIds.push(Number(nodeId));
+        neighborsNodeIds.push(nodeId);
         return depth >= input.valueAsNumber;
       },
       { mode: focusMode }
