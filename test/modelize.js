@@ -29,7 +29,7 @@ describe('Modelize from markdown files', () => {
     expect(filePaulOtlet.metas.tags).to.deep.equal(['CDU']);
     expect(filePaulOtlet.metas.references).to.deep.equal(['Otlet1930', 'Otlet1934']);
     expect(filePaulOtlet.metas.subtitle).to.equal('Fondateur du Mundaneum et juriste');
-    expect(filePaulOtlet.metas.dates.timestamp).to.deep.equal(new Date('2021-09-01 13:29:06'));
+    expect(filePaulOtlet.dates.timestamp).to.deep.equal(new Date('2021-09-01 13:29:06'));
     expect(filePaulOtlet.content)
       .to.contain('\n\nPaul Otlet est la tête pensante du Mundaneum')
       .and.to.contain('\n\nIl a consacré toute sa vie')
@@ -40,7 +40,7 @@ describe('Modelize from markdown files', () => {
     expect(fileSuzanneBriet.metas.types).to.deep.equal(['Personne']);
     expect(fileSuzanneBriet.metas.tags).to.deep.equal([]);
     expect(fileSuzanneBriet.metas.references).to.deep.equal([]);
-    expect(fileSuzanneBriet.metas.dates.timestamp).to.be.undefined;
+    expect(fileSuzanneBriet.dates.timestamp).to.be.undefined;
     expect(fileSuzanneBriet.content)
       .to.contain('\n\nSuzanne Briet est une bibliothécaire')
       .and.to.contain('travaux de recherches.');
@@ -50,7 +50,7 @@ describe('Modelize from markdown files', () => {
     expect(fileMelvilDewey.metas.types).to.deep.equal(['undefined']);
     expect(fileMelvilDewey.metas.tags).to.deep.equal(['CDD']);
     expect(fileMelvilDewey.metas.references).to.deep.equal(['Dewey1983']);
-    expect(fileMelvilDewey.metas.dates.timestamp).to.be.undefined;
+    expect(fileMelvilDewey.dates.timestamp).to.be.undefined;
     expect(fileMelvilDewey.content)
       .to.contain('\n\nMevil Dewey est un bibliothécaire américain')
       .and.to.contain('apprentissage pour les bibliothécaires.');

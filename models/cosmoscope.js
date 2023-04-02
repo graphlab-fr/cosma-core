@@ -131,7 +131,7 @@ module.exports = class Cosmoscope extends Graph {
 
         const { atime, mtime, birthtime } = fs.statSync(filePath);
 
-        file.metas.dates = {
+        file.dates = {
           created: atime,
           lastOpen: birthtime,
           lastEdit: mtime,
@@ -139,7 +139,7 @@ module.exports = class Cosmoscope extends Graph {
 
         const idAsNumber = Number(file.metas.id);
         if (file.metas.id.length === 14 && isNaN(idAsNumber) === false) {
-          file.metas.dates.timestamp = Record.getDateFromId(idAsNumber);
+          file.dates.timestamp = Record.getDateFromId(idAsNumber);
         }
 
         return file;
@@ -177,6 +177,7 @@ module.exports = class Cosmoscope extends Graph {
     file.metas.thumbnail = String(file.metas['thumbnail']);
 
     file.metas.types = file.metas['types'] || file.metas['type'] || [];
+    delete file.metas['type'];
     if (Array.isArray(file.metas.types) === false) {
       file.metas.types = [file.metas.types];
     }
@@ -190,11 +191,15 @@ module.exports = class Cosmoscope extends Graph {
       file.metas['keywords'] ||
       file.metas['keyword'] ||
       [];
+    delete file.metas['tag'];
+    delete file.metas['keywords'];
+    delete file.metas['keyword'];
     if (Array.isArray(file.metas.tags) === false) {
       file.metas.tags = [file.metas.tags];
     }
 
     file.metas.references = file.metas['references'] || file.metas['reference'] || [];
+    delete file.metas['reference'];
     if (Array.isArray(file.metas.references) === false) {
       file.metas.references = [file.metas.references];
     }
