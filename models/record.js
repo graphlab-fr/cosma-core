@@ -62,6 +62,10 @@ const Config = require('./config'),
   lang = require('./lang'),
   Report = require('./report');
 
+const { getTimestampTuple } = require('../utils/misc');
+
+const { RecordMaxOutDailyIdError } = require('./errors');
+
 module.exports = class Record {
   /**
    * Get data from a fromated CSV line
@@ -262,7 +266,7 @@ module.exports = class Record {
       const { id, title, content, type, metas, tags, references, begin, end, thumbnail } = line;
 
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
-        Number(id),
+        id,
         links,
         nodes
       );
@@ -359,37 +363,41 @@ module.exports = class Record {
   /**
    * Get a number (14 caracters) from the time stats :
    * year + month + day + hour + minute + second
-   * @return {number} - unique 14 caracters number from the second
+   * @return {string} - unique 14 caracters number timestamp from the second
+   * @example '20210322123312'
    */
 
   static generateId() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear().toString().padStart(4, '0');
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const hour = currentDate.getHours().toString().padStart(2, '0');
-    const minute = currentDate.getMinutes().toString().padStart(2, '0');
-    const second = currentDate.getSeconds().toString().padStart(2, '0');
-    const idAsString = [year, month, day, hour, minute, second].join('');
-    return Number(idAsString);
+    return getTimestampTuple().join('');
   }
 
   /**
    * Get an id, as Record.generateId(), but out of the daily hour, minute, second
    * The hour, minute, second are out of the daily common time, as 25 hours, 84 minutes and 61 secondes
-   * @return {number} - unique 14 caracters number as 20220115246165
+   * @param {number} [increment = 0] Positive number to add
+   * @return {string} - 14 caracters number
+   * @example
+   * ```
+   * // At day 2022-01-15
+   * Record.generateOutDailyId(5);
+   * '20220115246065'
+   * Record.generateOutDailyId(100);
+   * '20220115246160'
+   * ```
    */
 
-  static generateOutDailyId() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear().toString().padStart(4, '0');
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const maxHour = '24',
-      maxMinute = '60',
-      maxSecond = '60';
-    const idAsString = [year, month, day, maxHour, maxMinute, maxSecond].join('');
-    return Number(idAsString);
+  static generateOutDailyId(increment = 0) {
+    const [year, month, day] = getTimestampTuple();
+    const min = Number('24' + '60' + '60');
+    const max = Number('99' + '99' + '99');
+    if (increment < 0) {
+      increment = 0;
+    }
+    const result = min + increment;
+    if (result > max) {
+      throw new RecordMaxOutDailyIdError();
+    }
+    return [year, month, day, result.toString()].join('');
   }
 
   /**
@@ -510,7 +518,7 @@ module.exports = class Record {
     thumbnail,
     opts
   ) {
-    this.id = Number(id);
+    this.id = id;
     this.title = title;
     this.types = types;
     this.tags = tags;

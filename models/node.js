@@ -187,7 +187,7 @@ module.exports = class Node {
   }
 
   /**
-   * @param {number} id
+   * @param {string} id
    * @param {string} label
    * @param {string} type
    * @param {string} fill Color of the center
@@ -212,7 +212,7 @@ module.exports = class Node {
     begin,
     end
   ) {
-    this.id = Number(id);
+    this.id = id;
     this.label = label;
     this.type = type;
     this.fill = fill;

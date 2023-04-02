@@ -94,7 +94,7 @@ module.exports = class Graph {
   }
 
   /**
-   * @returns {Map<string, Set<string|number>}
+   * @returns {Map<string, Set<string>}
    */
 
   getTypesFromRecords() {
@@ -112,7 +112,7 @@ module.exports = class Graph {
   }
 
   /**
-   * @returns {Map<string, Set<string|number>}
+   * @returns {Map<string, Set<string>}
    */
 
   getTagsFromRecords() {

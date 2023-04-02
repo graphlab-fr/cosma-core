@@ -13,8 +13,6 @@
  * @property {boolean} withRecord
  */
 
-const { devServer } = require('./webpack.config');
-
 const path = require('path');
 const { faker } = require('@faker-js/faker'),
   nunjucks = require('nunjucks');
@@ -22,6 +20,8 @@ const { faker } = require('@faker-js/faker'),
 const Config = require('../models/config'),
   Cosmoscope = require('../models/cosmoscope'),
   Record = require('../models/record');
+
+const { getTimestampTuple } = require('./misc');
 
 const bib = require('../static/fake/bib.json');
 const tempDirPath = path.join(__dirname, '../temp');
@@ -146,27 +146,20 @@ function fakeView({ withFilters, withTags, withFocus, withRecord }) {
  */
 
 function fakeExtremeDates() {
-  let begin = faker.datatype.datetime({
+  const beginDate = faker.datatype.datetime({
     min: new Date('2000-01-01'),
     max: new Date('2010-01-01'),
   });
-  begin = new Date(begin);
-  begin = [
-    begin.getFullYear().toString().padStart(4, '0'),
-    (begin.getMonth() + 1).toString().padStart(2, '0'),
-    begin.getDate().toString().padStart(2, '0'),
-  ].join('-');
+  const [beginYear, beginMonth, beginDay] = getTimestampTuple(beginDate);
 
-  let end = faker.datatype.datetime({
+  const endDate = faker.datatype.datetime({
     min: new Date('2010-01-01'),
     max: new Date('2020-01-01'),
   });
-  end = new Date(end);
-  end = [
-    end.getFullYear().toString().padStart(4, '0'),
-    (end.getMonth() + 1).toString().padStart(2, '0'),
-    end.getDate().toString().padStart(2, '0'),
-  ].join('-');
+  const [endYear, endMonth, endDay] = getTimestampTuple(endDate);
 
-  return { begin, end };
+  return {
+    begin: [beginYear, beginMonth, beginDay].join('-'),
+    end: [endYear, endMonth, endDay].join('-'),
+  };
 }

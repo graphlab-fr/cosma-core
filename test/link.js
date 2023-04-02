@@ -6,7 +6,13 @@ const Link = require('../models/link');
 describe('Link', () => {
   describe('wikilinks from content', () => {
     const recordId = 20210907180436;
-    const ids = [20210613084440, 20210424214230, 20210613165413, 20210619085713, 20210613173849];
+    const ids = [
+      '20210613084440',
+      '20210424214230',
+      '20210613165413',
+      '20210619085713',
+      '20210613173849',
+    ];
     const typePrefix = 'a';
     const textSuffix = 'link text';
     const content = `Lorem ipsum dolor sit amet [[${ids[0]}]], consectetur adipiscing elit. Sed eleifend arcu sit amet condimentum malesuada [[${typePrefix}:${ids[1]}|${textSuffix}]].

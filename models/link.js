@@ -133,7 +133,7 @@ module.exports = class Link {
   }
 
   /**
-   * @param {number} nodeId
+   * @param {string} nodeId
    * @param {Link[]} links
    * @param {Node[]} nodes
    * @returns {Reference[]}
@@ -270,8 +270,8 @@ module.exports = class Link {
    * @param {Shape} [shape = Link.baseShape]
    * @param {string} color
    * @param {string} colorHighlight
-   * @param {number} source
-   * @param {number} target
+   * @param {string} source
+   * @param {string} target
    */
 
   constructor(
@@ -290,8 +290,8 @@ module.exports = class Link {
     this.shape = shape;
     this.color = color;
     this.colorHighlight = colorHighlight;
-    this.source = Number(source);
-    this.target = Number(target);
+    this.source = source;
+    this.target = target;
 
     this.report = [];
   }
