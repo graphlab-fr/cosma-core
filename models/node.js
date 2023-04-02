@@ -152,8 +152,8 @@ module.exports = class Node {
 
   static getNodesFromRecords(records, { linksExtent, backlinksExtent }) {
     return records.map((record) => {
-      const { id, title, type, links, backlinks, begin, end, thumbnail, config } = record;
-      const { fill, colorStroke, highlight } = Node.getNodeStyle(config, type[0]);
+      const { id, title, types, links, backlinks, begin, end, thumbnail, config } = record;
+      const { fill, colorStroke, highlight } = Node.getNodeStyle(config, types[0]);
       const { node_size_method, node_size, node_size_min, node_size_max } = config.opts;
       let size;
       switch (node_size_method) {
@@ -174,7 +174,7 @@ module.exports = class Node {
       return new Node(
         id,
         title,
-        type[0],
+        types[0],
         !!thumbnail ? `url(#${thumbnail})` : fill,
         colorStroke,
         highlight,

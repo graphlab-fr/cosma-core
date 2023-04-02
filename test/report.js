@@ -75,7 +75,7 @@ describe('Report', () => {
     new Record(
       1,
       'Record 1',
-      'undefined',
+      ['undefined'],
       undefined,
       undefined,
       undefined,
@@ -109,7 +109,7 @@ describe('Report', () => {
     new Record(
       1,
       'Record 1',
-      'foo',
+      ['foo'],
       undefined,
       undefined,
       undefined,
@@ -124,7 +124,7 @@ describe('Report', () => {
     new Record(
       2,
       'Record 2',
-      'bar',
+      ['bar'],
       undefined,
       undefined,
       undefined,
@@ -152,7 +152,7 @@ describe('Report', () => {
     new Record(
       1,
       'Record 1',
-      'undefined',
+      ['undefined'],
       undefined,
       { foo: 'toto', bar: 'toto' },
       undefined,
@@ -180,7 +180,7 @@ describe('Report', () => {
     new Record(
       1,
       'Record 1',
-      'undefined',
+      ['undefined'],
       undefined,
       { foo: null },
       undefined,
@@ -207,7 +207,7 @@ describe('Report', () => {
     new Record(
       1,
       'Record 1',
-      'undefined',
+      ['undefined'],
       undefined,
       undefined,
       undefined,
@@ -219,7 +219,7 @@ describe('Report', () => {
     new Record(
       2,
       'Record 2',
-      'undefined',
+      ['undefined'],
       undefined,
       undefined,
       undefined,
@@ -231,7 +231,7 @@ describe('Report', () => {
     new Record(
       3,
       'Record 2',
-      'undefined',
+      ['undefined'],
       undefined,
       undefined,
       undefined,
@@ -271,7 +271,7 @@ describe('Report', () => {
     new Record(
       1,
       'Record 1',
-      'undefined',
+      ['undefined'],
       undefined,
       undefined,
       text,

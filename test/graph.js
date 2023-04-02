@@ -24,7 +24,7 @@ describe('Graph verif', () => {
     new Record(
       1,
       'Record 1',
-      'foo',
+      ['foo'],
       ['foo', 'bar'],
       { foo: 'bar' },
       undefined,
@@ -39,7 +39,7 @@ describe('Graph verif', () => {
     new Record(
       2,
       'Record 2',
-      'bar',
+      ['bar'],
       'foo,bar',
       { foo: 'baz' },
       undefined,
@@ -54,7 +54,7 @@ describe('Graph verif', () => {
     new Record(
       3,
       'Record 2',
-      'bar',
+      ['bar'],
       'bar',
       { out: 'bar' },
       undefined,

@@ -42,14 +42,7 @@ describe('Record', () => {
 
     it('should convert undefined type in array', () => {
       let record = new Record(undefined, 'the title', undefined);
-      assert.deepStrictEqual(record.type, ['undefined']);
-    });
-
-    it('should convert type in array', () => {
-      assert.deepStrictEqual(
-        new Record(undefined, 'the title', 'type 1'),
-        new Record(undefined, 'the title', ['type 1'])
-      );
+      assert.deepStrictEqual(record.types, ['undefined']);
     });
   });
 
@@ -76,7 +69,7 @@ describe('Record', () => {
           },
         }
       );
-      assert.deepStrictEqual(record.type, ['important', 'done', 'undefined']);
+      assert.deepStrictEqual(record.types, ['important', 'done', 'undefined']);
     });
 
     it('should register only valid link types', () => {
@@ -175,8 +168,8 @@ describe('Record', () => {
 
       let recordYmlFrontMatterExpected = `---
 title: the title
-id: ${recordId}
-type: undefined
+types:
+  - undefined
 tags:
   - tag 1
   - tag 2
@@ -222,7 +215,7 @@ thumbnail: image.jpg
       recordYmlFrontMatterExpected = `---
 title: the title
 id: ${recordId}
-type:
+types:
   - type 1
   - type 2
 name: Guillaume

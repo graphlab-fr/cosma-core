@@ -127,8 +127,8 @@ right_panel:
         fr: dernière modification
         en: last modified
       type:
-        fr: type
-        en: type
+        fr: types
+        en: types
       keywords:
         fr: mots-clés
         en: keywords
