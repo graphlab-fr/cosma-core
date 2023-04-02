@@ -4,9 +4,9 @@ const assert = require('assert'),
 const Template = require('../models/template'),
   Cosmocope = require('../models/cosmoscope');
 
-const { records } = require('../utils/fake');
-
 describe.skip('Template', () => {
+  const { records } = require('../utils/fake');
+
   describe('link context', () => {
     const symbol = '↠';
     const graph = new Cosmocope(records);
