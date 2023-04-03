@@ -48,7 +48,7 @@ module.exports = class Config {
         attraction_vertical: 0,
         attraction_horizontal: 0,
         views: {},
-        chronological_record_meta: 'last_edit',
+        chronological_record_meta: 'created',
         record_metas: [],
         title: '',
         author: '',
