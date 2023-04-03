@@ -668,21 +668,21 @@ windows:
         en: Delete
   project_origin:
     title:
-      fr: Source des données
-      en: Data origin
+      fr: Nature des données
+      en: Nature of the data
     fields:
       select_origin:
-        fr: Source de données
-        en: Data origin
+        fr: Nature des données
+        en: Nature of the data
       directory_origin:
         fr: Fichiers Markdown
         en: Markdown files
       csv_origin:
-        fr: Données tabulaires (local)
-        en: Tabular data (local files)
+        fr: Fichiers CSV (locaux)
+        en: CSV files (local)
       online_origin:
-        fr: Données tabulaires (en ligne)
-        en: Tabular data (online files)
+        fr: Fichiers CSV (en ligne)
+        en: CSV files (online)
       files_origin:
         fr: Répertoire des fiches
         en: Records directory
