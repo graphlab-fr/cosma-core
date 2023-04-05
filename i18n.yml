@@ -624,8 +624,8 @@ windows:
       fr: Manuel d'utilisation
       en: User manual
     src:
-      fr: cosma-manuel-d-utilisation.html
-      en: cosma-user-manual.html
+      fr: manuel-d-utilisation-gui.html
+      en: user-manual-gui.html
   projects:
     title:
       fr: Projets
