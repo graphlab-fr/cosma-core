@@ -145,7 +145,13 @@
                 {{ translation.left_panel.menu_views.btn_reset[lang] }}
             </button>
 
-            <button id="view-save" onclick="">{{ translation.left_panel.menu_views.btn_save[lang] }}</button>
+            <button id="view-save">
+                {% if guiContext %}
+                {{ translation.left_panel.menu_views.btn_save_gui[lang] }}
+                {% else %}
+                {{ translation.left_panel.menu_views.btn_save[lang] }}
+                {% endif %}
+            </button>
 
             <span class="tooltip">?
                 <span class="tooltiptext">{{ translation.left_panel.menu_views.tooltip[lang] }}</span>

@@ -42,6 +42,9 @@ left_panel:
     btn_save:
       fr: Appliquer cette vue à l'URL
       en: Set the view to URL
+    btn_save_gui:
+      fr: Enregistrer cette vue
+      en: Save this view
     tooltip:
       fr: >
         Enregistre l'état actuel de l'interface
