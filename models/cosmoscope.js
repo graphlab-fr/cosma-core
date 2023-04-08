@@ -11,6 +11,7 @@
  * @property {string} name
  * @property {string} content
  * @property {FileMetas} metas
+ * @property {FileDates} dates
  */
 
 /**
@@ -22,9 +23,8 @@
  * @property {string[]} tags
  * @property {string[]} references
  * @property {string | undefined} thumbnail
- * @property {string | undefined} begin
- * @property {string | undefined} end
- * @property {FileDates} dates
+ * @property {number} begin
+ * @property {number} end
  */
 
 /**
@@ -204,8 +204,8 @@ module.exports = class Cosmoscope extends Graph {
       file.metas.references = [file.metas.references];
     }
 
-    file.metas.begin = undefined;
-    file.metas.end = undefined;
+    file.metas.begin = Number(new Date(file.metas.begin));
+    file.metas.end = Number(new Date(file.metas.end));
 
     return file;
   }
@@ -310,7 +310,7 @@ module.exports = class Cosmoscope extends Graph {
     });
 
     const records = files.map((file) => {
-      const { id, title, types, tags, thumbnail, references, begin, end, ...rest } = file.metas;
+      const { id, title, types, tags, thumbnail, references, ...metas } = file.metas;
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,
         links,
@@ -321,12 +321,15 @@ module.exports = class Cosmoscope extends Graph {
         ...Bibliography.getBibliographicRecordsFromList(references),
       ];
 
+      let { begin, end } = metas;
+      begin = begin || Number(file.dates[opts.chronological_record_meta]);
+
       return new Record(
         id,
         title,
         types,
         tags,
-        rest,
+        metas,
         file.content,
         linksReferences,
         backlinksReferences,

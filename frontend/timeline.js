@@ -43,10 +43,9 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const toHide = [],
-      toDisplay = [];
+    const toDisplay = [];
 
-    for (const { begin: nodeBegin, end: nodeEnd, id } of data.nodes) {
+    for (let { begin: nodeBegin, end: nodeEnd, id } of data.nodes) {
       if (nodeEnd === undefined) {
         nodeEnd = end;
       }

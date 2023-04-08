@@ -229,5 +229,30 @@ toto: tata
         assert.deepStrictEqual(result.metas['toto'], 'tata');
       });
     });
+
+    describe('begin, end', () => {
+      it('should keep get number from date', () => {
+        const result = Cosmocope.getDataFromYamlFrontMatter(
+          `---
+begin: 1999
+end: 2001
+---`,
+          'path'
+        );
+        assert.deepStrictEqual(result.metas['begin'], 915148800000);
+        assert.deepStrictEqual(result.metas['end'], 978307200000);
+      });
+
+      it('should get NaN for invalid date', () => {
+        const result = Cosmocope.getDataFromYamlFrontMatter(
+          `---
+end:
+---`,
+          'path'
+        );
+        assert.deepStrictEqual(result.metas['begin'], NaN);
+        assert.deepStrictEqual(result.metas['end'], NaN);
+      });
+    });
   });
 });

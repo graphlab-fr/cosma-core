@@ -82,6 +82,24 @@ if (config.opts['files_origin']) {
       name: faker.system.commonFileName('md'),
       lastEditDate: faker.date.past(),
       content,
+      dates: {
+        timestamp: faker.datatype.datetime({
+          min: new Date('2000-01-01'),
+          max: new Date('2010-01-01'),
+        }),
+        created: faker.datatype.datetime({
+          min: new Date('2000-01-01'),
+          max: new Date('2010-01-01'),
+        }),
+        lastEdit: faker.datatype.datetime({
+          min: new Date('2021-01-01'),
+          max: new Date('2022-01-01'),
+        }),
+        lastOpen: faker.datatype.datetime({
+          min: new Date('2022-01-01'),
+          max: new Date('2023-01-01'),
+        }),
+      },
       metas: {
         id: fileId,
         title: faker.name.jobTitle(),

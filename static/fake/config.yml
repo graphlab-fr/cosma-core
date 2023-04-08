@@ -48,8 +48,5 @@ focus_max: 3
 node_size: 10
 record_metas:
   - phone number
-# link_symbol: ↠
-# record_filters:
-#   -
-#     meta: type
-#     value: concept
+  - begin
+  - end

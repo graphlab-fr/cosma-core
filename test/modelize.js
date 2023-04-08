@@ -40,6 +40,8 @@ describe('Modelize from markdown files', () => {
     expect(fileSuzanneBriet.metas.types).to.deep.equal(['Personne']);
     expect(fileSuzanneBriet.metas.tags).to.deep.equal([]);
     expect(fileSuzanneBriet.metas.references).to.deep.equal([]);
+    expect(fileSuzanneBriet.metas.begin).to.equal(-2398291200000);
+    expect(fileSuzanneBriet.metas.end).to.equal(599616000000);
     expect(fileSuzanneBriet.dates.timestamp).to.be.undefined;
     expect(fileSuzanneBriet.content)
       .to.contain('\n\nSuzanne Briet est une bibliothécaire')
