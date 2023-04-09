@@ -4,7 +4,7 @@ const assert = require('assert'),
 const Node = require('../models/node'),
   Config = require('../models/config');
 
-describe.only('Node', () => {
+describe('Node', () => {
   const config = new Config({
     record_types: {
       undefined: { fill: 'gray', stroke: 'black' },
