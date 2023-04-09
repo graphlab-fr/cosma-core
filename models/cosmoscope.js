@@ -174,7 +174,7 @@ module.exports = class Cosmoscope extends Graph {
 
     file.metas.id = String(file.metas['id']);
     file.metas.title = String(file.metas['title']);
-    file.metas.thumbnail = String(file.metas['thumbnail']);
+    file.metas.thumbnail = file.metas['thumbnail'];
 
     file.metas.types = file.metas['types'] || file.metas['type'] || [];
     delete file.metas['type'];

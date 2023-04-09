@@ -40,10 +40,11 @@ module.exports = class Node {
   /**
    * @param {Config} config
    * @param {string} nodeType
+   * @param {string} thumbnail
    * @returns {object}
    */
 
-  static getNodeStyle(config, nodeType) {
+  static getNodeStyle(config, nodeType, thumbnail) {
     if (!config || config instanceof Config === false) {
       throw new Error('Need instance of Config to process');
     }
@@ -58,6 +59,11 @@ module.exports = class Node {
         fill = config.opts['record_types'][nodeType]['fill'];
         break;
     }
+
+    if (thumbnail) {
+      fill = `url(#${thumbnail}})`;
+    }
+
     return {
       fill,
       colorStroke: config.opts['record_types'][nodeType]['stroke'],
@@ -153,7 +159,7 @@ module.exports = class Node {
   static getNodesFromRecords(records, { linksExtent, backlinksExtent }) {
     return records.map((record) => {
       const { id, title, types, links, backlinks, begin, end, thumbnail, config } = record;
-      const { fill, colorStroke, highlight } = Node.getNodeStyle(config, types[0]);
+      const { fill, colorStroke, highlight } = Node.getNodeStyle(config, types[0], thumbnail);
       const { node_size_method, node_size, node_size_min, node_size_max } = config.opts;
       let size;
       switch (node_size_method) {
@@ -171,18 +177,7 @@ module.exports = class Node {
           );
           break;
       }
-      return new Node(
-        id,
-        title,
-        types[0],
-        !!thumbnail ? `url(#${thumbnail})` : fill,
-        colorStroke,
-        highlight,
-        size,
-        2,
-        begin,
-        end
-      );
+      return new Node(id, title, types[0], fill, colorStroke, highlight, size, 2, begin, end);
     });
   }
 
