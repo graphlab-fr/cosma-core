@@ -61,7 +61,7 @@ module.exports = class Node {
     }
 
     if (thumbnail) {
-      fill = `url(#${thumbnail}})`;
+      fill = `url(#${thumbnail})`;
     }
 
     return {
