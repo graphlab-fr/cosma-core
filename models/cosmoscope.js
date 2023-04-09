@@ -323,6 +323,8 @@ module.exports = class Cosmoscope extends Graph {
 
       let { begin, end } = metas;
       begin = begin || Number(file.dates[opts.chronological_record_meta]);
+      delete metas.end;
+      delete metas.begin;
 
       return new Record(
         id,
