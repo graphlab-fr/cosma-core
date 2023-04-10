@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
       window.removeEventListener('resize', setChronosTicks);
       range.removeEventListener('input', action);
 
-      displayNodesAll();
+      displayNodesAll(filterPriority.filteredByTimeline);
       setCounters();
     }
   });
