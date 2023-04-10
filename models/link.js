@@ -254,7 +254,7 @@ module.exports = class Link {
         label = [label];
       }
 
-      const link = new Link(i, label, undefined, undefined, undefined, undefined, source, target);
+      const link = new Link(i, label, 'undefined', undefined, undefined, undefined, source, target);
 
       if (link.isValid()) {
         return link;
