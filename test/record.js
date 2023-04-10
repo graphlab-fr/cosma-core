@@ -442,6 +442,24 @@ isDead: false
       line.should.property('tags').deep.equal(['tag 2']);
     });
 
+    it('should convert dataset to record', () => {
+      const data = [Record.getFormatedDataFromCsvLine(line)];
+      const config = new Config({
+        record_types: {
+          undefined: Config.base.record_types['undefined'],
+          documentation: Config.base.record_types['undefined'],
+          ami: Config.base.record_types['undefined'],
+        },
+        record_metas: ['nom'],
+      });
+
+      const [record] = Record.formatedDatasetToRecords(data, [], config);
+      record.title.should.equal(line.title);
+      record.types.should.contains.members([line['type:relation'], line['type:étude']]);
+      record.tags.should.contains.members([line['tag:genre']]);
+      record.metas.should.deep.equal({ nom: line['meta:nom'] });
+    });
+
     describe('make file', () => {
       const fileName = 'Paul Otlet';
       const filePath = path.join(tempFolderPath, Record.getSlugFileName(fileName));

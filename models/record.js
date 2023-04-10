@@ -41,7 +41,7 @@
  * @property {string|undefined} id
  * @property {string} title
  * @property {string} content
- * @property {string[]} type
+ * @property {string[]} types
  * @property {object} metas
  * @property {string[]} tags
  * @property {string[]} references
@@ -249,21 +249,10 @@ module.exports = class Record {
       throw new Error('Need instance of Config to process');
     }
 
-    const nodes = data.map(({ id, title, ...rest }) => {
-      let type;
-      for (const [key, value] of Object.entries(rest)) {
-        const [field, label] = key.split(':', 2);
-        switch (field) {
-          case 'type':
-            type = value;
-            break;
-        }
-      }
-      return new Node(id, title, type[0]);
-    });
+    const nodes = data.map(({ id, title, types }) => new Node(id, title, types[0]));
 
     return data.map((line) => {
-      const { id, title, content, type, metas, tags, references, begin, end, thumbnail } = line;
+      const { id, title, content, types, metas, tags, references, begin, end, thumbnail } = line;
 
       const { linksReferences, backlinksReferences } = Link.getReferencesFromLinks(
         id,
@@ -272,10 +261,10 @@ module.exports = class Record {
       );
       const bibliographicRecords = Bibliography.getBibliographicRecordsFromList(references);
 
-      const record = new Record(
+      return new Record(
         id,
         title,
-        type,
+        types,
         tags,
         metas,
         content,
@@ -287,8 +276,6 @@ module.exports = class Record {
         thumbnail,
         config.opts
       );
-
-      return record;
     });
   }
 
